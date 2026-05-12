@@ -11,7 +11,7 @@
   let lastTime = 0;
 
   // Ink ripple state
-  let ripples = []; // { x, y, radius, maxRadius, opacity }
+  let ripples = []; // { x, y, radius, opacity, startTime }
 
   // Data rain state
   let rainDrops = [];
@@ -233,33 +233,35 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /*  Engine 3: Silent Signal                                            */
+  /*  Engine 3: Silent Signal — warm, paper-like, Eastern time philosophy */
   /* ------------------------------------------------------------------ */
 
   function initSilent() {
     particles = [];
     ripples = [];
-    var count = 3 + Math.floor(Math.random() * 3); // 3-5
+    var count = 8 + Math.floor(Math.random() * 8); // 8-15 floating dust motes
     for (var i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        baseR: rand(2, 4),
-        r: 0,
+        r: rand(1, 2),
+        vx: rand(-0.08, 0.08),
+        vy: rand(-0.08, 0.08),
         baseOpacity: rand(0.03, 0.08),
-        opacity: 0,
         phase: Math.random() * Math.PI * 2,
-        cycle: rand(5, 8), // seconds per full breath cycle
+        cycle: rand(6, 10), // seconds per full opacity oscillation
+        warm: Math.random() < 0.5, // toggle between two warm gray tones
       });
     }
   }
 
   function drawPaperGrain() {
-    var grainCount = Math.floor(canvas.width * canvas.height * 0.003); // 0.3% coverage
+    var grainCount = Math.floor(canvas.width * canvas.height * 0.004); // 0.4% coverage
     for (var g = 0; g < grainCount; g++) {
       var gx = Math.random() * canvas.width;
       var gy = Math.random() * canvas.height;
-      ctx.fillStyle = 'rgba(0,0,0,0.01)';
+      var grainAlpha = rand(0.008, 0.02);
+      ctx.fillStyle = 'rgba(0,0,0,' + grainAlpha + ')';
       ctx.fillRect(gx, gy, 1, 1);
     }
   }
@@ -267,17 +269,32 @@
   function drawSilentNormal(time) {
     var seconds = time * 0.001;
 
-    // Breathing ink dots
+    // Floating dust motes — drift slowly, opacity oscillates gently
     for (var i = 0; i < particles.length; i++) {
       var p = particles[i];
-      var t = (seconds % p.cycle) / p.cycle;
-      var breathe = Math.sin(t * Math.PI * 2 + p.phase);
-      p.r = p.baseR + breathe * p.baseR * 0.2;
-      p.opacity = p.baseOpacity * (0.7 + (breathe + 1) / 2 * 0.6);
+
+      // Drift
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Wrap around edges
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+
+      // Gentle opacity oscillation (sinusoidal, 6–10 s period)
+      var cycleFactor = 0.5 + 0.5 * Math.sin(seconds * 2 * Math.PI / p.cycle + p.phase);
+      var currentOpacity = p.baseOpacity * cycleFactor;
+
+      // Warm gray tones — like dust motes in sunlight
+      var color = p.warm
+        ? 'rgba(120,110,100,' + currentOpacity + ')'
+        : 'rgba(160,150,140,' + currentOpacity + ')';
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0,0,0,' + p.opacity + ')';
+      ctx.fillStyle = color;
       ctx.fill();
     }
 
@@ -289,56 +306,41 @@
     var cx = canvas.width / 2;
     var cy = canvas.height / 2;
 
-    // Single prominent center dot
-    // r oscillates between 4 and 12 * breathIntensity
-    // opacity oscillates between 0.08 and 0.2 * breathIntensity
-    var cycle = 4;
+    // Single subtle warm dot at center
+    // Opacity: 0.04 ↔ 0.15 * intensity, Size: 3 px ↔ 10 px, Cycle: 6 s
+    var cycle = 6;
     var t = (seconds % cycle) / cycle;
     var breathe = Math.sin(t * Math.PI * 2);
-    var cr = 4 + (breathe + 1) / 2 * (12 * breathIntensity - 4);
-    var copacity = 0.08 + (breathe + 1) / 2 * (0.2 * breathIntensity - 0.08);
+    var cr = 3 + (breathe + 1) / 2 * 7; // 3 → 10
+    var maxOpacity = 0.15 * breathIntensity;
+    var copacity = 0.04 + (breathe + 1) / 2 * (maxOpacity - 0.04);
 
     ctx.beginPath();
     ctx.arc(cx, cy, cr, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,' + copacity + ')';
+    ctx.fillStyle = 'rgba(120,110,100,' + copacity + ')';
     ctx.fill();
-
-    // Peripheral dots faded to near-invisible
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-      var pt = (seconds % p.cycle) / p.cycle;
-      var pbreathe = Math.sin(pt * Math.PI * 2 + p.phase);
-      p.r = p.baseR + pbreathe * p.baseR * 0.2;
-      p.opacity = p.baseOpacity * 0.15;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0,0,0,' + p.opacity + ')';
-      ctx.fill();
-    }
 
     drawPaperGrain();
   }
 
-  function drawRipples() {
+  function drawRipples(time) {
     for (var i = ripples.length - 1; i >= 0; i--) {
       var rip = ripples[i];
+      var elapsed = (time - rip.startTime) * 0.001; // seconds
+      var duration = 2.5; // seconds — radius grows 0 → 100 px
 
-      // Expand radius over ~2 seconds (at 60fps: ~0.67-1.0 px/frame for 80-120 maxRadius)
-      rip.radius += 1.5;
-
-      var progress = rip.radius / rip.maxRadius;
-      rip.opacity = 0.25 * (1 - progress);
-
-      // Remove when fully faded or max radius reached
-      if (rip.opacity <= 0 || rip.radius >= rip.maxRadius) {
+      if (elapsed >= duration) {
         ripples.splice(i, 1);
         continue;
       }
 
+      var progress = elapsed / duration;
+      rip.radius = 100 * progress; // 0 → 100 px
+      rip.opacity = 0.2 * (1 - progress); // 0.2 → 0
+
       ctx.beginPath();
       ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(0,0,0,' + rip.opacity + ')';
+      ctx.strokeStyle = 'rgba(100,90,80,' + rip.opacity + ')';
       ctx.lineWidth = 1;
       ctx.stroke();
     }
@@ -350,8 +352,8 @@
     } else {
       drawSilentNormal(time);
     }
-    // Ripples layer on top of all silent modes
-    drawRipples();
+    // Warm water ripples layer on top of all silent modes
+    drawRipples(time);
   }
 
   /* ------------------------------------------------------------------ */
@@ -444,8 +446,8 @@
         x: x,
         y: y,
         radius: 0,
-        maxRadius: 80 + Math.random() * 40,
-        opacity: 0.25,
+        opacity: 0.2,
+        startTime: performance.now(),
       });
     },
 
@@ -493,7 +495,7 @@
       rainSpeed = speed;
     },
 
-    // Control ink dot breathing intensity -- for Silent Signal loading
+    // Control warm breathing dot intensity -- for Silent Signal loading
     breathMode: function (intensity) {
       if (currentTheme !== 'silent-signal') return;
       mode = 'breath';

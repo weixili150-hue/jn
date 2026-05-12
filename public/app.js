@@ -91,7 +91,7 @@ function shareResult(r) {
   const T = S.theme;
   let shareText;
   if (T === 'neon-entropy') {
-    shareText = '// ENTROPY_OBSERVATION_REPORT\n\nWORLD BIAS: ' + r.bias + '\n"' + r.finalLine + '"\n\n—— Entropy Observer';
+    shareText = '// 环境熵观测报告\n\n世界偏向：' + r.bias + '\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
   } else {
     shareText = '\u{1F52E} 环境熵观测\n\n世界偏向 ' + r.bias + '\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
   }
@@ -99,7 +99,7 @@ function shareResult(r) {
     navigator.share({ title: '环境熵观测', text: shareText }).catch(() => {});
   } else {
     navigator.clipboard.writeText(shareText).then(
-      () => alert(T === 'neon-entropy' ? 'COPIED' : '已复制分享文案'),
+      () => alert(T === 'neon-entropy' ? '已复制' : '已复制分享文案'),
       () => {}
     );
   }
@@ -289,6 +289,7 @@ function renderDecision() {
   /* prompt */
   if (T === 'silent-signal') {
     view.appendChild(el('p', { className: 'decision-prompt decision-prompt-zen' }, '你在犹豫什么？'));
+    view.appendChild(el('p', { className: 'decision-subtitle-zen' }, '轻轻写下两个选择'));
   } else {
     view.appendChild(el('p', { className: 'decision-prompt' }, '在黑暗中写下你的犹豫'));
   }
@@ -348,6 +349,7 @@ function renderDecision() {
       S.answers = {};
       S.currentQuestion = 0;
       S.result = null;
+      S._zenAnswered = new Set();
       try {
         const data = await API.getQuestions(S.theme, S.optionA.trim(), S.optionB.trim());
         S.questions = data.questions;
@@ -372,6 +374,14 @@ function renderSample() {
   $('#app').innerHTML = '';
   const T = S.theme;
 
+  /* ── Silent Signal: Drift Engine ── */
+  if (T === 'silent-signal') {
+    renderSampleZen();
+    return;
+  }
+
+  /* ── Mystic Void: sequential questions ── */
+
   if (S.currentQuestion >= S.questions.length) {
     location.hash = 'loading';
     return;
@@ -381,50 +391,45 @@ function renderSample() {
   const view = el('div', { className: 'sample-view' });
 
   /* question card */
-  const entryAnim = T === 'silent-signal' ? 'anim-zenReveal' : 'anim-voidUnblur';
+  const entryAnim = 'anim-voidUnblur';
   const cardCls = 'question-card ' + entryAnim;
   const card = el('div', { className: cardCls });
 
-  const textCls = T === 'silent-signal' ? 'question-text question-text-zen' : 'question-text';
+  const textCls = 'question-text';
   card.appendChild(el('div', { className: textCls }, q.text));
 
   /* answer handler */
   function answer(value) {
     S.answers[q.id] = value;
 
-    if (T === 'silent-signal') {
-      /* ink ripple at center of viewport or click position */
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      if (window.Particles && window.Particles.inkRipple) {
-        window.Particles.inkRipple(cx, cy);
-      }
-      /* remove card immediately, wait in silence */
+    /* Mystic Void: dissolve exit, then 1500ms darkness */
+    card.classList.remove(entryAnim);
+    card.classList.add('void-dissolve');
+    setTimeout(() => {
       if (card.parentNode) card.remove();
       setTimeout(() => {
         S.currentQuestion++;
         renderSample();
-      }, 2500);
-    } else {
-      /* Mystic Void: dissolve exit, then 1500ms darkness */
-      card.classList.remove(entryAnim);
-      card.classList.add('void-dissolve');
-      setTimeout(() => {
-        if (card.parentNode) card.remove();
-        setTimeout(() => {
-          S.currentQuestion++;
-          renderSample();
-        }, 1500);
-      }, 600); /* dissolve animation duration */
-    }
+      }, 1500);
+    }, 600); /* dissolve animation duration */
   }
 
   /* input area */
-  if (T === 'silent-signal') {
-    /* Always text input for Silent Signal */
+  /* Mystic Void: chips for chip questions, void-input-line for text */
+  if (q.inputType === 'chips' && q.options) {
+    const group = el('div', { className: 'void-choice-group' });
+    for (const opt of q.options) {
+      group.appendChild(el('button', {
+        className: 'void-floating-choice',
+        onclick: () => answer(opt),
+      }, opt));
+    }
+    card.appendChild(group);
+  } else {
     const input = el('input', {
-      className: 'zen-input-line',
-      type: 'text',
+      className: 'void-input-line',
+      type: q.inputType === 'number' ? 'number' : 'text',
+      inputMode: q.inputType === 'number' ? 'numeric' : undefined,
       placeholder: q.placeholder || '输入...',
     });
     const inputWrap = el('div', { className: 'sample-input-wrap' }, input);
@@ -435,55 +440,209 @@ function renderSample() {
     });
 
     card.appendChild(el('button', {
-      className: 'btn-zen-text',
-      style: { marginTop: '24px' },
+      className: 'btn btn-primary',
+      style: { marginTop: '20px' },
       onclick: () => { if (input.value.trim()) answer(input.value.trim()); },
     }, '确认'));
-  } else {
-    /* Mystic Void: chips for chip questions, void-input-line for text */
-    if (q.inputType === 'chips' && q.options) {
-      const group = el('div', { className: 'void-choice-group' });
-      for (const opt of q.options) {
-        group.appendChild(el('button', {
-          className: 'void-floating-choice',
-          onclick: () => answer(opt),
-        }, opt));
-      }
-      card.appendChild(group);
-    } else {
-      const input = el('input', {
-        className: 'void-input-line',
-        type: q.inputType === 'number' ? 'number' : 'text',
-        inputMode: q.inputType === 'number' ? 'numeric' : undefined,
-        placeholder: q.placeholder || '输入...',
-      });
-      const inputWrap = el('div', { className: 'sample-input-wrap' }, input);
-      card.appendChild(inputWrap);
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && input.value.trim()) answer(input.value.trim());
-      });
-
-      card.appendChild(el('button', {
-        className: 'btn btn-primary',
-        style: { marginTop: '20px' },
-        onclick: () => { if (input.value.trim()) answer(input.value.trim()); },
-      }, '确认'));
-    }
   }
 
   /* progress — Mystic Void only (star dots) */
-  if (T !== 'silent-signal') {
-    const progress = el('div', { className: 'void-star-progress' });
-    for (let i = 0; i < S.questions.length; i++) {
-      const starCls = i < S.currentQuestion ? 'void-star-lit' : 'void-star';
-      progress.appendChild(el('div', { className: starCls }));
-    }
-    view.appendChild(progress);
+  const progress = el('div', { className: 'void-star-progress' });
+  for (let i = 0; i < S.questions.length; i++) {
+    const starCls = i < S.currentQuestion ? 'void-star-lit' : 'void-star';
+    progress.appendChild(el('div', { className: starCls }));
   }
+  view.appendChild(progress);
 
   view.appendChild(card);
   $('#app').appendChild(view);
+}
+
+/* ─── Silent Signal Drift Engine: renderSampleZen ─── */
+
+function renderSampleZen() {
+  if (!S.questions || S.questions.length === 0) {
+    location.hash = 'loading';
+    return;
+  }
+
+  /* Initialize zen answered set if needed */
+  if (!S._zenAnswered) S._zenAnswered = new Set();
+
+  const view = el('div', { className: 'sample-view-zen' });
+
+  /* Subtle prompt at top */
+  const prompt = el('div', { className: 'zen-subtle-prompt' }, '轻轻触碰你想回答的那一句');
+  view.appendChild(prompt);
+
+  /* All questions as floating sentences */
+  const sentencesContainer = el('div', { className: 'zen-sentences-container' });
+  const sentenceEls = [];
+  const questionMap = {}; /* q.id → { el, q } */
+
+  for (let i = 0; i < S.questions.length; i++) {
+    const q = S.questions[i];
+    const sentence = el('div', {
+      className: 'zen-sentence zenFloat',
+      'data-qid': q.id,
+      style: {
+        animationDelay: (i * 0.7) + 's',
+      },
+    }, q.text);
+
+    sentencesContainer.appendChild(sentence);
+    sentenceEls.push(sentence);
+    questionMap[q.id] = { el: sentence, q: q };
+  }
+
+  view.appendChild(sentencesContainer);
+
+  /* Progress indicator — faint, at bottom */
+  const progressEl = el('div', { className: 'zen-progress' }, '已回应 ' + S._zenAnswered.size + '/' + S.questions.length);
+  view.appendChild(progressEl);
+
+  $('#app').appendChild(view);
+
+  /* ── Interaction state ── */
+  let answeringState = null; /* { sentenceEl, q, inputWrap } or null */
+
+  function restoreUnanswered() {
+    /* Fade all unanswered, non-active sentences back to normal */
+    for (const el of sentenceEls) {
+      const qid = el.getAttribute('data-qid');
+      if (!S._zenAnswered.has(qid) && (!answeringState || answeringState.sentenceEl !== el)) {
+        el.style.transition = 'opacity 0.8s ease';
+        el.style.opacity = '1';
+        if (el.classList.contains('zen-sentence-paused')) {
+          el.classList.remove('zen-sentence-paused');
+          el.style.animationPlayState = 'running';
+        }
+      }
+    }
+  }
+
+  function submitAnswer(q, sentenceEl, value, inputWrap) {
+    /* Store answer */
+    S.answers[q.id] = value;
+    S._zenAnswered.add(q.id);
+
+    /* Ink ripple at sentence position */
+    const rect = sentenceEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    if (window.Particles && window.Particles.inkRipple) {
+      window.Particles.inkRipple(cx, cy);
+    }
+
+    /* Remove input area */
+    if (inputWrap && inputWrap.parentNode) {
+      inputWrap.remove();
+    }
+
+    /* Animate sentence away — drift off */
+    sentenceEl.classList.remove('zen-sentence-active', 'zen-sentence-paused');
+    sentenceEl.style.animationPlayState = 'running';
+    sentenceEl.classList.add('answered');
+
+    /* Update progress */
+    progressEl.textContent = '已回应 ' + S._zenAnswered.size + '/' + S.questions.length;
+
+    /* Clear answering state */
+    answeringState = null;
+
+    /* After 2s pause, restore remaining sentences or transition out */
+    setTimeout(() => {
+      if (S._zenAnswered.size >= S.questions.length) {
+        /* All answered — fade everything out */
+        sentencesContainer.style.transition = 'opacity 2s ease';
+        sentencesContainer.style.opacity = '0';
+        prompt.style.transition = 'opacity 2s ease';
+        prompt.style.opacity = '0';
+        progressEl.style.transition = 'opacity 2s ease';
+        progressEl.style.opacity = '0';
+
+        /* 3s pause of pure whitespace, then navigate */
+        setTimeout(() => {
+          location.hash = 'loading';
+        }, 3000);
+      } else {
+        /* Restore unanswered sentences */
+        restoreUnanswered();
+      }
+    }, 2000);
+  }
+
+  function createAnswerInput(sentenceEl, q) {
+    const inputWrap = el('div', { className: 'zen-answer-area' });
+
+    const input = el('input', {
+      className: 'zen-input-line',
+      type: 'text',
+      placeholder: q.placeholder || '轻轻写下...',
+    });
+
+    const confirmBtn = el('button', {
+      className: 'btn-zen-text',
+    }, '✓');
+
+    inputWrap.appendChild(input);
+    inputWrap.appendChild(confirmBtn);
+
+    /* Insert after the sentence */
+    sentenceEl.parentNode.insertBefore(inputWrap, sentenceEl.nextSibling);
+
+    /* Focus input after a brief delay (let animation settle) */
+    setTimeout(() => input.focus(), 100);
+
+    function doSubmit(value) {
+      if (!value.trim()) return;
+      submitAnswer(q, sentenceEl, value.trim(), inputWrap);
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSubmit(input.value);
+    });
+
+    confirmBtn.addEventListener('click', () => doSubmit(input.value));
+
+    return inputWrap;
+  }
+
+  /* ── Click handlers for each sentence ── */
+  for (let i = 0; i < sentenceEls.length; i++) {
+    const sentenceEl = sentenceEls[i];
+    const qid = sentenceEl.getAttribute('data-qid');
+    const q = questionMap[qid].q;
+
+    sentenceEl.addEventListener('click', () => {
+      /* Ignore if already answered or currently answering another */
+      if (S._zenAnswered.has(qid)) return;
+      if (answeringState) return;
+
+      answeringState = { sentenceEl: sentenceEl, q: q, inputWrap: null };
+
+      /* Fade all other unanswered sentences */
+      for (const other of sentenceEls) {
+        const otherQid = other.getAttribute('data-qid');
+        if (other !== sentenceEl && !S._zenAnswered.has(otherQid)) {
+          other.style.transition = 'opacity 0.8s ease';
+          other.style.opacity = '0.1';
+        }
+      }
+
+      /* Fade prompt slightly */
+      prompt.style.transition = 'opacity 0.8s ease';
+      prompt.style.opacity = '0.15';
+
+      /* Pause float and center the tapped sentence */
+      sentenceEl.style.animationPlayState = 'paused';
+      sentenceEl.classList.add('zen-sentence-paused', 'zen-sentence-active');
+
+      /* Create input area */
+      const inputWrap = createAnswerInput(sentenceEl, q);
+      answeringState.inputWrap = inputWrap;
+    });
+  }
 }
 
 // ─── ⑤ Loading Ritual ───
@@ -495,29 +654,29 @@ function renderLoading() {
   const cleanupFns = [];
 
   if (T === 'silent-signal') {
-    /* Silent Signal: white/cream overlay, ink-dot breathing */
+    /* Silent Signal: white/cream overlay, ink-dot breathing slowly */
     const overlay = el('div', { className: 'loading-overlay loading-overlay-zen' });
 
     const animContainer = el('div', { className: 'loading-animation loading-animation-zen' });
     animContainer.appendChild(el('div', { className: 'ink-dot loading-center-dot' }));
     overlay.appendChild(animContainer);
 
-    /* phrase cycling every 6s */
-    const phrases = ['...', '......', '.........'];
+    /* Phrase cycling every 8s — just ellipses of varying lengths */
+    const phrases = ['......', '............', '..................'];
     const phraseEl = el('div', { className: 'loading-phrase loading-phrase-zen' }, phrases[0]);
     overlay.appendChild(phraseEl);
     let phraseIdx = 0;
     const cycle = setInterval(() => {
       phraseIdx = (phraseIdx + 1) % phrases.length;
       phraseEl.textContent = phrases[phraseIdx];
-    }, 6000);
+    }, 8000);
     cleanupFns.push(() => clearInterval(cycle));
 
     $('#app').appendChild(overlay);
 
-    /* trigger prominent breathing on particles canvas */
+    /* Subtle breathing on particles canvas */
     if (window.Particles && window.Particles.breathMode) {
-      window.Particles.breathMode(1.0);
+      window.Particles.breathMode(0.6);
     }
   } else {
     /* Mystic Void: dark overlay, glow-dot breathing, radial glow, converging particles */
@@ -583,26 +742,31 @@ function renderResult() {
   const r = S.result;
 
   if (T === 'silent-signal') {
-    /* Silent Signal: no card, whitespace, timed reveals */
+    /* ── Silent Signal: no card, pure whitespace, timed reveals ── */
     const view = el('div', { className: 'result-view-zen' });
 
+    /* "观测报告" in tiny text at top */
     view.appendChild(el('div', { className: 'result-label-zen' }, '观测报告'));
-    view.appendChild(el('div', { className: 'result-bias-zen' }, '偏向 ' + r.bias));
 
-    /* verdict — revealed after 1.5s */
-    const verdictEl = el('div', { className: 'result-verdict-zen', style: { opacity: '0', transition: 'opacity 1.5s ease' } }, r.verdict);
-    view.appendChild(verdictEl);
-    setTimeout(() => { verdictEl.style.opacity = '1'; }, 1500);
+    /* Bias — large serif, zen-emerge animation */
+    view.appendChild(el('div', {
+      className: 'result-bias-zen zen-emerge',
+      style: { animationDelay: '0s' },
+    }, '偏向 ' + r.bias));
 
-    /* final line — revealed after 3.5s (1.5s + 2s) */
-    const finalEl = el('div', { className: 'result-final-zen', style: { opacity: '0', transition: 'opacity 2s ease' } }, r.finalLine);
-    view.appendChild(finalEl);
-    setTimeout(() => { finalEl.style.opacity = '1'; }, 3500);
+    /* Verdict — emerges after 2s pause */
+    view.appendChild(el('div', {
+      className: 'result-verdict-zen zen-emerge',
+      style: { animationDelay: '2s' },
+    }, r.verdict));
 
-    /* interpretation */
-    view.appendChild(el('div', { className: 'result-interpretation-zen' }, r.interpretation));
+    /* Final line — emerges after 5s (3s after verdict), italic */
+    view.appendChild(el('div', {
+      className: 'result-final-zen zen-emerge',
+      style: { animationDelay: '5s', fontStyle: 'italic' },
+    }, r.finalLine));
 
-    /* signals */
+    /* Signals — two simple lines with generous spacing */
     if (r.signals) {
       const signals = el('div', { className: 'result-signals-zen' });
       for (const s of r.signals) {
@@ -614,21 +778,19 @@ function renderResult() {
       view.appendChild(signals);
     }
 
-    /* buttons — barely visible */
+    /* Button: "再问一次" — plain text, no chrome, generous space below everything */
     view.appendChild(el('button', {
-      className: 'btn-zen-subtle',
+      className: 'btn-zen-text',
+      style: { marginTop: '64px' },
       onclick: () => {
         S.optionA = ''; S.optionB = ''; S.questions = [];
         S.answers = {}; S.currentQuestion = 0; S.result = null;
+        S._zenAnswered = new Set();
         location.hash = 'decide';
       },
-    }, '重新决策'));
+    }, '再问一次'));
 
-    view.appendChild(el('button', {
-      className: 'btn-zen-subtle',
-      style: { marginTop: '12px' },
-      onclick: () => shareResult(r),
-    }, '分享'));
+    /* No share button for Silent Signal */
 
     $('#app').appendChild(view);
   } else {
@@ -775,19 +937,19 @@ async function handleTerminalState() {
       await runBootSequence();
       break;
     case 'theme_select':
-      await typeOutput('SELECT THEME: [M]YSTIC VOID  [N]EON ENTROPY  [S]ILENT SIGNAL', 30);
+      await typeOutput('选择模式：[M]神秘虚空  [N]霓虹熵  [S]静默信号', 30);
       _termAcceptingInput = true;
       showTerminalInput();
       break;
     case 'option_a':
       terminalOutput('');
-      terminalOutput('INPUT DECISION PARAMETERS:');
-      await typeOutput('OPTION_A: _', 30);
+      await typeOutput('输入决策参数：', 30);
+      await typeOutput('选项A：_', 30);
       _termAcceptingInput = true;
       showTerminalInput();
       break;
     case 'option_b':
-      await typeOutput('OPTION_B: _', 30);
+      await typeOutput('选项B：_', 30);
       _termAcceptingInput = true;
       showTerminalInput();
       break;
@@ -811,23 +973,23 @@ async function handleTerminalState() {
 
 async function runBootSequence() {
   terminalOutput('');
-  await typeOutput('ENTROPY_OBSERVER v3.4.1', 25);
-  await typeOutput('CONNECTING TO REALITY_STREAM...', 30);
-  await typeOutput('CONNECTION ESTABLISHED.', 20);
-  await typeOutput('SCANNING LOCAL ENVIRONMENT...', 30);
+  await typeOutput('环境熵观测器 v3.4.1', 25);
+  await typeOutput('正在连接现实流...', 30);
+  await typeOutput('连接已建立。', 20);
+  await typeOutput('正在扫描本地环境...', 30);
 
   /* battery */
-  var batteryLine = 'BATTERY: --%';
+  var batteryLine = '电量：--%';
   try {
     var bat = await navigator.getBattery();
-    batteryLine = 'BATTERY: ' + Math.round(bat.level * 100) + '%';
+    batteryLine = '电量：' + Math.round(bat.level * 100) + '%';
   } catch (e) { /* ignore */ }
   await typeOutput(batteryLine, 30);
 
-  var timeLine = 'LOCAL TIME: ' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  var timeLine = '本地时间：' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   await typeOutput(timeLine, 30);
 
-  var noiseLine = 'NOISE_FLOOR: ' + (Math.random() * 0.8 + 0.1).toFixed(3);
+  var noiseLine = '噪声基准：' + (Math.random() * 0.8 + 0.1).toFixed(3);
   await typeOutput(noiseLine, 30);
 
   terminalOutput('');
@@ -853,17 +1015,17 @@ function handleTerminalInput(key) {
 
           /* If they chose a non-neon theme, exit terminal and use hash router */
           if (chosenTheme !== 'neon-entropy') {
-            terminalOutput('THEME: ' + (chosenTheme === 'mystic-void' ? 'MYSTIC VOID' : 'SILENT SIGNAL'));
-            terminalOutput('EXITING TERMINAL...');
+            terminalOutput('主题：' + (chosenTheme === 'mystic-void' ? '神秘虚空' : '静默信号'));
+            terminalOutput('正在退出终端...');
             destroyTerminal();
             location.hash = 'decide';
             return;
           }
 
-          terminalOutput('THEME: NEON ENTROPY');
+          terminalOutput('主题：霓虹熵');
           advanceTerminalState('option_a');
         } else {
-          terminalOutput('INVALID SELECTION. PRESS [M], [N], OR [S].');
+          terminalOutput('无效选择。请按 [M]、[N] 或 [S]。');
           _termAcceptingInput = true;
           showTerminalInput();
         }
@@ -871,13 +1033,13 @@ function handleTerminalInput(key) {
 
       case 'option_a':
         S.optionA = value;
-        terminalOutput('OPTION_A: ' + value);
+        terminalOutput('选项A：' + value);
         advanceTerminalState('option_b');
         break;
 
       case 'option_b':
         S.optionB = value;
-        terminalOutput('OPTION_B: ' + value);
+        terminalOutput('选项B：' + value);
         advanceTerminalState('fetching');
         break;
 
@@ -889,7 +1051,7 @@ function handleTerminalInput(key) {
         var q = S.questions[idx];
         S.answers[q.id] = value;
         terminalOutput('> ' + value);
-        terminalOutput('PROCESSING...');
+        terminalOutput('正在处理...');
         /* advance to next sample or processing */
         if (idx + 1 >= S.questions.length) {
           advanceTerminalState('processing');
@@ -925,9 +1087,9 @@ function handleTerminalInput(key) {
 
 async function runFetching() {
   terminalOutput('');
-  await typeOutput('GENERATING SIGNAL SAMPLES...', 30);
-  terminalOutput('SEED: 0x' + Math.random().toString(16).slice(2, 10).toUpperCase());
-  terminalOutput('PROCESSING...');
+  await typeOutput('正在生成信号采样...', 30);
+  terminalOutput('种子：0x' + Math.random().toString(16).slice(2, 10).toUpperCase());
+  terminalOutput('正在处理...');
 
   S.questions = [];
   S.answers = {};
@@ -940,8 +1102,8 @@ async function runFetching() {
     S.currentQuestion = 0;
     advanceTerminalState('sample_1');
   } catch (e) {
-    terminalOutput('ERROR: ' + e.message);
-    terminalOutput('RETRYING IN BOOT...');
+    terminalOutput('错误：' + e.message);
+    terminalOutput('正在重新连接到引导...');
     setTimeout(function () { advanceTerminalState('boot'); }, 2000);
   }
 }
@@ -951,7 +1113,7 @@ async function runSampleQuestion() {
   var q = S.questions[idx];
 
   terminalOutput('');
-  await typeOutput('SAMPLE ' + (idx + 1) + '/4:', 25);
+  await typeOutput('采样 ' + (idx + 1) + '/4：', 25);
   await typeOutput(q.text, 30);
 
   _termAcceptingInput = true;
@@ -960,17 +1122,17 @@ async function runSampleQuestion() {
 
 async function runProcessing() {
   terminalOutput('');
-  await typeOutput('CALCULATING ENTROPY BIAS...', 30);
-  await typeOutput('COLLAPSING PROBABILITY WAVES...', 30);
-  await typeOutput('REALITY_NOISE_STABILIZED...', 30);
+  await typeOutput('正在计算熵偏向...', 30);
+  await typeOutput('正在坍缩概率波...', 30);
+  await typeOutput('现实噪声已稳定。', 30);
 
   try {
     var data = await API.decide(S.theme, S.optionA, S.optionB, S.answers);
     S.result = data;
     advanceTerminalState('result');
   } catch (e) {
-    terminalOutput('ERROR: ' + e.message);
-    terminalOutput('RETURNING TO BOOT...');
+    terminalOutput('错误：' + e.message);
+    terminalOutput('正在返回引导...');
     setTimeout(function () {
       S.optionA = ''; S.optionB = ''; S.questions = [];
       S.answers = {}; S.currentQuestion = 0; S.result = null;
@@ -982,17 +1144,26 @@ async function runProcessing() {
 
 async function runTerminalResult() {
   var r = S.result;
+
+  /* Build centered bias line */
+  var biasText = '检测到世界偏向：' + r.bias;
+  var innerWidth = 34;
+  var padTotal = Math.max(0, innerWidth - biasText.length);
+  var padLeft = Math.floor(padTotal / 2);
+  var padRight = padTotal - padLeft;
+  var biasLine = '║' + ' '.repeat(padLeft) + biasText + ' '.repeat(padRight) + '║';
+
   terminalOutput('');
-  await typeOutput('╔═══════════════════════════════════╗', 15);
-  await typeOutput('║     WORLD BIAS DETECTED: ' + r.bias + '      ║', 15);
-  await typeOutput('╚═══════════════════════════════════╝', 15);
+  await typeOutput('╔' + '═'.repeat(34) + '╗', 15);
+  await typeOutput(biasLine, 15);
+  await typeOutput('╚' + '═'.repeat(34) + '╝', 15);
   terminalOutput('');
   terminalOutput(r.verdict);
   terminalOutput('');
   terminalOutput('"' + r.finalLine + '"');
   terminalOutput('');
-  terminalOutput('──────────────────────────');
-  await typeOutput('Press [R] to restart  [T] for new theme', 25);
+  terminalOutput('─'.repeat(26));
+  await typeOutput('按 [R] 重来  [T] 换主题', 25);
 
   _termAcceptingInput = true;
   showTerminalInput();

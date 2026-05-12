@@ -102,6 +102,7 @@ body {
 .option-input-zen { font-size:1.25rem; border-bottom-color:rgba(0,0,0,0.08); }
 .decision-prompt-neon { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent-2); }
 .decision-prompt-zen { font-size:0.875rem; opacity:0.6; }
+.decision-subtitle-zen { text-align:center; font-size:0.75rem; color:var(--fg-muted); opacity:0.4; margin-top:-16px; margin-bottom:8px; }
 
 /* ─── Mystic Void: Signal Sampling ─── */
 .sample-view { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%; min-height:100dvh; gap:32px; position:relative; }
@@ -306,22 +307,22 @@ body {
    WORLD 3: SILENT SIGNAL — Digital Zen
    ═══════════════════════════════════════════ */
 [data-theme="silent-signal"] {
-  --bg: #F5F0EB;
+  --bg: #F7F3ED;
   --card: transparent;
-  --accent: #1A1A1A;
-  --accent-glow: rgba(0,0,0,0.03);
-  --accent-2: #1A1A1A;
-  --fg: #1A1A1A;
-  --fg-muted: #8A8580;
-  --border: rgba(0,0,0,0.06);
+  --accent: #3A3430;
+  --accent-glow: rgba(0,0,0,0.02);
+  --accent-2: #3A3430;
+  --fg: #2C2622;
+  --fg-muted: #9A928C;
+  --border: rgba(0,0,0,0.05);
   --input-bg: transparent;
   --font-display: 'Noto Serif SC', serif;
   --font-body: 'Inter', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   --font-cn: 'Noto Serif SC', serif;
-  --transition: 800ms cubic-bezier(0.4,0,0.2,1);
-  --transition-slow: 1500ms cubic-bezier(0.4,0,0.2,1);
-  --transition-fast: 400ms ease;
+  --transition: 900ms cubic-bezier(0.4,0,0.2,1);
+  --transition-slow: 1800ms cubic-bezier(0.4,0,0.2,1);
+  --transition-fast: 500ms ease;
 }
 
 [data-theme="silent-signal"] { color: var(--fg); background: var(--bg); }
@@ -330,8 +331,66 @@ body {
 /* ─── Silent Signal: Keyframes ─── */
 @keyframes zenReveal { 0%{opacity:0;filter:blur(4px)} 100%{opacity:1;filter:blur(0)} }
 @keyframes zenFadeOut { to { opacity:0; } }
-@keyframes zenBreathe { 0%,100%{opacity:0.12;transform:scale(1)} 50%{opacity:0.35;transform:scale(1.4)} }
-@keyframes zenFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+@keyframes zenBreathe { 0%,100%{opacity:0.10;transform:scale(1)} 50%{opacity:0.25;transform:scale(1.3)} }
+@keyframes zenFloat1 { 0%,100%{transform:translateY(0) translateX(0)} 25%{transform:translateY(-6px) translateX(3px)} 50%{transform:translateY(-2px) translateX(-2px)} 75%{transform:translateY(-8px) translateX(1px)} }
+@keyframes zenFloat2 { 0%,100%{transform:translateY(0) translateX(0)} 25%{transform:translateY(-4px) translateX(-3px)} 50%{transform:translateY(-9px) translateX(2px)} 75%{transform:translateY(-1px) translateX(-1px)} }
+@keyframes zenFloat3 { 0%,100%{transform:translateY(0) translateX(0)} 25%{transform:translateY(-7px) translateX(1px)} 50%{transform:translateY(0px) translateX(-3px)} 75%{transform:translateY(-5px) translateX(2px)} }
+@keyframes zenFloat4 { 0%,100%{transform:translateY(0) translateX(0)} 25%{transform:translateY(-3px) translateX(-2px)} 50%{transform:translateY(-7px) translateX(3px)} 75%{transform:translateY(-1px) translateX(-1px)} }
+
+/* ─── Silent Signal: Drifting Sentences ─── */
+.sample-view-zen {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  width:100%; min-height:100dvh; position:relative; overflow:hidden;
+  padding:60px 24px;
+}
+.zen-prompt-hint, .zen-subtle-prompt {
+  font-size:0.6875rem; color:var(--fg-muted); opacity:0.35;
+  margin-bottom:40px; text-align:center; letter-spacing:0.1em;
+}
+.zen-sentences, .zen-sentences-container {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:36px; width:100%; position:relative;
+}
+.zen-sentence {
+  font-family:var(--font-cn); font-size:1.25rem; font-weight:400;
+  color:var(--fg); text-align:center; cursor:pointer;
+  padding:16px 24px; position:relative;
+  transition:opacity 800ms, color 600ms;
+  -webkit-tap-highlight-color:transparent; user-select:none;
+  animation-duration:9s; animation-iteration-count:infinite;
+  animation-timing-function:ease-in-out;
+}
+.zen-sentence:nth-child(1) { animation-name:zenFloat1; }
+.zen-sentence:nth-child(2) { animation-name:zenFloat2; animation-delay:-2s; }
+.zen-sentence:nth-child(3) { animation-name:zenFloat3; animation-delay:-4s; }
+.zen-sentence:nth-child(4) { animation-name:zenFloat4; animation-delay:-6s; }
+.zen-sentence:active { color:var(--accent); }
+.zen-sentence.dimmed { opacity:0.12; pointer-events:none; }
+.zen-sentence.selected,
+.zen-sentence-active,
+.zen-sentence-paused {
+  animation-play-state:paused;
+  color:var(--accent);
+  opacity:1;
+}
+.zen-sentence.answered {
+  opacity:0; transform:translateY(-20px);
+  transition:opacity 1.5s,transform 1.5s;
+  pointer-events:none;
+}
+.zen-answer-area {
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+  margin-top:20px; animation:zenReveal 0.8s ease;
+}
+.zen-progress {
+  position:absolute; bottom:40px; font-size:0.625rem;
+  color:var(--fg-muted); opacity:0.25; letter-spacing:0.12em;
+}
+.zen-continue-hint {
+  font-size:0.6875rem; color:var(--fg-muted); opacity:0;
+  transition:opacity 1s; text-align:center; margin-top:24px;
+}
+.zen-continue-hint.visible { opacity:0.3; }
 
 /* ─── Silent Signal: Splash ─── */
 .splash-zen h1 { font-family:var(--font-cn); font-size:1.5rem; font-weight:400; margin-bottom:24px; animation:zenReveal 2s ease; }
@@ -389,6 +448,8 @@ body {
 [data-theme="silent-signal"] .result-signals { display:none; }
 [data-theme="silent-signal"] .result-signals-zen { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:40px; padding-top:28px; border-top:1px solid rgba(0,0,0,0.05); }
 .result-signals-zen { display:none; }
+[data-theme="silent-signal"] .result-signal-entry-zen { padding:8px 0; }
+.result-signal-entry-zen { display:none; }
 [data-theme="silent-signal"] .corner-bracket { display:none; }
 
 /* ═══════════════════════════════════════════
@@ -421,7 +482,7 @@ body {
 .theme-dot[data-t="mystic-void"].active { opacity:1; }
 .theme-dot[data-t="neon-entropy"] { background:#B44DFF; border-color:#B44DFF; opacity:0.3; }
 .theme-dot[data-t="neon-entropy"].active { opacity:1; }
-.theme-dot[data-t="silent-signal"] { background:#1A1A1A; border-color:#1A1A1A; opacity:0.15; }
+.theme-dot[data-t="silent-signal"] { background:#8A8078; border-color:#8A8078; opacity:0.2; }
 .theme-dot[data-t="silent-signal"].active { opacity:1; }
 
 [data-theme="neon-entropy"] .theme-dot { border-radius:0; }
@@ -614,4 +675,5 @@ body {
   .terminal { padding:28px 40px; font-size:0.9375rem; }
   .void-input-line { font-size:1.5rem; }
   .zen-input-line { font-size:1.375rem; }
+  .zen-sentence { font-size:1.5rem; }
 }
