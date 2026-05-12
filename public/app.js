@@ -100,21 +100,22 @@ function renderNav() {
 function renderSplash() {
   $('#app').innerHTML = '';
   const phrases = [
-    '世界正在观察你的选择。',
-    '外部信号已就绪。你需要做一个决定。',
-    '现实偏向正在等待你的问题。',
-    '宇宙的噪声中，有你要的答案。',
+    '纠结的时候，不如换个方式找答案。',
+    '让世界的偶然，替你做一次决定。',
+    '有时候，你只需要一个理由去选。',
+    '现实中有很多你看不到的偏向。',
     '环境熵正在流动。你的选择正在靠近。',
   ];
   const phrase = phrases[Math.floor(Math.random() * phrases.length)];
 
   const splash = el('div', { className: 'splash' });
   splash.appendChild(el('h1', {}, phrase));
+  splash.appendChild(el('p', { className: 'splash-sub' }, '通过随机环境信号，观测世界正偏向哪一边'));
   splash.appendChild(el('div', { className: 'glow-dot' }));
 
   $('#app').appendChild(splash);
 
-  setTimeout(() => { location.hash = 'theme'; }, 3500);
+  setTimeout(() => { location.hash = 'theme'; }, 4000);
 }
 
 // ─── ② Theme Select ───
@@ -156,12 +157,14 @@ function renderDecision() {
   $('#app').innerHTML = '';
   const view = el('div', { className: 'decision-view' });
 
+  view.appendChild(el('p', { className: 'decision-prompt' }, '输入你正在犹豫的两个选择'));
+
   const pair = el('div', { className: 'decision-pair' });
 
   const inputA = el('input', {
     className: 'option-input',
     type: 'text',
-    placeholder: '一个方向...',
+    placeholder: '比如：辞职',
     value: S.optionA,
     oninput: (e) => { S.optionA = e.target.value; },
   });
@@ -174,7 +177,7 @@ function renderDecision() {
   const inputB = el('input', {
     className: 'option-input',
     type: 'text',
-    placeholder: '另一个方向...',
+    placeholder: '比如：留下',
     value: S.optionB,
     oninput: (e) => { S.optionB = e.target.value; },
   });
@@ -186,19 +189,24 @@ function renderDecision() {
 
   view.appendChild(el('button', {
     className: 'btn btn-primary btn-block',
-    onclick: async () => {
+    id: 'decide-btn',
+    onclick: async function () {
       if (!S.optionA.trim() || !S.optionB.trim()) return;
+      const btn = this;
+      btn.textContent = '正在生成信号采样...';
+      btn.disabled = true;
+      S.questions = [];
+      S.answers = {};
+      S.currentQuestion = 0;
+      S.result = null;
       try {
-        S.questions = [];
-        S.answers = {};
-        S.currentQuestion = 0;
-        S.result = null;
-        location.hash = 'loading';
         const data = await API.getQuestions(S.theme, S.optionA.trim(), S.optionB.trim());
         S.questions = data.questions;
         S.currentQuestion = 0;
         location.hash = 'sample';
       } catch (e) {
+        btn.textContent = '开始采样';
+        btn.disabled = false;
         location.hash = 'decide';
         alert(e.message);
       }

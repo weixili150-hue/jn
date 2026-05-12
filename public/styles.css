@@ -104,9 +104,15 @@ body {
   font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: 0.04em;
-  margin-bottom: 40px;
+  margin-bottom: 16px;
   filter: blur(0px);
   animation: unblur 2s ease;
+}
+.splash .splash-sub {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 36px;
+  line-height: 1.6;
 }
 .splash .glow-dot {
   width: 4px;
@@ -173,6 +179,12 @@ body {
   width: 100%;
   min-height: 100dvh;
   gap: 32px;
+}
+.decision-prompt {
+  text-align: center;
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+  margin-bottom: 8px;
 }
 .decision-pair {
   display: flex;
@@ -406,6 +418,7 @@ body {
   font-weight: 600;
 }
 .btn-primary:active { opacity: 0.85; }
+.btn-primary:disabled { opacity: 0.5; }
 .btn-block { width: 100%; }
 .btn-link {
   border: none;
