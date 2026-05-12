@@ -427,6 +427,173 @@ body {
 [data-theme="neon-entropy"] .theme-dot { border-radius:0; }
 [data-theme="silent-signal"] .theme-dot { width:6px; height:6px; }
 
+/* ═══════════════════════════════════════════
+   MYSTIC VOID: Ritual Classes
+   ═══════════════════════════════════════════ */
+
+/* Floating choice text — no button chrome, glows on touch */
+.void-floating-choice {
+  display:inline-block; padding:10px 18px; margin:6px;
+  font-family:var(--font-display); font-size:1.0625rem;
+  color:var(--fg); background:transparent; border:none;
+  cursor:pointer; transition:color 400ms,text-shadow 400ms;
+  -webkit-tap-highlight-color:transparent; user-select:none;
+  min-height:44px; min-width:44px;
+}
+.void-floating-choice:active,
+.void-floating-choice:hover { color:var(--accent); text-shadow:0 0 20px var(--accent-glow); }
+
+/* Dissolve-out: question blurs, fades, rises */
+@keyframes voidDissolve {
+  0% { opacity:1; filter:blur(0); transform:translateY(0) scale(1); }
+  100% { opacity:0; filter:blur(16px); transform:translateY(-24px) scale(1.04); }
+}
+.void-dissolve { animation:voidDissolve 1.2s cubic-bezier(0.4,0,0.6,1) forwards; }
+
+/* Borderless input line — fades in on focus */
+.void-input-line {
+  width:100%; max-width:360px; padding:16px 0;
+  font-family:var(--font-display); font-size:1.25rem; font-weight:400;
+  color:var(--fg); background:transparent;
+  border:none; border-bottom:1px solid rgba(255,255,255,0.06);
+  outline:none; text-align:center;
+  transition:border-color 600ms;
+}
+.void-input-line:focus { border-bottom-color:var(--accent); }
+.void-input-line::placeholder { color:var(--fg-muted); opacity:0.25; }
+
+/* Star progress dots */
+.void-star-progress {
+  display:flex; gap:14px; position:absolute; bottom:60px;
+}
+.void-star {
+  width:5px; height:5px; border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  transition:background 600ms,box-shadow 600ms;
+}
+.void-star-lit {
+  background:var(--accent);
+  box-shadow:0 0 8px var(--accent-glow);
+}
+
+/* ═══════════════════════════════════════════
+   NEON ENTROPY: Terminal Emulator
+   ═══════════════════════════════════════════ */
+
+[data-theme="neon-entropy"] #app { max-width:100%; padding:0; }
+
+#terminal-app {
+  width:100%; min-height:100dvh; display:flex; flex-direction:column;
+  position:relative; z-index:3;
+}
+.terminal {
+  flex:1; display:flex; flex-direction:column;
+  padding:20px 20px 20px 20px;
+  font-family:'JetBrains Mono',monospace; font-size:0.8125rem;
+  line-height:1.7; color:var(--fg);
+  min-height:100dvh;
+}
+.terminal-output {
+  flex:1; overflow-y:auto; padding-bottom:20px;
+  white-space:pre-wrap; word-break:break-all;
+}
+.term-line { min-height:1.4em; }
+.term-line.system { color:var(--fg-muted); }
+.term-line.question { color:var(--accent-2); }
+.term-line.result-bias-line {
+  color:var(--accent); font-size:1.125rem; text-align:center;
+  padding:8px 0; letter-spacing:0.1em;
+}
+
+.terminal-input-line {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 0; border-top:1px solid var(--border);
+  position:relative;
+}
+.terminal-prompt { color:var(--accent-2); white-space:nowrap; }
+.terminal-input-text { color:var(--fg); min-width:1px; }
+.terminal-cursor {
+  display:inline-block; width:8px; height:16px;
+  background:var(--accent-2);
+  animation:terminalBlink 1s step-end infinite;
+}
+@keyframes terminalBlink {
+  0%,100%{opacity:1} 50%{opacity:0}
+}
+
+/* Terminal glitch */
+@keyframes terminalGlitch {
+  0%{transform:translate(0)} 10%{transform:translate(-3px,1px)} 12%{transform:translate(2px,-1px)} 14%{transform:translate(0)}
+  80%{transform:translate(0)} 82%{filter:brightness(1.4)} 84%{filter:brightness(1)} 86%{transform:translate(1px)} 88%{transform:translate(0)}
+}
+.terminal-glitch { animation:terminalGlitch 0.3s ease; }
+
+/* Terminal report block */
+.terminal-report {
+  margin:16px 0; padding:12px 16px;
+  border:1px solid var(--accent);
+  color:var(--accent); text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  animation:neonPunchIn 400ms ease;
+}
+
+/* CRT scanline bar */
+.terminal-scanline-bar {
+  position:fixed; left:0; width:100%; height:2px;
+  background:rgba(180,77,255,0.15);
+  pointer-events:none; z-index:4;
+  animation:neonScanline 3.5s linear infinite;
+}
+
+/* Typewriter cursor doesn't need extra animation beyond terminalBlink */
+
+/* ═══════════════════════════════════════════
+   SILENT SIGNAL: Zen Classes
+   ═══════════════════════════════════════════ */
+
+/* Ultra-thin input line */
+.zen-input-line {
+  width:100%; max-width:400px; padding:16px 0 12px;
+  font-family:var(--font-cn); font-size:1.125rem; font-weight:300;
+  color:var(--fg); background:transparent;
+  border:none; border-bottom:1px solid rgba(0,0,0,0.08);
+  outline:none; text-align:center;
+  transition:border-color 800ms;
+}
+.zen-input-line:focus { border-bottom-color:var(--accent); }
+.zen-input-line::placeholder { color:var(--fg-muted); opacity:0.2; }
+
+/* Emerge animation — slow blur→clear */
+@keyframes zenEmerge {
+  0% { opacity:0; filter:blur(6px); transform:translateY(6px); }
+  100% { opacity:1; filter:blur(0); transform:translateY(0); }
+}
+.zen-emerge { animation:zenEmerge 2s cubic-bezier(0.4,0,0.2,1); }
+
+/* Result line for Silent Signal */
+.zen-result-line {
+  font-family:var(--font-cn); font-size:1.125rem; font-weight:400;
+  line-height:1.9; text-align:center; opacity:0;
+  animation:zenEmerge 2.5s cubic-bezier(0.4,0,0.2,1) forwards;
+  margin-bottom:20px;
+}
+
+/* Button as plain text — no chrome */
+.btn-zen-text {
+  display:inline-block; padding:12px 0;
+  font-family:var(--font-cn); font-size:0.9375rem;
+  color:var(--fg-muted); background:transparent; border:none;
+  cursor:pointer; text-decoration:none;
+  transition:color 600ms; -webkit-tap-highlight-color:transparent;
+}
+.btn-zen-text:active { color:var(--accent); }
+
+/* Ink ripple is handled by canvas, no CSS needed */
+
+/* ═══════════════════════════════════════════
+   TRANSITIONS
+   ═══════════════════════════════════════════ */
+
 /* ─── Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
@@ -444,4 +611,7 @@ body {
   [data-theme="mystic-void"] .result-bias-void { font-size:4rem; }
   [data-theme="neon-entropy"] .result-bias-neon { font-size:3.5rem; }
   [data-theme="silent-signal"] .result-bias-zen { font-size:3.5rem; }
+  .terminal { padding:28px 40px; font-size:0.9375rem; }
+  .void-input-line { font-size:1.5rem; }
+  .zen-input-line { font-size:1.375rem; }
 }

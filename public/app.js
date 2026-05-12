@@ -1,74 +1,10 @@
 /* ═══════════════════════════════════════
    Entropy Observer — Frontend SPA
-   Hash router, 6 view states, vanilla JS
-   Three worlds: theme-branched interactions,
-   timing, and DOM structure
+   Three engines: Mystic Void, Silent Signal, Neon Entropy
    ═══════════════════════════════════════ */
 
-// ─── Theme Configuration ───
-const THEME = {
-  timing: {
-    splash: { 'mystic-void': 4000, 'neon-entropy': 2500, 'silent-signal': 5000 },
-    questionEnter: { 'mystic-void': 800, 'neon-entropy': 300, 'silent-signal': 1500 },
-    questionExit: { 'mystic-void': 500, 'neon-entropy': 150, 'silent-signal': 1200 },
-    phraseCycle: { 'mystic-void': 3500, 'neon-entropy': 1500, 'silent-signal': 5000 },
-    themeTransition: { 'mystic-void': 600, 'neon-entropy': 200, 'silent-signal': 1000 },
-    questionNext: { 'mystic-void': 500, 'neon-entropy': 200, 'silent-signal': 800 },
-  },
-  inputAnimation: {
-    'mystic-void': 'voidUnblur',
-    'neon-entropy': 'neonGlitchIn',
-    'silent-signal': 'zenReveal',
-  },
-  exitAnimation: {
-    'mystic-void': 'voidFadeOut',
-    'neon-entropy': 'neonGlitchOut',
-    'silent-signal': 'zenFadeOut',
-  },
-  splashPhrases: {
-    'mystic-void': [
-      '纠结的时候，不如换个方式找答案。',
-      '让世界的偶然，替你做一次决定。',
-      '命运并非随机，只是观测的角度不同。',
-      '宇宙的熵在流动，你的答案正在生成。',
-      '每一个犹豫，都是对可能性的尊重。',
-    ],
-    'neon-entropy': [
-      '系统就绪。现实数据流已接入。',
-      '熵值扫描启动。世界偏差即将揭示。',
-      '信号已同步。等待不是选项。',
-      '数据不会犹豫。让环境替你决策。',
-      '初始化完成。按下按钮，接受真相。',
-    ],
-    'silent-signal': [
-      '静下来，答案自然会浮现。',
-      '不急着选。看看世界怎么说。',
-      '呼吸。然后让一切都慢下来。',
-      '你不需要想太多。',
-      '轻轻放下纠结。环境会告诉你方向。',
-    ],
-  },
-  loadingPhrases: {
-    'mystic-void': [
-      '正在同步环境熵...',
-      '外部信号聚集中...',
-      '世界偏向正在收敛...',
-    ],
-    'neon-entropy': [
-      'SCANNING_ENV...',
-      'ENTROPY_CALC...',
-      'REALITY_BIAS_DETECTED...',
-      'WORLD_CONVERGING...',
-    ],
-    'silent-signal': [
-      '...',
-      '......',
-      '.........',
-    ],
-  },
-};
+// ─── Shared Infrastructure ───
 
-// ─── API ───
 const API = {
   async post(path, body) {
     const res = await fetch(path, {
@@ -88,7 +24,6 @@ const API = {
   },
 };
 
-// ─── State ───
 const S = {
   theme: 'mystic-void',
   optionA: '',
@@ -99,7 +34,6 @@ const S = {
   result: null,
 };
 
-// ─── Helpers ───
 const $ = (sel) => document.querySelector(sel);
 const el = (tag, attrs, ...children) => {
   const e = document.createElement(tag);
@@ -123,6 +57,7 @@ function setTheme(theme) {
 }
 
 // ─── Loading Cleanup ───
+
 let _loadingCleanup = null;
 
 function clearLoadingCleanup() {
@@ -132,9 +67,54 @@ function clearLoadingCleanup() {
   }
 }
 
-// ─── Router ───
+// ─── Splash Phrase Pools ───
+
+const MYSTIC_PHRASES = [
+  '纠结的时候，不如换个方式找答案。',
+  '让世界的偶然，替你做一次决定。',
+  '命运并非随机，只是观测的角度不同。',
+  '宇宙的熵在流动，你的答案正在生成。',
+  '每一个犹豫，都是对可能性的尊重。',
+];
+
+const ZEN_PHRASES = [
+  '静下来，答案自然会浮现。',
+  '不急着选。看看世界怎么说。',
+  '呼吸。然后让一切都慢下来。',
+  '你不需要想太多。',
+  '轻轻放下纠结。环境会告诉你方向。',
+];
+
+// ─── Share Helper ───
+
+function shareResult(r) {
+  const T = S.theme;
+  let shareText;
+  if (T === 'neon-entropy') {
+    shareText = '// ENTROPY_OBSERVATION_REPORT\n\nWORLD BIAS: ' + r.bias + '\n"' + r.finalLine + '"\n\n—— Entropy Observer';
+  } else {
+    shareText = '\u{1F52E} 环境熵观测\n\n世界偏向 ' + r.bias + '\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
+  }
+  if (navigator.share) {
+    navigator.share({ title: '环境熵观测', text: shareText }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(shareText).then(
+      () => alert(T === 'neon-entropy' ? 'COPIED' : '已复制分享文案'),
+      () => {}
+    );
+  }
+}
+
+// ═══════════════════════════════════════════
+//  ROUTER
+// ═══════════════════════════════════════════
+
 function route() {
   const hash = location.hash.slice(1) || 'splash';
+  if (S.theme === 'neon-entropy' && hash !== 'splash') {
+    if (!window._terminalActive) startTerminal();
+    return;
+  }
   renderNav();
   switch (hash) {
     case 'splash': renderSplash(); break;
@@ -146,17 +126,23 @@ function route() {
     default: location.hash = 'splash';
   }
 }
+
 window.addEventListener('hashchange', () => {
+  if (S.theme === 'neon-entropy' && location.hash.slice(1) !== 'splash') return;
   clearLoadingCleanup();
   route();
 });
+
 window.addEventListener('load', () => {
   const saved = localStorage.getItem('entropy-theme');
   if (saved) setTheme(saved);
   route();
 });
 
-// ─── Theme Switcher Dots ───
+// ═══════════════════════════════════════════
+//  NAV — Theme Switcher Dots
+// ═══════════════════════════════════════════
+
 function renderNav() {
   const existing = $('#theme-switcher');
   if (existing) existing.remove();
@@ -165,67 +151,79 @@ function renderNav() {
 
   const dots = el('div', { id: 'theme-switcher', className: 'theme-switcher' });
   const themes = ['mystic-void', 'neon-entropy', 'silent-signal'];
+
   for (const t of themes) {
     dots.appendChild(el('div', {
       className: 'theme-dot' + (S.theme === t ? ' active' : ''),
       'data-t': t,
-      onclick: () => { setTheme(t); renderNav(); },
+      onclick: () => {
+        const prevTheme = S.theme;
+        setTheme(t);
+
+        if (t === 'neon-entropy') {
+          clearLoadingCleanup();
+          destroyTerminal();
+          startTerminal();
+        } else if (prevTheme === 'neon-entropy' && window._terminalActive) {
+          destroyTerminal();
+          location.hash = 'splash';
+        } else {
+          clearLoadingCleanup();
+          route();
+        }
+        renderNav();
+      },
     }));
   }
   document.body.appendChild(dots);
 }
 
 // ═══════════════════════════════════════════
-// ① Oracle Splash
+//  ENGINE 1 & 2: MYSTIC VOID + SILENT SIGNAL
+//  (shared function signatures, branched internally)
 // ═══════════════════════════════════════════
+
+// ─── ① Splash ───
+
 function renderSplash() {
+  clearLoadingCleanup();
   $('#app').innerHTML = '';
   const T = S.theme;
-  const phrases = THEME.splashPhrases[T];
-  const phrase = phrases[Math.floor(Math.random() * phrases.length)];
 
-  let splashCls = 'splash';
-  if (T === 'silent-signal') splashCls += ' splash-zen';
+  const pool = T === 'silent-signal' ? ZEN_PHRASES : MYSTIC_PHRASES;
+  const phrase = pool[Math.floor(Math.random() * pool.length)];
 
+  const splashCls = T === 'silent-signal' ? 'splash splash-zen' : 'splash';
   const splash = el('div', { className: splashCls });
 
-  /* --- phrase --- */
-  if (T === 'neon-entropy') {
-    const h1 = el('h1', { className: 'neonGlitchText' });
-    h1.appendChild(el('span', { className: 'neon-prefix' }, '> _ '));
-    h1.appendChild(document.createTextNode(phrase));
-    splash.appendChild(h1);
-  } else {
-    splash.appendChild(el('h1', {}, phrase));
-  }
+  splash.appendChild(el('h1', {}, phrase));
 
-  /* --- subtitle --- */
-  if (T === 'mystic-void') {
-    splash.appendChild(el('p', { className: 'splash-sub' }, '观测世界的环境熵，让它替你做一次选择'));
-  } else if (T === 'neon-entropy') {
-    splash.appendChild(el('p', { className: 'splash-sub' }, '// reality.stream.observe()'));
-  } else {
-    splash.appendChild(el('p', { className: 'splash-sub splash-sub-zen' }, '轻轻点一下。'));
-  }
-
-  /* --- dot --- */
   if (T === 'silent-signal') {
+    splash.appendChild(el('p', { className: 'splash-sub splash-sub-zen' }, '轻轻点一下。'));
     splash.appendChild(el('div', { className: 'ink-dot' }));
   } else {
+    splash.appendChild(el('p', { className: 'splash-sub' }, '观测世界的环境熵，让它替你做一次选择'));
     splash.appendChild(el('div', { className: 'glow-dot' }));
   }
 
   $('#app').appendChild(splash);
 
-  const delay = THEME.timing.splash[T];
+  const delay = T === 'silent-signal' ? 5000 : 4000;
   setTimeout(() => { location.hash = 'theme'; }, delay);
 }
 
-// ═══════════════════════════════════════════
-// ② Theme Select
-// ═══════════════════════════════════════════
+// ─── ② Theme Select ───
+
 function renderThemeSelect() {
+  clearLoadingCleanup();
   $('#app').innerHTML = '';
+
+  /* Silent Signal skips this view entirely */
+  if (S.theme === 'silent-signal') {
+    location.hash = 'decide';
+    return;
+  }
+
   const T = S.theme;
 
   const hour = new Date().getHours();
@@ -239,17 +237,13 @@ function renderThemeSelect() {
     { id: 'silent-signal', name: 'Silent Signal', desc: '冷静、日常、想慢慢想', hint: defaultTheme === 'silent-signal' ? '当前时段推荐' : '' },
   ];
 
-  let viewCls = 'theme-select';
-  if (T === 'silent-signal') viewCls += ' theme-select-zen';
+  const viewCls = T === 'silent-signal' ? 'theme-select theme-select-zen' : 'theme-select';
   const view = el('div', { className: viewCls });
-
-  const transitionDelay = THEME.timing.themeTransition[T];
 
   for (const t of themes) {
     let cardCls = 'theme-card';
     if (defaultTheme === t.id) cardCls += ' selected';
 
-    /* theme-specific selected styling */
     if (defaultTheme === t.id) {
       if (T === 'neon-entropy') cardCls += ' pulse-border';
       else if (T === 'silent-signal') cardCls += ' subtle-selected';
@@ -259,7 +253,13 @@ function renderThemeSelect() {
       className: cardCls,
       onclick: () => {
         setTheme(t.id);
-        setTimeout(() => { location.hash = 'decide'; }, transitionDelay);
+        clearLoadingCleanup();
+        if (t.id === 'neon-entropy') {
+          destroyTerminal();
+          startTerminal();
+        } else {
+          location.hash = 'decide';
+        }
       },
     });
     card.appendChild(el('h3', {}, t.name));
@@ -268,7 +268,6 @@ function renderThemeSelect() {
     if (t.hint) {
       const hintCls = T === 'silent-signal' ? 'hint hint-zen' : 'hint';
       const hintEl = el('span', { className: hintCls }, t.hint);
-      /* Neon Entropy: hint appears instantly */
       if (T === 'neon-entropy') hintEl.style.opacity = '1';
       card.appendChild(hintEl);
     }
@@ -278,61 +277,49 @@ function renderThemeSelect() {
   $('#app').appendChild(view);
 }
 
-// ═══════════════════════════════════════════
-// ③ A/B Decision Input
-// ═══════════════════════════════════════════
+// ─── ③ Decision Input ───
+
 function renderDecision() {
+  clearLoadingCleanup();
   $('#app').innerHTML = '';
   const T = S.theme;
+
   const view = el('div', { className: 'decision-view' });
 
-  /* --- prompt --- */
-  if (T === 'mystic-void') {
-    view.appendChild(el('p', { className: 'decision-prompt' }, '在黑暗中写下你的两个选择'));
-  } else if (T === 'neon-entropy') {
-    view.appendChild(el('p', { className: 'decision-prompt decision-prompt-neon' }, '> INPUT DECISION PARAMETERS'));
-  } else {
+  /* prompt */
+  if (T === 'silent-signal') {
     view.appendChild(el('p', { className: 'decision-prompt decision-prompt-zen' }, '你在犹豫什么？'));
+  } else {
+    view.appendChild(el('p', { className: 'decision-prompt' }, '在黑暗中写下你的犹豫'));
   }
 
-  /* --- input pair --- */
+  /* input pair */
   const pair = el('div', { className: 'decision-pair' });
 
-  /* input A */
-  let inputACls = 'option-input';
-  if (T === 'neon-entropy') inputACls += ' option-input-neon';
-  else if (T === 'silent-signal') inputACls += ' option-input-zen';
+  const inputCls = T === 'silent-signal' ? 'zen-input-line' : 'void-input-line';
+  const placeholderA = T === 'silent-signal' ? '选项一' : '比如：辞职';
+  const placeholderB = T === 'silent-signal' ? '选项二' : '比如：留下';
+
   const inputA = el('input', {
-    className: inputACls,
+    className: inputCls,
     type: 'text',
-    placeholder: T === 'neon-entropy' ? 'OPTION_A' : (T === 'silent-signal' ? '选项一' : '比如：辞职'),
+    placeholder: placeholderA,
     value: S.optionA,
     oninput: (e) => { S.optionA = e.target.value; },
   });
 
-  /* separator */
   const sep = el('div', { className: 'decision-separator' });
-  if (T === 'mystic-void') {
-    sep.textContent = '│';
-  } else if (T === 'neon-entropy') {
-    sep.textContent = '>';
-    sep.style.color = 'var(--accent-2)';
-    sep.style.fontFamily = 'var(--font-mono)';
-  } else {
+  if (T === 'silent-signal') {
     sep.textContent = '·';
-    sep.style.opacity = '0.25';
-    sep.style.fontSize = '1.5rem';
-    sep.style.margin = '8px 0';
+    sep.style.opacity = '0.15';
+  } else {
+    sep.textContent = '│';
   }
 
-  /* input B */
-  let inputBCls = 'option-input';
-  if (T === 'neon-entropy') inputBCls += ' option-input-neon';
-  else if (T === 'silent-signal') inputBCls += ' option-input-zen';
   const inputB = el('input', {
-    className: inputBCls,
+    className: inputCls,
     type: 'text',
-    placeholder: T === 'neon-entropy' ? 'OPTION_B' : (T === 'silent-signal' ? '选项二' : '比如：留下'),
+    placeholder: placeholderB,
     value: S.optionB,
     oninput: (e) => { S.optionB = e.target.value; },
   });
@@ -342,29 +329,21 @@ function renderDecision() {
   pair.appendChild(inputB);
   view.appendChild(pair);
 
-  /* --- button --- */
-  let btnText = '开始观测';
-  let btnLoadingText = '正在生成信号采样...';
-  let btnLoadingClass = 'gold-pulse';
-  if (T === 'neon-entropy') {
-    btnText = 'INITIATE SCAN';
-    btnLoadingText = 'SCANNING...';
-    btnLoadingClass = 'glitch-button';
-  } else if (T === 'silent-signal') {
-    btnText = '开始';
-    btnLoadingText = '...';
-    btnLoadingClass = 'btn-zen-loading';
-  }
+  /* button */
+  const btnText = T === 'silent-signal' ? '开始' : '提交给宇宙';
+  const btnLoadingText = T === 'silent-signal' ? '...' : '提交中...';
+  const btnCls = T === 'silent-signal' ? 'btn-zen-text' : 'btn btn-primary btn-block';
 
   view.appendChild(el('button', {
-    className: 'btn btn-primary btn-block',
+    className: btnCls,
     id: 'decide-btn',
     onclick: async function () {
       if (!S.optionA.trim() || !S.optionB.trim()) return;
       const btn = this;
+      const originalText = btn.textContent;
       btn.textContent = btnLoadingText;
       btn.disabled = true;
-      btn.classList.add(btnLoadingClass);
+      if (T !== 'silent-signal') btn.classList.add('gold-pulse');
       S.questions = [];
       S.answers = {};
       S.currentQuestion = 0;
@@ -375,9 +354,9 @@ function renderDecision() {
         S.currentQuestion = 0;
         location.hash = 'sample';
       } catch (e) {
-        btn.textContent = btnText;
+        btn.textContent = originalText;
         btn.disabled = false;
-        btn.classList.remove(btnLoadingClass);
+        if (T !== 'silent-signal') btn.classList.remove('gold-pulse');
         alert(e.message);
       }
     },
@@ -386,10 +365,10 @@ function renderDecision() {
   $('#app').appendChild(view);
 }
 
-// ═══════════════════════════════════════════
-// ④ Signal Sampling (question flow)
-// ═══════════════════════════════════════════
+// ─── ④ Sample (Question Flow) ───
+
 function renderSample() {
+  clearLoadingCleanup();
   $('#app').innerHTML = '';
   const T = S.theme;
 
@@ -399,240 +378,181 @@ function renderSample() {
   }
 
   const q = S.questions[S.currentQuestion];
-  const entryAnimClass = 'anim-' + THEME.inputAnimation[T];
-  const exitAnimClass = 'anim-' + THEME.exitAnimation[T];
-  const exitDuration = THEME.timing.questionExit[T];
-  const nextDelay = THEME.timing.questionNext[T];
-
   const view = el('div', { className: 'sample-view' });
 
-  /* --- progress dots --- */
-  let dotsCls = 'progress-dots';
-  if (T === 'neon-entropy') dotsCls += ' progress-dots-neon';
-  else if (T === 'silent-signal') dotsCls += ' progress-dots-zen';
-  const dots = el('div', { className: dotsCls });
-  for (let i = 0; i < S.questions.length; i++) {
-    let cls = 'progress-dot';
-    if (T === 'neon-entropy') cls += ' progress-dot-square';
-    else if (T === 'silent-signal') cls += ' progress-dot-zen';
-    if (i < S.currentQuestion) cls += ' done';
-    else if (i === S.currentQuestion) cls += ' current';
-    dots.appendChild(el('div', { className: cls }));
-  }
-
-  /* --- question card --- */
-  let cardCls = 'question-card ' + entryAnimClass;
-  if (T === 'neon-entropy') cardCls += ' question-card-neon';
-  else if (T === 'silent-signal') cardCls += ' question-card-zen';
+  /* question card */
+  const entryAnim = T === 'silent-signal' ? 'anim-zenReveal' : 'anim-voidUnblur';
+  const cardCls = 'question-card ' + entryAnim;
   const card = el('div', { className: cardCls });
 
-  let textCls = 'question-text';
-  if (T === 'neon-entropy') textCls += ' question-text-neon';
-  else if (T === 'silent-signal') textCls += ' question-text-zen';
+  const textCls = T === 'silent-signal' ? 'question-text question-text-zen' : 'question-text';
   card.appendChild(el('div', { className: textCls }, q.text));
 
-  /* --- answer handler --- */
+  /* answer handler */
   function answer(value) {
     S.answers[q.id] = value;
-    card.classList.remove(entryAnimClass);
-    card.classList.add(exitAnimClass);
-    setTimeout(() => {
-      S.currentQuestion++;
-      renderSample();
-    }, exitDuration + nextDelay);
+
+    if (T === 'silent-signal') {
+      /* ink ripple at center of viewport or click position */
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      if (window.Particles && window.Particles.inkRipple) {
+        window.Particles.inkRipple(cx, cy);
+      }
+      /* remove card immediately, wait in silence */
+      if (card.parentNode) card.remove();
+      setTimeout(() => {
+        S.currentQuestion++;
+        renderSample();
+      }, 2500);
+    } else {
+      /* Mystic Void: dissolve exit, then 1500ms darkness */
+      card.classList.remove(entryAnim);
+      card.classList.add('void-dissolve');
+      setTimeout(() => {
+        if (card.parentNode) card.remove();
+        setTimeout(() => {
+          S.currentQuestion++;
+          renderSample();
+        }, 1500);
+      }, 600); /* dissolve animation duration */
+    }
   }
 
-  /* --- input per type --- */
-  if (q.inputType === 'chips' && q.options) {
-    let groupCls = 'chip-group';
-    if (T === 'neon-entropy') groupCls += ' chip-group-neon';
-    else if (T === 'silent-signal') groupCls += ' chip-group-zen';
-    const group = el('div', { className: groupCls });
-    for (const opt of q.options) {
-      let chipCls = 'chip';
-      if (T === 'neon-entropy') chipCls += ' chip-neon';
-      else if (T === 'silent-signal') chipCls += ' chip-zen';
-      group.appendChild(el('button', {
-        className: chipCls,
-        onclick: () => answer(opt),
-      }, opt));
-    }
-    card.appendChild(group);
-  } else if (q.inputType === 'number') {
-    let inputCls = 'sample-input';
-    if (T === 'neon-entropy') inputCls += ' sample-input-neon';
-    else if (T === 'silent-signal') inputCls += ' sample-input-zen';
+  /* input area */
+  if (T === 'silent-signal') {
+    /* Always text input for Silent Signal */
     const input = el('input', {
-      className: inputCls,
-      type: 'number',
-      inputMode: 'numeric',
-      placeholder: q.placeholder || (T === 'neon-entropy' ? 'ENTER_NUMBER...' : '输入数字...'),
-    });
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && input.value) answer(input.value);
-    });
-    card.appendChild(input);
-
-    let confirmText = '确认';
-    if (T === 'neon-entropy') confirmText = 'CONFIRM';
-    card.appendChild(el('button', {
-      className: 'btn btn-primary' + (T === 'neon-entropy' ? ' btn-neon' : ''),
-      style: { marginTop: '20px' },
-      onclick: () => { if (input.value) answer(input.value); },
-    }, confirmText));
-  } else {
-    /* text input */
-    let inputCls = 'sample-input';
-    if (T === 'neon-entropy') inputCls += ' sample-input-neon';
-    else if (T === 'silent-signal') inputCls += ' sample-input-zen';
-    const input = el('input', {
-      className: inputCls,
+      className: 'zen-input-line',
       type: 'text',
-      placeholder: q.placeholder || (T === 'neon-entropy' ? 'ENTER_TEXT...' : '输入...'),
+      placeholder: q.placeholder || '输入...',
     });
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && input.value) answer(input.value);
-    });
-    card.appendChild(input);
+    const inputWrap = el('div', { className: 'sample-input-wrap' }, input);
+    card.appendChild(inputWrap);
 
-    let confirmText = '确认';
-    if (T === 'neon-entropy') confirmText = 'CONFIRM';
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && input.value.trim()) answer(input.value.trim());
+    });
+
     card.appendChild(el('button', {
-      className: 'btn btn-primary' + (T === 'neon-entropy' ? ' btn-neon' : ''),
-      style: { marginTop: '20px' },
-      onclick: () => { if (input.value) answer(input.value); },
-    }, confirmText));
+      className: 'btn-zen-text',
+      style: { marginTop: '24px' },
+      onclick: () => { if (input.value.trim()) answer(input.value.trim()); },
+    }, '确认'));
+  } else {
+    /* Mystic Void: chips for chip questions, void-input-line for text */
+    if (q.inputType === 'chips' && q.options) {
+      const group = el('div', { className: 'void-choice-group' });
+      for (const opt of q.options) {
+        group.appendChild(el('button', {
+          className: 'void-floating-choice',
+          onclick: () => answer(opt),
+        }, opt));
+      }
+      card.appendChild(group);
+    } else {
+      const input = el('input', {
+        className: 'void-input-line',
+        type: q.inputType === 'number' ? 'number' : 'text',
+        inputMode: q.inputType === 'number' ? 'numeric' : undefined,
+        placeholder: q.placeholder || '输入...',
+      });
+      const inputWrap = el('div', { className: 'sample-input-wrap' }, input);
+      card.appendChild(inputWrap);
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && input.value.trim()) answer(input.value.trim());
+      });
+
+      card.appendChild(el('button', {
+        className: 'btn btn-primary',
+        style: { marginTop: '20px' },
+        onclick: () => { if (input.value.trim()) answer(input.value.trim()); },
+      }, '确认'));
+    }
+  }
+
+  /* progress — Mystic Void only (star dots) */
+  if (T !== 'silent-signal') {
+    const progress = el('div', { className: 'void-star-progress' });
+    for (let i = 0; i < S.questions.length; i++) {
+      const starCls = i < S.currentQuestion ? 'void-star-lit' : 'void-star';
+      progress.appendChild(el('div', { className: starCls }));
+    }
+    view.appendChild(progress);
   }
 
   view.appendChild(card);
-  view.appendChild(dots);
   $('#app').appendChild(view);
 }
 
-// ═══════════════════════════════════════════
-// ⑤ Loading Ritual → Result
-// ═══════════════════════════════════════════
+// ─── ⑤ Loading Ritual ───
+
 function renderLoading() {
-  $('#app').innerHTML = '';
   clearLoadingCleanup();
+  $('#app').innerHTML = '';
   const T = S.theme;
   const cleanupFns = [];
 
-  const overlay = el('div', { className: 'loading-overlay' });
+  if (T === 'silent-signal') {
+    /* Silent Signal: white/cream overlay, ink-dot breathing */
+    const overlay = el('div', { className: 'loading-overlay loading-overlay-zen' });
 
-  /* ─── Mystic Void: gold pulse dot + particles + radial glow ─── */
-  if (T === 'mystic-void') {
-    /* radial glow background */
-    overlay.appendChild(el('div', { className: 'loading-radial-glow' }));
-
-    /* particle canvas */
-    const canvas = el('canvas', { className: 'loading-particles' });
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const particles = [];
-    for (let i = 0; i < 35; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const dist = Math.random() * Math.max(canvas.width, canvas.height) * 0.6 + 80;
-      particles.push({
-        x: centerX + Math.cos(angle) * dist,
-        y: centerY + Math.sin(angle) * dist,
-        size: Math.random() * 1.8 + 0.4,
-        alpha: Math.random() * 0.35 + 0.05,
-        speed: Math.random() * 0.4 + 0.2,
-        angle: angle,
-        dist: dist,
-      });
-    }
-    let animId;
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const p of particles) {
-        p.dist -= p.speed;
-        if (p.dist < 4) {
-          p.dist = Math.max(canvas.width, canvas.height) * 0.55 + Math.random() * 100;
-          p.angle = Math.random() * Math.PI * 2;
-        }
-        p.x = centerX + Math.cos(p.angle) * p.dist;
-        p.y = centerY + Math.sin(p.angle) * p.dist;
-        const fadeIn = Math.min(1, (Math.max(canvas.width, canvas.height) * 0.55 - p.dist + 100) / 160);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(196,163,90,' + (p.alpha * fadeIn) + ')';
-        ctx.fill();
-      }
-      animId = requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
-    cleanupFns.push(() => cancelAnimationFrame(animId));
-
-    /* glow dot */
-    const animContainer = el('div', { className: 'loading-animation' });
-    animContainer.appendChild(el('div', { className: 'glow-dot loading-center-dot' }));
-    overlay.appendChild(animContainer);
-
-    /* phrase cycling */
-    const phrases = THEME.loadingPhrases[T];
-    const phraseEl = el('div', { className: 'loading-phrase' }, phrases[0]);
-    overlay.appendChild(phraseEl);
-    let phraseIdx = 0;
-    const cycle = setInterval(() => {
-      phraseIdx = (phraseIdx + 1) % phrases.length;
-      phraseEl.textContent = phrases[phraseIdx];
-    }, THEME.timing.phraseCycle[T]);
-    cleanupFns.push(() => clearInterval(cycle));
-  }
-
-  /* ─── Neon Entropy: grid bg + progress bar + scanline + fast status cycling ─── */
-  else if (T === 'neon-entropy') {
-    /* grid background */
-    overlay.appendChild(el('div', { className: 'loading-grid-bg' }));
-
-    /* scanline */
-    overlay.appendChild(el('div', { className: 'loading-scanline' }));
-
-    /* animated gradient progress bar */
-    const progressContainer = el('div', { className: 'loading-progress-container' });
-    const progressBar = el('div', { className: 'loading-progress-bar' });
-    const progressGlow = el('div', { className: 'loading-progress-glow' });
-    progressContainer.appendChild(progressGlow);
-    progressContainer.appendChild(progressBar);
-    overlay.appendChild(progressContainer);
-
-    /* status text cycling */
-    const statuses = THEME.loadingPhrases[T];
-    let statusIdx = 0;
-    const statusEl = el('div', { className: 'loading-status' }, statuses[0]);
-    overlay.appendChild(statusEl);
-    const cycle = setInterval(() => {
-      statusIdx = (statusIdx + 1) % statuses.length;
-      statusEl.textContent = statuses[statusIdx];
-    }, THEME.timing.phraseCycle[T]);
-    cleanupFns.push(() => clearInterval(cycle));
-  }
-
-  /* ─── Silent Signal: ink dot + very slow phrase ─── */
-  else {
-    /* ink dot */
     const animContainer = el('div', { className: 'loading-animation loading-animation-zen' });
     animContainer.appendChild(el('div', { className: 'ink-dot loading-center-dot' }));
     overlay.appendChild(animContainer);
 
-    /* phrase cycling (very slow) */
-    const phrases = THEME.loadingPhrases[T];
+    /* phrase cycling every 6s */
+    const phrases = ['...', '......', '.........'];
     const phraseEl = el('div', { className: 'loading-phrase loading-phrase-zen' }, phrases[0]);
     overlay.appendChild(phraseEl);
     let phraseIdx = 0;
     const cycle = setInterval(() => {
       phraseIdx = (phraseIdx + 1) % phrases.length;
       phraseEl.textContent = phrases[phraseIdx];
-    }, THEME.timing.phraseCycle[T]);
+    }, 6000);
     cleanupFns.push(() => clearInterval(cycle));
-  }
 
-  $('#app').appendChild(overlay);
+    $('#app').appendChild(overlay);
+
+    /* trigger prominent breathing on particles canvas */
+    if (window.Particles && window.Particles.breathMode) {
+      window.Particles.breathMode(1.0);
+    }
+  } else {
+    /* Mystic Void: dark overlay, glow-dot breathing, radial glow, converging particles */
+    const overlay = el('div', { className: 'loading-overlay' });
+
+    /* radial glow */
+    overlay.appendChild(el('div', { className: 'loading-radial-glow' }));
+
+    /* glow dot breathing */
+    const animContainer = el('div', { className: 'loading-animation' });
+    animContainer.appendChild(el('div', { className: 'glow-dot loading-center-dot' }));
+    overlay.appendChild(animContainer);
+
+    /* phrase cycling every 4s */
+    const phrases = [
+      '正在同步环境熵...',
+      '外部信号聚集中...',
+      '世界偏向正在收敛...',
+    ];
+    const phraseEl = el('div', { className: 'loading-phrase' }, phrases[0]);
+    overlay.appendChild(phraseEl);
+    let phraseIdx = 0;
+    const cycle = setInterval(() => {
+      phraseIdx = (phraseIdx + 1) % phrases.length;
+      phraseEl.textContent = phrases[phraseIdx];
+    }, 4000);
+    cleanupFns.push(() => clearInterval(cycle));
+
+    $('#app').appendChild(overlay);
+
+    /* converge particles */
+    if (window.Particles && window.Particles.convergeParticles) {
+      window.Particles.convergeParticles();
+    }
+  }
 
   _loadingCleanup = () => {
     for (const fn of cleanupFns) fn();
@@ -652,18 +572,67 @@ function renderLoading() {
     });
 }
 
-// ═══════════════════════════════════════════
-// ⑥ Result
-// ═══════════════════════════════════════════
+// ─── ⑥ Result ───
+
 function renderResult() {
+  clearLoadingCleanup();
   $('#app').innerHTML = '';
   if (!S.result) { location.hash = 'decide'; return; }
 
   const T = S.theme;
   const r = S.result;
 
-  /* ─── Mystic Void: gold-bordered card ─── */
-  if (T === 'mystic-void') {
+  if (T === 'silent-signal') {
+    /* Silent Signal: no card, whitespace, timed reveals */
+    const view = el('div', { className: 'result-view-zen' });
+
+    view.appendChild(el('div', { className: 'result-label-zen' }, '观测报告'));
+    view.appendChild(el('div', { className: 'result-bias-zen' }, '偏向 ' + r.bias));
+
+    /* verdict — revealed after 1.5s */
+    const verdictEl = el('div', { className: 'result-verdict-zen', style: { opacity: '0', transition: 'opacity 1.5s ease' } }, r.verdict);
+    view.appendChild(verdictEl);
+    setTimeout(() => { verdictEl.style.opacity = '1'; }, 1500);
+
+    /* final line — revealed after 3.5s (1.5s + 2s) */
+    const finalEl = el('div', { className: 'result-final-zen', style: { opacity: '0', transition: 'opacity 2s ease' } }, r.finalLine);
+    view.appendChild(finalEl);
+    setTimeout(() => { finalEl.style.opacity = '1'; }, 3500);
+
+    /* interpretation */
+    view.appendChild(el('div', { className: 'result-interpretation-zen' }, r.interpretation));
+
+    /* signals */
+    if (r.signals) {
+      const signals = el('div', { className: 'result-signals-zen' });
+      for (const s of r.signals) {
+        signals.appendChild(el('div', { className: 'result-signal-entry-zen' },
+          el('div', { className: 'result-signal-label' }, s.label),
+          el('div', { className: 'result-signal-value' }, s.value),
+        ));
+      }
+      view.appendChild(signals);
+    }
+
+    /* buttons — barely visible */
+    view.appendChild(el('button', {
+      className: 'btn-zen-subtle',
+      onclick: () => {
+        S.optionA = ''; S.optionB = ''; S.questions = [];
+        S.answers = {}; S.currentQuestion = 0; S.result = null;
+        location.hash = 'decide';
+      },
+    }, '重新决策'));
+
+    view.appendChild(el('button', {
+      className: 'btn-zen-subtle',
+      style: { marginTop: '12px' },
+      onclick: () => shareResult(r),
+    }, '分享'));
+
+    $('#app').appendChild(view);
+  } else {
+    /* Mystic Void: gold-bordered card */
     const view = el('div', { className: 'result-view' });
     const card = el('div', { className: 'result-card result-card-void' });
 
@@ -676,7 +645,7 @@ function renderResult() {
     if (r.signals) {
       const signals = el('div', { className: 'result-signals' });
       for (const s of r.signals) {
-        signals.appendChild(el('div', {},
+        signals.appendChild(el('div', { className: 'result-signal-entry' },
           el('div', { className: 'result-signal-label' }, s.label),
           el('div', { className: 'result-signal-value' }, s.value),
         ));
@@ -703,114 +672,385 @@ function renderResult() {
 
     $('#app').appendChild(view);
   }
+}
 
-  /* ─── Neon Entropy: terminal frame with brackets ─── */
-  else if (T === 'neon-entropy') {
-    const view = el('div', { className: 'result-view' });
-    const frame = el('div', { className: 'result-card result-card-neon' });
+// ═══════════════════════════════════════════
+//  ENGINE 3: NEON ENTROPY — Full Terminal
+// ═══════════════════════════════════════════
 
-    /* decorative corner brackets */
-    const bracketTL = el('div', { className: 'corner-bracket corner-tl' }, '┌──');
-    const bracketTR = el('div', { className: 'corner-bracket corner-tr' }, '──┐');
-    const bracketBL = el('div', { className: 'corner-bracket corner-bl' }, '└──');
-    const bracketBR = el('div', { className: 'corner-bracket corner-br' }, '──┘');
-    frame.appendChild(bracketTL);
-    frame.appendChild(bracketTR);
-    frame.appendChild(bracketBL);
-    frame.appendChild(bracketBR);
+window._terminalActive = false;
 
-    frame.appendChild(el('div', { className: 'result-label result-label-neon' }, '// ENTROPY_OBSERVATION_REPORT'));
-    frame.appendChild(el('div', { className: 'result-bias result-bias-neon' }, 'WORLD BIAS: ' + r.bias));
-    frame.appendChild(el('div', { className: 'result-verdict result-verdict-neon' }, '> ' + r.verdict));
-    frame.appendChild(el('div', { className: 'result-interpretation' }, r.interpretation));
-    frame.appendChild(el('div', { className: 'result-final result-final-neon' }, r.finalLine));
+let _termState = 'boot';
+let _termInputBuffer = '';
+let _termAcceptingInput = false;
+let _termKeydownHandler = null;
 
-    if (r.signals) {
-      const signals = el('div', { className: 'result-signals result-signals-neon' });
-      for (const s of r.signals) {
-        const entry = el('div', { className: 'result-signal-entry-neon' });
-        entry.appendChild(el('div', { className: 'result-signal-label result-signal-label-neon' }, s.label));
-        entry.appendChild(el('div', { className: 'result-signal-value result-signal-value-neon' }, s.value));
-        signals.appendChild(entry);
-      }
-      frame.appendChild(signals);
-    }
-
-    view.appendChild(frame);
-
-    view.appendChild(el('button', {
-      className: 'btn btn-primary btn-block btn-neon',
-      onclick: () => {
-        S.optionA = ''; S.optionB = ''; S.questions = [];
-        S.answers = {}; S.currentQuestion = 0; S.result = null;
-        location.hash = 'decide';
-      },
-    }, 'NEW SCAN'));
-
-    view.appendChild(el('button', {
-      className: 'btn btn-link btn-link-neon',
-      style: { marginTop: '8px' },
-      onclick: () => shareResult(r),
-    }, 'SHARE'));
-
-    $('#app').appendChild(view);
+function destroyTerminal() {
+  if (!window._terminalActive) return;
+  window._terminalActive = false;
+  _termAcceptingInput = false;
+  _termInputBuffer = '';
+  if (_termKeydownHandler) {
+    document.removeEventListener('keydown', _termKeydownHandler);
+    _termKeydownHandler = null;
   }
+  $('#app').innerHTML = '';
+}
 
-  /* ─── Silent Signal: no card, just text in whitespace ─── */
-  else {
-    const view = el('div', { className: 'result-view result-view-zen' });
+function typeOutput(text, speed) {
+  speed = speed || 30;
+  return new Promise(function (resolve) {
+    var termOutput = $('#term-output');
+    if (!termOutput) { resolve(); return; }
+    var line = document.createElement('div');
+    line.className = 'term-line';
+    termOutput.appendChild(line);
+    termOutput.scrollTop = termOutput.scrollHeight;
+    var i = 0;
+    function type() {
+      if (i < text.length) {
+        line.textContent += text[i];
 
-    view.appendChild(el('div', { className: 'result-label result-label-zen' }, '观测报告'));
-    view.appendChild(el('div', { className: 'result-bias result-bias-zen' }, '偏向 ' + r.bias));
-    view.appendChild(el('div', { className: 'result-verdict result-verdict-zen' }, r.verdict));
-    view.appendChild(el('div', { className: 'result-interpretation result-interpretation-zen' }, r.interpretation));
-    view.appendChild(el('div', { className: 'result-final result-final-zen' }, r.finalLine));
+        /* 2% glitch chance per character */
+        if (Math.random() < 0.02) {
+          var terminal = $('.terminal');
+          if (terminal) {
+            terminal.classList.add('terminal-glitch');
+            setTimeout(function () { terminal.classList.remove('terminal-glitch'); }, 150);
+          }
+        }
 
-    if (r.signals) {
-      const signals = el('div', { className: 'result-signals result-signals-zen' });
-      for (const s of r.signals) {
-        signals.appendChild(el('div', {},
-          el('div', { className: 'result-signal-label' }, s.label),
-          el('div', { className: 'result-signal-value' }, s.value),
-        ));
+        i++;
+        termOutput.scrollTop = termOutput.scrollHeight;
+        setTimeout(type, speed);
+      } else {
+        resolve();
       }
-      view.appendChild(signals);
     }
+    type();
+  });
+}
 
-    view.appendChild(el('button', {
-      className: 'btn btn-block btn-zen',
-      onclick: () => {
-        S.optionA = ''; S.optionB = ''; S.questions = [];
-        S.answers = {}; S.currentQuestion = 0; S.result = null;
-        location.hash = 'decide';
-      },
-    }, '重新决策'));
+function terminalOutput(text) {
+  var termOutput = $('#term-output');
+  if (!termOutput) return;
+  var line = document.createElement('div');
+  line.className = 'term-line';
+  line.textContent = text;
+  termOutput.appendChild(line);
+  termOutput.scrollTop = termOutput.scrollHeight;
+}
 
-    view.appendChild(el('button', {
-      className: 'btn btn-link',
-      style: { marginTop: '16px' },
-      onclick: () => shareResult(r),
-    }, '分享'));
-
-    $('#app').appendChild(view);
+function updateTerminalPrompt() {
+  var prompt = $('#term-input-line .terminal-prompt');
+  if (prompt) {
+    prompt.textContent = '> ' + _termInputBuffer;
   }
 }
 
-// ─── Share Helper ───
-function shareResult(r) {
-  const T = S.theme;
-  let shareText;
-  if (T === 'neon-entropy') {
-    shareText = '// ENTROPY_OBSERVATION_REPORT\n\nWORLD BIAS: ' + r.bias + '\n"' + r.finalLine + '"\n\n—— Entropy Observer';
-  } else {
-    shareText = '\u{1F52E} 环境熵观测\n\n世界偏向 ' + r.bias + '\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
+function showTerminalInput() {
+  var inputLine = $('#term-input-line');
+  if (inputLine) inputLine.style.display = 'flex';
+  updateTerminalPrompt();
+}
+
+function hideTerminalInput() {
+  var inputLine = $('#term-input-line');
+  if (inputLine) inputLine.style.display = 'none';
+}
+
+function advanceTerminalState(newState) {
+  _termState = newState;
+  _termInputBuffer = '';
+  handleTerminalState();
+}
+
+async function handleTerminalState() {
+  if (!window._terminalActive) return;
+  _termAcceptingInput = false;
+  hideTerminalInput();
+
+  switch (_termState) {
+    case 'boot':
+      await runBootSequence();
+      break;
+    case 'theme_select':
+      await typeOutput('SELECT THEME: [M]YSTIC VOID  [N]EON ENTROPY  [S]ILENT SIGNAL', 30);
+      _termAcceptingInput = true;
+      showTerminalInput();
+      break;
+    case 'option_a':
+      terminalOutput('');
+      terminalOutput('INPUT DECISION PARAMETERS:');
+      await typeOutput('OPTION_A: _', 30);
+      _termAcceptingInput = true;
+      showTerminalInput();
+      break;
+    case 'option_b':
+      await typeOutput('OPTION_B: _', 30);
+      _termAcceptingInput = true;
+      showTerminalInput();
+      break;
+    case 'fetching':
+      await runFetching();
+      break;
+    case 'sample_1':
+    case 'sample_2':
+    case 'sample_3':
+    case 'sample_4':
+      await runSampleQuestion();
+      break;
+    case 'processing':
+      await runProcessing();
+      break;
+    case 'result':
+      await runTerminalResult();
+      break;
   }
-  if (navigator.share) {
-    navigator.share({ title: '环境熵观测', text: shareText }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(shareText).then(
-      () => alert(T === 'neon-entropy' ? 'COPIED' : '已复制分享文案'),
-      () => {}
-    );
+}
+
+async function runBootSequence() {
+  terminalOutput('');
+  await typeOutput('ENTROPY_OBSERVER v3.4.1', 25);
+  await typeOutput('CONNECTING TO REALITY_STREAM...', 30);
+  await typeOutput('CONNECTION ESTABLISHED.', 20);
+  await typeOutput('SCANNING LOCAL ENVIRONMENT...', 30);
+
+  /* battery */
+  var batteryLine = 'BATTERY: --%';
+  try {
+    var bat = await navigator.getBattery();
+    batteryLine = 'BATTERY: ' + Math.round(bat.level * 100) + '%';
+  } catch (e) { /* ignore */ }
+  await typeOutput(batteryLine, 30);
+
+  var timeLine = 'LOCAL TIME: ' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  await typeOutput(timeLine, 30);
+
+  var noiseLine = 'NOISE_FLOOR: ' + (Math.random() * 0.8 + 0.1).toFixed(3);
+  await typeOutput(noiseLine, 30);
+
+  terminalOutput('');
+  advanceTerminalState('theme_select');
+}
+
+function handleTerminalInput(key) {
+  if (!_termAcceptingInput) return;
+
+  if (key === 'Enter') {
+    var value = _termInputBuffer.trim();
+    _termInputBuffer = '';
+    updateTerminalPrompt();
+
+    switch (_termState) {
+      case 'theme_select':
+        var upper = value.toUpperCase();
+        if (upper === 'M' || upper === 'N' || upper === 'S') {
+          var chosenTheme = upper === 'M' ? 'mystic-void'
+            : upper === 'N' ? 'neon-entropy'
+            : 'silent-signal';
+          setTheme(chosenTheme);
+
+          /* If they chose a non-neon theme, exit terminal and use hash router */
+          if (chosenTheme !== 'neon-entropy') {
+            terminalOutput('THEME: ' + (chosenTheme === 'mystic-void' ? 'MYSTIC VOID' : 'SILENT SIGNAL'));
+            terminalOutput('EXITING TERMINAL...');
+            destroyTerminal();
+            location.hash = 'decide';
+            return;
+          }
+
+          terminalOutput('THEME: NEON ENTROPY');
+          advanceTerminalState('option_a');
+        } else {
+          terminalOutput('INVALID SELECTION. PRESS [M], [N], OR [S].');
+          _termAcceptingInput = true;
+          showTerminalInput();
+        }
+        break;
+
+      case 'option_a':
+        S.optionA = value;
+        terminalOutput('OPTION_A: ' + value);
+        advanceTerminalState('option_b');
+        break;
+
+      case 'option_b':
+        S.optionB = value;
+        terminalOutput('OPTION_B: ' + value);
+        advanceTerminalState('fetching');
+        break;
+
+      case 'sample_1':
+      case 'sample_2':
+      case 'sample_3':
+      case 'sample_4':
+        var idx = parseInt(_termState.split('_')[1]) - 1;
+        var q = S.questions[idx];
+        S.answers[q.id] = value;
+        terminalOutput('> ' + value);
+        terminalOutput('PROCESSING...');
+        /* advance to next sample or processing */
+        if (idx + 1 >= S.questions.length) {
+          advanceTerminalState('processing');
+        } else {
+          advanceTerminalState('sample_' + (idx + 2));
+        }
+        break;
+
+      case 'result':
+        if (value.toUpperCase() === 'R') {
+          /* restart */
+          S.optionA = ''; S.optionB = ''; S.questions = [];
+          S.answers = {}; S.currentQuestion = 0; S.result = null;
+          $('#term-output').innerHTML = '';
+          advanceTerminalState('boot');
+        } else if (value.toUpperCase() === 'T') {
+          /* new theme */
+          destroyTerminal();
+          S.optionA = ''; S.optionB = ''; S.questions = [];
+          S.answers = {}; S.currentQuestion = 0; S.result = null;
+          location.hash = 'theme';
+        }
+        break;
+    }
+  } else if (key === 'Backspace') {
+    _termInputBuffer = _termInputBuffer.slice(0, -1);
+    updateTerminalPrompt();
+  } else if (key.length === 1) {
+    _termInputBuffer += key;
+    updateTerminalPrompt();
   }
+}
+
+async function runFetching() {
+  terminalOutput('');
+  await typeOutput('GENERATING SIGNAL SAMPLES...', 30);
+  terminalOutput('SEED: 0x' + Math.random().toString(16).slice(2, 10).toUpperCase());
+  terminalOutput('PROCESSING...');
+
+  S.questions = [];
+  S.answers = {};
+  S.currentQuestion = 0;
+  S.result = null;
+
+  try {
+    var data = await API.getQuestions(S.theme, S.optionA.trim(), S.optionB.trim());
+    S.questions = data.questions;
+    S.currentQuestion = 0;
+    advanceTerminalState('sample_1');
+  } catch (e) {
+    terminalOutput('ERROR: ' + e.message);
+    terminalOutput('RETRYING IN BOOT...');
+    setTimeout(function () { advanceTerminalState('boot'); }, 2000);
+  }
+}
+
+async function runSampleQuestion() {
+  var idx = parseInt(_termState.split('_')[1]) - 1;
+  var q = S.questions[idx];
+
+  terminalOutput('');
+  await typeOutput('SAMPLE ' + (idx + 1) + '/4:', 25);
+  await typeOutput(q.text, 30);
+
+  _termAcceptingInput = true;
+  showTerminalInput();
+}
+
+async function runProcessing() {
+  terminalOutput('');
+  await typeOutput('CALCULATING ENTROPY BIAS...', 30);
+  await typeOutput('COLLAPSING PROBABILITY WAVES...', 30);
+  await typeOutput('REALITY_NOISE_STABILIZED...', 30);
+
+  try {
+    var data = await API.decide(S.theme, S.optionA, S.optionB, S.answers);
+    S.result = data;
+    advanceTerminalState('result');
+  } catch (e) {
+    terminalOutput('ERROR: ' + e.message);
+    terminalOutput('RETURNING TO BOOT...');
+    setTimeout(function () {
+      S.optionA = ''; S.optionB = ''; S.questions = [];
+      S.answers = {}; S.currentQuestion = 0; S.result = null;
+      $('#term-output').innerHTML = '';
+      advanceTerminalState('boot');
+    }, 2000);
+  }
+}
+
+async function runTerminalResult() {
+  var r = S.result;
+  terminalOutput('');
+  await typeOutput('╔═══════════════════════════════════╗', 15);
+  await typeOutput('║     WORLD BIAS DETECTED: ' + r.bias + '      ║', 15);
+  await typeOutput('╚═══════════════════════════════════╝', 15);
+  terminalOutput('');
+  terminalOutput(r.verdict);
+  terminalOutput('');
+  terminalOutput('"' + r.finalLine + '"');
+  terminalOutput('');
+  terminalOutput('──────────────────────────');
+  await typeOutput('Press [R] to restart  [T] for new theme', 25);
+
+  _termAcceptingInput = true;
+  showTerminalInput();
+}
+
+function startTerminal() {
+  if (window._terminalActive) return;
+
+  /* If coming from hash routing, update hash to something non-splash
+     so the router doesn't interfere */
+  if (location.hash.slice(1) !== 'splash') {
+    /* already not splash, terminal keeps control */
+  }
+
+  destroyTerminal();
+  window._terminalActive = true;
+
+  /* build terminal DOM */
+  var app = $('#app');
+  app.innerHTML = '';
+
+  var terminalApp = el('div', { id: 'terminal-app' });
+  var terminal = el('div', { className: 'terminal' });
+
+  var termOutput = el('div', { className: 'terminal-output', id: 'term-output' });
+  terminal.appendChild(termOutput);
+
+  var inputLine = el('div', { className: 'terminal-input-line', id: 'term-input-line' });
+  inputLine.appendChild(el('span', { className: 'terminal-prompt' }, '> _'));
+  inputLine.appendChild(el('span', { className: 'terminal-cursor' }));
+  inputLine.style.display = 'none';
+  terminal.appendChild(inputLine);
+
+  terminalApp.appendChild(terminal);
+  app.appendChild(terminalApp);
+
+  /* global keydown listener for terminal input */
+  _termKeydownHandler = function (e) {
+    if (!window._terminalActive) return;
+
+    /* ignore modifier combos */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleTerminalInput('Enter');
+    } else if (e.key === 'Backspace') {
+      e.preventDefault();
+      handleTerminalInput('Backspace');
+    } else if (e.key.length === 1) {
+      e.preventDefault();
+      handleTerminalInput(e.key);
+    }
+  };
+  document.addEventListener('keydown', _termKeydownHandler);
+
+  /* start boot sequence */
+  _termState = 'boot';
+  _termInputBuffer = '';
+  handleTerminalState();
 }
