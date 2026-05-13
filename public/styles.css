@@ -554,6 +554,11 @@ body {
   background:var(--accent-2);
   animation:terminalBlink 1s step-end infinite;
 }
+.terminal-hidden-input {
+  position:fixed; left:-9999px; top:0;
+  width:1px; height:1px; opacity:0;
+  font-size:16px;
+}
 @keyframes terminalBlink {
   0%,100%{opacity:1} 50%{opacity:0}
 }

@@ -768,24 +768,21 @@ window._terminalActive = false;
 let _termState = 'boot';
 let _termInputBuffer = '';
 let _termAcceptingInput = false;
+let _termHiddenInput = null;
 let _termKeydownHandler = null;
-let _termCompositionHandler = null;
-let _termIsComposing = false;
 
 function destroyTerminal() {
   if (!window._terminalActive) return;
   window._terminalActive = false;
   _termAcceptingInput = false;
   _termInputBuffer = '';
-  _termIsComposing = false;
+  if (_termHiddenInput) {
+    _termHiddenInput.remove();
+    _termHiddenInput = null;
+  }
   if (_termKeydownHandler) {
     document.removeEventListener('keydown', _termKeydownHandler);
     _termKeydownHandler = null;
-  }
-  if (_termCompositionHandler) {
-    document.removeEventListener('compositionstart', _termCompositionHandler.onStart);
-    document.removeEventListener('compositionend', _termCompositionHandler.onEnd);
-    _termCompositionHandler = null;
   }
   $('#app').innerHTML = '';
 }
@@ -844,12 +841,21 @@ function updateTerminalPrompt() {
 function showTerminalInput() {
   var inputLine = $('#term-input-line');
   if (inputLine) inputLine.style.display = 'flex';
+  if (_termHiddenInput) {
+    _termHiddenInput.style.display = 'block';
+    _termHiddenInput.value = '';
+    setTimeout(function () { _termHiddenInput.focus(); }, 50);
+  }
   updateTerminalPrompt();
 }
 
 function hideTerminalInput() {
   var inputLine = $('#term-input-line');
   if (inputLine) inputLine.style.display = 'none';
+  if (_termHiddenInput) {
+    _termHiddenInput.style.display = 'none';
+    _termHiddenInput.value = '';
+  }
 }
 
 function advanceTerminalState(newState) {
@@ -927,11 +933,11 @@ async function runBootSequence() {
   advanceTerminalState('theme_select');
 }
 
-function handleTerminalInput(key) {
+function handleTerminalInput(key, enterValue) {
   if (!_termAcceptingInput) return;
 
   if (key === 'Enter') {
-    var value = _termInputBuffer.trim();
+    var value = enterValue !== undefined ? enterValue : _termInputBuffer.trim();
     _termInputBuffer = '';
     updateTerminalPrompt();
 
@@ -1007,12 +1013,6 @@ function handleTerminalInput(key) {
         }
         break;
     }
-  } else if (key === 'Backspace') {
-    _termInputBuffer = _termInputBuffer.slice(0, -1);
-    updateTerminalPrompt();
-  } else if (key.length === 1) {
-    _termInputBuffer += key;
-    updateTerminalPrompt();
   }
 }
 
@@ -1131,43 +1131,40 @@ function startTerminal() {
   terminalApp.appendChild(terminal);
   app.appendChild(terminalApp);
 
-  /* global keydown listener for terminal input */
+  /* hidden input — native IME works perfectly in real input fields */
+  _termHiddenInput = el('input', {
+    type: 'text',
+    className: 'terminal-hidden-input',
+    autocomplete: 'off',
+    autocorrect: 'off',
+    autocapitalize: 'off',
+    spellcheck: false,
+  });
+  _termHiddenInput.style.display = 'none';
+  terminalApp.appendChild(_termHiddenInput);
+
+  /* Listen to input event for full text (IME-compatible) */
+  _termHiddenInput.addEventListener('input', function () {
+    if (!window._terminalActive || !_termAcceptingInput) return;
+    /* Sync the hidden input value to our buffer */
+    var val = _termHiddenInput.value;
+    _termInputBuffer = val;
+    updateTerminalPrompt();
+  });
+
+  /* Keydown only for Enter — handle special keys */
   _termKeydownHandler = function (e) {
-    if (!window._terminalActive) return;
-
-    /* ignore modifier combos */
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-    /* skip during IME composition — let the IME finish */
-    if (e.isComposing || _termIsComposing) return;
-
+    if (!window._terminalActive || !_termAcceptingInput) return;
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleTerminalInput('Enter');
-    } else if (e.key === 'Backspace') {
-      e.preventDefault();
-      handleTerminalInput('Backspace');
-    } else if (e.key.length === 1) {
-      e.preventDefault();
-      handleTerminalInput(e.key);
+      var value = _termHiddenInput.value.trim();
+      _termHiddenInput.value = '';
+      _termInputBuffer = '';
+      updateTerminalPrompt();
+      handleTerminalInput('Enter', value);
     }
   };
   document.addEventListener('keydown', _termKeydownHandler);
-
-  /* IME composition handlers — allow CJK input */
-  _termCompositionHandler = {
-    onStart: function () { _termIsComposing = true; },
-    onEnd: function (e) {
-      _termIsComposing = false;
-      if (e.data && window._terminalActive) {
-        for (var i = 0; i < e.data.length; i++) {
-          handleTerminalInput(e.data[i]);
-        }
-      }
-    },
-  };
-  document.addEventListener('compositionstart', _termCompositionHandler.onStart);
-  document.addEventListener('compositionend', _termCompositionHandler.onEnd);
 
   /* start boot sequence */
   _termState = 'boot';
