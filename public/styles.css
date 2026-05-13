@@ -22,6 +22,7 @@ body {
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
+  transition: background-color 0.8s ease;
 }
 
 #app {
@@ -34,7 +35,9 @@ body {
   align-items: center;
   position: relative;
   z-index: 1;
+  transition: opacity 0.35s ease;
 }
+#app.crossfading { opacity: 0; }
 
 /* ═══════════════════════════════════════════
    WORLD 1: MYSTIC VOID — Cosmic Whisper System
@@ -337,60 +340,33 @@ body {
 @keyframes zenFloat3 { 0%,100%{transform:translateY(0) translateX(0)} 25%{transform:translateY(-7px) translateX(1px)} 50%{transform:translateY(0px) translateX(-3px)} 75%{transform:translateY(-5px) translateX(2px)} }
 @keyframes zenFloat4 { 0%,100%{transform:translateY(0) translateX(0)} 25%{transform:translateY(-3px) translateX(-2px)} 50%{transform:translateY(-7px) translateX(3px)} 75%{transform:translateY(-1px) translateX(-1px)} }
 
-/* ─── Silent Signal: Drifting Sentences ─── */
+/* ─── Silent Signal: One-at-a-time moments ─── */
 .sample-view-zen {
   flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
   width:100%; min-height:100dvh; position:relative; overflow:hidden;
   padding:60px 24px;
+  transition: opacity 2s ease;
 }
-.zen-prompt-hint, .zen-subtle-prompt {
-  font-size:0.6875rem; color:var(--fg-muted); opacity:0.35;
-  margin-bottom:40px; text-align:center; letter-spacing:0.1em;
+.zen-moment {
+  display:flex; flex-direction:column; align-items:center; gap:32px;
+  width:100%; max-width:400px;
+  opacity:0; transform:translateY(12px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
 }
-.zen-sentences, .zen-sentences-container {
-  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:36px; width:100%; position:relative;
-}
-.zen-sentence {
-  font-family:var(--font-cn); font-size:1.25rem; font-weight:400;
-  color:var(--fg); text-align:center; cursor:pointer;
-  padding:16px 24px; position:relative;
-  transition:opacity 800ms, color 600ms;
-  -webkit-tap-highlight-color:transparent; user-select:none;
-  animation-duration:9s; animation-iteration-count:infinite;
-  animation-timing-function:ease-in-out;
-}
-.zen-sentence:nth-child(1) { animation-name:zenFloat1; }
-.zen-sentence:nth-child(2) { animation-name:zenFloat2; animation-delay:-2s; }
-.zen-sentence:nth-child(3) { animation-name:zenFloat3; animation-delay:-4s; }
-.zen-sentence:nth-child(4) { animation-name:zenFloat4; animation-delay:-6s; }
-.zen-sentence:active { color:var(--accent); }
-.zen-sentence.dimmed { opacity:0.12; pointer-events:none; }
-.zen-sentence.selected,
-.zen-sentence-active,
-.zen-sentence-paused {
-  animation-play-state:paused;
-  color:var(--accent);
-  opacity:1;
-}
-.zen-sentence.answered {
-  opacity:0; transform:translateY(-20px);
-  transition:opacity 1.5s,transform 1.5s;
-  pointer-events:none;
+.zen-question-emerge {
+  font-family:var(--font-cn); font-size:1.375rem; font-weight:400;
+  color:var(--fg); text-align:center; line-height:1.8;
+  animation:zenReveal 2s ease;
+  cursor:text; user-select:none;
 }
 .zen-answer-area {
   display:flex; flex-direction:column; align-items:center; gap:16px;
-  margin-top:20px; animation:zenReveal 0.8s ease;
+  width:100%; animation:zenReveal 1.2s ease 0.3s both;
 }
-.zen-progress {
-  position:absolute; bottom:40px; font-size:0.625rem;
-  color:var(--fg-muted); opacity:0.25; letter-spacing:0.12em;
+.zen-done-hint {
+  font-size:0.625rem; color:var(--fg-muted); opacity:0.25;
+  letter-spacing:0.12em; transition:opacity 0.6s ease;
 }
-.zen-continue-hint {
-  font-size:0.6875rem; color:var(--fg-muted); opacity:0;
-  transition:opacity 1s; text-align:center; margin-top:24px;
-}
-.zen-continue-hint.visible { opacity:0.3; }
 
 /* ─── Silent Signal: Splash ─── */
 .splash-zen h1 { font-family:var(--font-cn); font-size:1.5rem; font-weight:400; margin-bottom:24px; animation:zenReveal 2s ease; }

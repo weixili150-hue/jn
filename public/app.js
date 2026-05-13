@@ -54,6 +54,9 @@ function setTheme(theme) {
   S.theme = theme;
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('entropy-theme', theme);
+  if (window.Ambient && window.Ambient.setTheme) {
+    window.Ambient.setTheme(theme);
+  }
 }
 
 // ─── Loading Cleanup ───
@@ -116,15 +119,25 @@ function route() {
     return;
   }
   renderNav();
-  switch (hash) {
-    case 'splash': renderSplash(); break;
-    case 'theme': renderThemeSelect(); break;
-    case 'decide': renderDecision(); break;
-    case 'sample': renderSample(); break;
-    case 'loading': renderLoading(); break;
-    case 'result': renderResult(); break;
-    default: location.hash = 'splash';
-  }
+
+  /* Smooth crossfade transition between views */
+  const app = $('#app');
+  app.classList.add('crossfading');
+
+  setTimeout(() => {
+    switch (hash) {
+      case 'splash': renderSplash(); break;
+      case 'theme': renderThemeSelect(); break;
+      case 'decide': renderDecision(); break;
+      case 'sample': renderSample(); break;
+      case 'loading': renderLoading(); break;
+      case 'result': renderResult(); break;
+      default: location.hash = 'splash'; return;
+    }
+    requestAnimationFrame(() => {
+      app.classList.remove('crossfading');
+    });
+  }, 350);
 }
 
 window.addEventListener('hashchange', () => {
@@ -458,7 +471,9 @@ function renderSample() {
   $('#app').appendChild(view);
 }
 
-/* ─── Silent Signal Drift Engine: renderSampleZen ─── */
+/* ─── Silent Signal Engine: renderSampleZen ───
+   Questions arrive one at a time — like ink blooming, like time passing.
+   No choice of order. No skipping. Just presence. */
 
 function renderSampleZen() {
   if (!S.questions || S.questions.length === 0) {
@@ -466,183 +481,91 @@ function renderSampleZen() {
     return;
   }
 
-  /* Initialize zen answered set if needed */
-  if (!S._zenAnswered) S._zenAnswered = new Set();
-
   const view = el('div', { className: 'sample-view-zen' });
-
-  /* Subtle prompt at top */
-  const prompt = el('div', { className: 'zen-subtle-prompt' }, '轻轻触碰你想回答的那一句');
-  view.appendChild(prompt);
-
-  /* All questions as floating sentences */
-  const sentencesContainer = el('div', { className: 'zen-sentences-container' });
-  const sentenceEls = [];
-  const questionMap = {}; /* q.id → { el, q } */
-
-  for (let i = 0; i < S.questions.length; i++) {
-    const q = S.questions[i];
-    const sentence = el('div', {
-      className: 'zen-sentence zenFloat',
-      'data-qid': q.id,
-      style: {
-        animationDelay: (i * 0.7) + 's',
-      },
-    }, q.text);
-
-    sentencesContainer.appendChild(sentence);
-    sentenceEls.push(sentence);
-    questionMap[q.id] = { el: sentence, q: q };
-  }
-
-  view.appendChild(sentencesContainer);
-
-  /* Progress indicator — faint, at bottom */
-  const progressEl = el('div', { className: 'zen-progress' }, '已回应 ' + S._zenAnswered.size + '/' + S.questions.length);
-  view.appendChild(progressEl);
-
   $('#app').appendChild(view);
 
-  /* ── Interaction state ── */
-  let answeringState = null; /* { sentenceEl, q, inputWrap } or null */
+  /* Show the first question */
+  showNextZenQuestion(view, 0);
+}
 
-  function restoreUnanswered() {
-    /* Fade all unanswered, non-active sentences back to normal */
-    for (const el of sentenceEls) {
-      const qid = el.getAttribute('data-qid');
-      if (!S._zenAnswered.has(qid) && (!answeringState || answeringState.sentenceEl !== el)) {
-        el.style.transition = 'opacity 0.8s ease';
-        el.style.opacity = '1';
-        if (el.classList.contains('zen-sentence-paused')) {
-          el.classList.remove('zen-sentence-paused');
-          el.style.animationPlayState = 'running';
-        }
-      }
-    }
+function showNextZenQuestion(view, idx) {
+  if (idx >= S.questions.length) {
+    /* All answered — slow dissolve and navigate */
+    view.style.transition = 'opacity 2s ease';
+    view.style.opacity = '0';
+    setTimeout(() => { location.hash = 'loading'; }, 2500);
+    return;
   }
 
-  function submitAnswer(q, sentenceEl, value, inputWrap) {
-    /* Store answer */
-    S.answers[q.id] = value;
-    S._zenAnswered.add(q.id);
+  const q = S.questions[idx];
 
-    /* Ink ripple at sentence position */
-    const rect = sentenceEl.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
+  /* Clear previous question content */
+  const oldContent = view.querySelector('.zen-moment');
+  if (oldContent) {
+    oldContent.style.transition = 'opacity 1.2s ease, transform 1.2s ease';
+    oldContent.style.opacity = '0';
+    oldContent.style.transform = 'translateY(-12px)';
+    setTimeout(() => oldContent.remove(), 1200);
+  }
+
+  /* Create new moment container */
+  const moment = el('div', { className: 'zen-moment' });
+
+  /* Question text — emerges like ink spreading on paper */
+  const questionText = el('div', { className: 'zen-question-emerge' }, q.text);
+  moment.appendChild(questionText);
+
+  /* Input area — thin, minimal, no chrome */
+  const inputWrap = el('div', { className: 'zen-answer-area' });
+
+  const input = el('input', {
+    className: 'zen-input-line',
+    type: 'text',
+    placeholder: q.placeholder || '轻轻写下...',
+  });
+
+  const doneHint = el('div', { className: 'zen-done-hint' }, '按回车');
+
+  inputWrap.appendChild(input);
+  inputWrap.appendChild(doneHint);
+  moment.appendChild(inputWrap);
+
+  view.appendChild(moment);
+
+  /* Trigger emergence animation after DOM insertion */
+  requestAnimationFrame(() => {
+    moment.style.opacity = '1';
+    moment.style.transform = 'translateY(0)';
+    setTimeout(() => input.focus(), 400);
+  });
+
+  /* Handle answer submission */
+  function submit(value) {
+    if (!value.trim()) return;
+
+    S.answers[q.id] = value.trim();
+
+    /* Ink ripple at input position */
+    const rect = input.getBoundingClientRect();
     if (window.Particles && window.Particles.inkRipple) {
-      window.Particles.inkRipple(cx, cy);
+      window.Particles.inkRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
 
-    /* Remove input area */
-    if (inputWrap && inputWrap.parentNode) {
-      inputWrap.remove();
-    }
+    /* Disable further input */
+    input.disabled = true;
+    doneHint.style.transition = 'opacity 0.6s ease';
+    doneHint.style.opacity = '0';
 
-    /* Animate sentence away — drift off */
-    sentenceEl.classList.remove('zen-sentence-active', 'zen-sentence-paused');
-    sentenceEl.style.animationPlayState = 'running';
-    sentenceEl.classList.add('answered');
-
-    /* Update progress */
-    progressEl.textContent = '已回应 ' + S._zenAnswered.size + '/' + S.questions.length;
-
-    /* Clear answering state */
-    answeringState = null;
-
-    /* After 2s pause, restore remaining sentences or transition out */
-    setTimeout(() => {
-      if (S._zenAnswered.size >= S.questions.length) {
-        /* All answered — fade everything out */
-        sentencesContainer.style.transition = 'opacity 2s ease';
-        sentencesContainer.style.opacity = '0';
-        prompt.style.transition = 'opacity 2s ease';
-        prompt.style.opacity = '0';
-        progressEl.style.transition = 'opacity 2s ease';
-        progressEl.style.opacity = '0';
-
-        /* 3s pause of pure whitespace, then navigate */
-        setTimeout(() => {
-          location.hash = 'loading';
-        }, 3000);
-      } else {
-        /* Restore unanswered sentences */
-        restoreUnanswered();
-      }
-    }, 2000);
+    /* Gentle pause — time to breathe — then next question */
+    setTimeout(() => { showNextZenQuestion(view, idx + 1); }, 2000);
   }
 
-  function createAnswerInput(sentenceEl, q) {
-    const inputWrap = el('div', { className: 'zen-answer-area' });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submit(input.value);
+  });
 
-    const input = el('input', {
-      className: 'zen-input-line',
-      type: 'text',
-      placeholder: q.placeholder || '轻轻写下...',
-    });
-
-    const confirmBtn = el('button', {
-      className: 'btn-zen-text',
-    }, '✓');
-
-    inputWrap.appendChild(input);
-    inputWrap.appendChild(confirmBtn);
-
-    /* Insert after the sentence */
-    sentenceEl.parentNode.insertBefore(inputWrap, sentenceEl.nextSibling);
-
-    /* Focus input after a brief delay (let animation settle) */
-    setTimeout(() => input.focus(), 100);
-
-    function doSubmit(value) {
-      if (!value.trim()) return;
-      submitAnswer(q, sentenceEl, value.trim(), inputWrap);
-    }
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') doSubmit(input.value);
-    });
-
-    confirmBtn.addEventListener('click', () => doSubmit(input.value));
-
-    return inputWrap;
-  }
-
-  /* ── Click handlers for each sentence ── */
-  for (let i = 0; i < sentenceEls.length; i++) {
-    const sentenceEl = sentenceEls[i];
-    const qid = sentenceEl.getAttribute('data-qid');
-    const q = questionMap[qid].q;
-
-    sentenceEl.addEventListener('click', () => {
-      /* Ignore if already answered or currently answering another */
-      if (S._zenAnswered.has(qid)) return;
-      if (answeringState) return;
-
-      answeringState = { sentenceEl: sentenceEl, q: q, inputWrap: null };
-
-      /* Fade all other unanswered sentences */
-      for (const other of sentenceEls) {
-        const otherQid = other.getAttribute('data-qid');
-        if (other !== sentenceEl && !S._zenAnswered.has(otherQid)) {
-          other.style.transition = 'opacity 0.8s ease';
-          other.style.opacity = '0.1';
-        }
-      }
-
-      /* Fade prompt slightly */
-      prompt.style.transition = 'opacity 0.8s ease';
-      prompt.style.opacity = '0.15';
-
-      /* Pause float and center the tapped sentence */
-      sentenceEl.style.animationPlayState = 'paused';
-      sentenceEl.classList.add('zen-sentence-paused', 'zen-sentence-active');
-
-      /* Create input area */
-      const inputWrap = createAnswerInput(sentenceEl, q);
-      answeringState.inputWrap = inputWrap;
-    });
-  }
+  /* Small touch: tapping the question text also focuses input */
+  questionText.addEventListener('click', () => input.focus());
 }
 
 // ─── ⑤ Loading Ritual ───
@@ -846,15 +769,23 @@ let _termState = 'boot';
 let _termInputBuffer = '';
 let _termAcceptingInput = false;
 let _termKeydownHandler = null;
+let _termCompositionHandler = null;
+let _termIsComposing = false;
 
 function destroyTerminal() {
   if (!window._terminalActive) return;
   window._terminalActive = false;
   _termAcceptingInput = false;
   _termInputBuffer = '';
+  _termIsComposing = false;
   if (_termKeydownHandler) {
     document.removeEventListener('keydown', _termKeydownHandler);
     _termKeydownHandler = null;
+  }
+  if (_termCompositionHandler) {
+    document.removeEventListener('compositionstart', _termCompositionHandler.onStart);
+    document.removeEventListener('compositionend', _termCompositionHandler.onEnd);
+    _termCompositionHandler = null;
   }
   $('#app').innerHTML = '';
 }
@@ -1207,6 +1138,9 @@ function startTerminal() {
     /* ignore modifier combos */
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
+    /* skip during IME composition — let the IME finish */
+    if (e.isComposing || _termIsComposing) return;
+
     if (e.key === 'Enter') {
       e.preventDefault();
       handleTerminalInput('Enter');
@@ -1219,6 +1153,21 @@ function startTerminal() {
     }
   };
   document.addEventListener('keydown', _termKeydownHandler);
+
+  /* IME composition handlers — allow CJK input */
+  _termCompositionHandler = {
+    onStart: function () { _termIsComposing = true; },
+    onEnd: function (e) {
+      _termIsComposing = false;
+      if (e.data && window._terminalActive) {
+        for (var i = 0; i < e.data.length; i++) {
+          handleTerminalInput(e.data[i]);
+        }
+      }
+    },
+  };
+  document.addEventListener('compositionstart', _termCompositionHandler.onStart);
+  document.addEventListener('compositionend', _termCompositionHandler.onEnd);
 
   /* start boot sequence */
   _termState = 'boot';
