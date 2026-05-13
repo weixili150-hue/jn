@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════
-   Entropy Observer — Frontend SPA
-   Three engines: Mystic Void, Silent Signal, Neon Entropy
+   Entropy Observer — Core SPA
+   Shared infrastructure, router, and common views.
+   Engines: engine-mystic.js, engine-silent.js, engine-neon.js
    ═══════════════════════════════════════ */
 
 // ─── Shared Infrastructure ───
@@ -120,7 +121,6 @@ function route() {
   }
   renderNav();
 
-  /* Smooth crossfade transition between views */
   const app = $('#app');
   app.classList.add('crossfading');
 
@@ -192,8 +192,8 @@ function renderNav() {
 }
 
 // ═══════════════════════════════════════════
-//  ENGINE 1 & 2: MYSTIC VOID + SILENT SIGNAL
-//  (shared function signatures, branched internally)
+//  SHARED VIEWS
+//  Engine-specific logic delegated to modules
 // ═══════════════════════════════════════════
 
 // ─── ① Splash ───
@@ -231,7 +231,7 @@ function renderThemeSelect() {
   clearLoadingCleanup();
   $('#app').innerHTML = '';
 
-  /* Silent Signal skips this view entirely */
+  /* Silent Signal skips this view */
   if (S.theme === 'silent-signal') {
     location.hash = 'decide';
     return;
@@ -299,7 +299,6 @@ function renderDecision() {
 
   const view = el('div', { className: 'decision-view' });
 
-  /* prompt */
   if (T === 'silent-signal') {
     view.appendChild(el('p', { className: 'decision-prompt decision-prompt-zen' }, '你在犹豫什么？'));
     view.appendChild(el('p', { className: 'decision-subtitle-zen' }, '轻轻写下两个选择'));
@@ -307,7 +306,6 @@ function renderDecision() {
     view.appendChild(el('p', { className: 'decision-prompt' }, '在黑暗中写下你的犹豫'));
   }
 
-  /* input pair */
   const pair = el('div', { className: 'decision-pair' });
 
   const inputCls = T === 'silent-signal' ? 'zen-input-line' : 'void-input-line';
@@ -343,7 +341,6 @@ function renderDecision() {
   pair.appendChild(inputB);
   view.appendChild(pair);
 
-  /* button */
   const btnText = T === 'silent-signal' ? '开始' : '提交给宇宙';
   const btnLoadingText = T === 'silent-signal' ? '...' : '提交中...';
   const btnCls = T === 'silent-signal' ? 'btn-zen-text' : 'btn btn-primary btn-block';
@@ -380,192 +377,17 @@ function renderDecision() {
   $('#app').appendChild(view);
 }
 
-// ─── ④ Sample (Question Flow) ───
+// ─── ④ Sample — dispatches to engine ───
 
 function renderSample() {
   clearLoadingCleanup();
   $('#app').innerHTML = '';
-  const T = S.theme;
 
-  /* ── Silent Signal: Drift Engine ── */
-  if (T === 'silent-signal') {
-    renderSampleZen();
-    return;
-  }
-
-  /* ── Mystic Void: sequential questions ── */
-
-  if (S.currentQuestion >= S.questions.length) {
-    location.hash = 'loading';
-    return;
-  }
-
-  const q = S.questions[S.currentQuestion];
-  const view = el('div', { className: 'sample-view' });
-
-  /* question card */
-  const entryAnim = 'anim-voidUnblur';
-  const cardCls = 'question-card ' + entryAnim;
-  const card = el('div', { className: cardCls });
-
-  const textCls = 'question-text';
-  card.appendChild(el('div', { className: textCls }, q.text));
-
-  /* answer handler */
-  function answer(value) {
-    S.answers[q.id] = value;
-
-    /* Mystic Void: dissolve exit, then 1500ms darkness */
-    card.classList.remove(entryAnim);
-    card.classList.add('void-dissolve');
-    setTimeout(() => {
-      if (card.parentNode) card.remove();
-      setTimeout(() => {
-        S.currentQuestion++;
-        renderSample();
-      }, 1500);
-    }, 600); /* dissolve animation duration */
-  }
-
-  /* input area */
-  /* Mystic Void: chips for chip questions, void-input-line for text */
-  if (q.inputType === 'chips' && q.options) {
-    const group = el('div', { className: 'void-choice-group' });
-    for (const opt of q.options) {
-      group.appendChild(el('button', {
-        className: 'void-floating-choice',
-        onclick: () => answer(opt),
-      }, opt));
-    }
-    card.appendChild(group);
+  if (S.theme === 'silent-signal') {
+    Engine_Silent.sample();
   } else {
-    const input = el('input', {
-      className: 'void-input-line',
-      type: q.inputType === 'number' ? 'number' : 'text',
-      inputMode: q.inputType === 'number' ? 'numeric' : undefined,
-      placeholder: q.placeholder || '输入...',
-    });
-    const inputWrap = el('div', { className: 'sample-input-wrap' }, input);
-    card.appendChild(inputWrap);
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && input.value.trim()) answer(input.value.trim());
-    });
-
-    card.appendChild(el('button', {
-      className: 'btn btn-primary',
-      style: { marginTop: '20px' },
-      onclick: () => { if (input.value.trim()) answer(input.value.trim()); },
-    }, '确认'));
+    Engine_Mystic.sample();
   }
-
-  /* progress — Mystic Void only (star dots) */
-  const progress = el('div', { className: 'void-star-progress' });
-  for (let i = 0; i < S.questions.length; i++) {
-    const starCls = i < S.currentQuestion ? 'void-star-lit' : 'void-star';
-    progress.appendChild(el('div', { className: starCls }));
-  }
-  view.appendChild(progress);
-
-  view.appendChild(card);
-  $('#app').appendChild(view);
-}
-
-/* ─── Silent Signal Engine: renderSampleZen ───
-   Questions arrive one at a time — like ink blooming, like time passing.
-   No choice of order. No skipping. Just presence. */
-
-function renderSampleZen() {
-  if (!S.questions || S.questions.length === 0) {
-    location.hash = 'loading';
-    return;
-  }
-
-  const view = el('div', { className: 'sample-view-zen' });
-  $('#app').appendChild(view);
-
-  /* Show the first question */
-  showNextZenQuestion(view, 0);
-}
-
-function showNextZenQuestion(view, idx) {
-  if (idx >= S.questions.length) {
-    /* All answered — slow dissolve and navigate */
-    view.style.transition = 'opacity 2s ease';
-    view.style.opacity = '0';
-    setTimeout(() => { location.hash = 'loading'; }, 2500);
-    return;
-  }
-
-  const q = S.questions[idx];
-
-  /* Clear previous question content */
-  const oldContent = view.querySelector('.zen-moment');
-  if (oldContent) {
-    oldContent.style.transition = 'opacity 1.2s ease, transform 1.2s ease';
-    oldContent.style.opacity = '0';
-    oldContent.style.transform = 'translateY(-12px)';
-    setTimeout(() => oldContent.remove(), 1200);
-  }
-
-  /* Create new moment container */
-  const moment = el('div', { className: 'zen-moment' });
-
-  /* Question text — emerges like ink spreading on paper */
-  const questionText = el('div', { className: 'zen-question-emerge' }, q.text);
-  moment.appendChild(questionText);
-
-  /* Input area — thin, minimal, no chrome */
-  const inputWrap = el('div', { className: 'zen-answer-area' });
-
-  const input = el('input', {
-    className: 'zen-input-line',
-    type: 'text',
-    placeholder: q.placeholder || '轻轻写下...',
-  });
-
-  const doneHint = el('div', { className: 'zen-done-hint' }, '按回车');
-
-  inputWrap.appendChild(input);
-  inputWrap.appendChild(doneHint);
-  moment.appendChild(inputWrap);
-
-  view.appendChild(moment);
-
-  /* Trigger emergence animation after DOM insertion */
-  requestAnimationFrame(() => {
-    moment.style.opacity = '1';
-    moment.style.transform = 'translateY(0)';
-    setTimeout(() => input.focus(), 400);
-  });
-
-  /* Handle answer submission */
-  function submit(value) {
-    if (!value.trim()) return;
-
-    S.answers[q.id] = value.trim();
-
-    /* Ink ripple at input position */
-    const rect = input.getBoundingClientRect();
-    if (window.Particles && window.Particles.inkRipple) {
-      window.Particles.inkRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
-    }
-
-    /* Disable further input */
-    input.disabled = true;
-    doneHint.style.transition = 'opacity 0.6s ease';
-    doneHint.style.opacity = '0';
-
-    /* Gentle pause — time to breathe — then next question */
-    setTimeout(() => { showNextZenQuestion(view, idx + 1); }, 2000);
-  }
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') submit(input.value);
-  });
-
-  /* Small touch: tapping the question text also focuses input */
-  questionText.addEventListener('click', () => input.focus());
 }
 
 // ─── ⑤ Loading Ritual ───
@@ -577,14 +399,12 @@ function renderLoading() {
   const cleanupFns = [];
 
   if (T === 'silent-signal') {
-    /* Silent Signal: white/cream overlay, ink-dot breathing slowly */
     const overlay = el('div', { className: 'loading-overlay loading-overlay-zen' });
 
     const animContainer = el('div', { className: 'loading-animation loading-animation-zen' });
     animContainer.appendChild(el('div', { className: 'ink-dot loading-center-dot' }));
     overlay.appendChild(animContainer);
 
-    /* Phrase cycling every 8s — just ellipses of varying lengths */
     const phrases = ['......', '............', '..................'];
     const phraseEl = el('div', { className: 'loading-phrase loading-phrase-zen' }, phrases[0]);
     overlay.appendChild(phraseEl);
@@ -597,23 +417,18 @@ function renderLoading() {
 
     $('#app').appendChild(overlay);
 
-    /* Subtle breathing on particles canvas */
     if (window.Particles && window.Particles.breathMode) {
       window.Particles.breathMode(0.6);
     }
   } else {
-    /* Mystic Void: dark overlay, glow-dot breathing, radial glow, converging particles */
     const overlay = el('div', { className: 'loading-overlay' });
 
-    /* radial glow */
     overlay.appendChild(el('div', { className: 'loading-radial-glow' }));
 
-    /* glow dot breathing */
     const animContainer = el('div', { className: 'loading-animation' });
     animContainer.appendChild(el('div', { className: 'glow-dot loading-center-dot' }));
     overlay.appendChild(animContainer);
 
-    /* phrase cycling every 4s */
     const phrases = [
       '正在同步环境熵...',
       '外部信号聚集中...',
@@ -630,7 +445,6 @@ function renderLoading() {
 
     $('#app').appendChild(overlay);
 
-    /* converge particles */
     if (window.Particles && window.Particles.convergeParticles) {
       window.Particles.convergeParticles();
     }
@@ -640,7 +454,6 @@ function renderLoading() {
     for (const fn of cleanupFns) fn();
   };
 
-  /* call decide API */
   API.decide(S.theme, S.optionA, S.optionB, S.answers)
     .then((data) => {
       clearLoadingCleanup();
@@ -654,520 +467,16 @@ function renderLoading() {
     });
 }
 
-// ─── ⑥ Result ───
+// ─── ⑥ Result — dispatches to engine ───
 
 function renderResult() {
   clearLoadingCleanup();
   $('#app').innerHTML = '';
   if (!S.result) { location.hash = 'decide'; return; }
 
-  const T = S.theme;
-  const r = S.result;
-
-  if (T === 'silent-signal') {
-    /* ── Silent Signal: no card, pure whitespace, timed reveals ── */
-    const view = el('div', { className: 'result-view-zen' });
-
-    /* "观测报告" in tiny text at top */
-    view.appendChild(el('div', { className: 'result-label-zen' }, '观测报告'));
-
-    /* Bias — large serif, zen-emerge animation */
-    view.appendChild(el('div', {
-      className: 'result-bias-zen zen-emerge',
-      style: { animationDelay: '0s' },
-    }, '偏向 ' + r.bias));
-
-    /* Verdict — emerges after 2s pause */
-    view.appendChild(el('div', {
-      className: 'result-verdict-zen zen-emerge',
-      style: { animationDelay: '2s' },
-    }, r.verdict));
-
-    /* Final line — emerges after 5s (3s after verdict), italic */
-    view.appendChild(el('div', {
-      className: 'result-final-zen zen-emerge',
-      style: { animationDelay: '5s', fontStyle: 'italic' },
-    }, r.finalLine));
-
-    /* Signals — two simple lines with generous spacing */
-    if (r.signals) {
-      const signals = el('div', { className: 'result-signals-zen' });
-      for (const s of r.signals) {
-        signals.appendChild(el('div', { className: 'result-signal-entry-zen' },
-          el('div', { className: 'result-signal-label' }, s.label),
-          el('div', { className: 'result-signal-value' }, s.value),
-        ));
-      }
-      view.appendChild(signals);
-    }
-
-    /* Button: "再问一次" — plain text, no chrome, generous space below everything */
-    view.appendChild(el('button', {
-      className: 'btn-zen-text',
-      style: { marginTop: '64px' },
-      onclick: () => {
-        S.optionA = ''; S.optionB = ''; S.questions = [];
-        S.answers = {}; S.currentQuestion = 0; S.result = null;
-        S._zenAnswered = new Set();
-        location.hash = 'decide';
-      },
-    }, '再问一次'));
-
-    /* No share button for Silent Signal */
-
-    $('#app').appendChild(view);
+  if (S.theme === 'silent-signal') {
+    Engine_Silent.result();
   } else {
-    /* Mystic Void: gold-bordered card */
-    const view = el('div', { className: 'result-view' });
-    const card = el('div', { className: 'result-card result-card-void' });
-
-    card.appendChild(el('div', { className: 'result-label' }, '环境熵观测报告'));
-    card.appendChild(el('div', { className: 'result-bias result-bias-void' }, '世界偏向 ' + r.bias));
-    card.appendChild(el('div', { className: 'result-verdict' }, r.verdict));
-    card.appendChild(el('div', { className: 'result-interpretation' }, r.interpretation));
-    card.appendChild(el('div', { className: 'result-final result-final-void' }, r.finalLine));
-
-    if (r.signals) {
-      const signals = el('div', { className: 'result-signals' });
-      for (const s of r.signals) {
-        signals.appendChild(el('div', { className: 'result-signal-entry' },
-          el('div', { className: 'result-signal-label' }, s.label),
-          el('div', { className: 'result-signal-value' }, s.value),
-        ));
-      }
-      card.appendChild(signals);
-    }
-
-    view.appendChild(card);
-
-    view.appendChild(el('button', {
-      className: 'btn btn-primary btn-block',
-      onclick: () => {
-        S.optionA = ''; S.optionB = ''; S.questions = [];
-        S.answers = {}; S.currentQuestion = 0; S.result = null;
-        location.hash = 'decide';
-      },
-    }, '重新决策'));
-
-    view.appendChild(el('button', {
-      className: 'btn btn-link',
-      style: { marginTop: '8px' },
-      onclick: () => shareResult(r),
-    }, '分享结果'));
-
-    $('#app').appendChild(view);
+    Engine_Mystic.result();
   }
-}
-
-// ═══════════════════════════════════════════
-//  ENGINE 3: NEON ENTROPY — Full Terminal
-// ═══════════════════════════════════════════
-
-window._terminalActive = false;
-
-let _termState = 'boot';
-let _termInputBuffer = '';
-let _termAcceptingInput = false;
-let _termHiddenInput = null;
-let _termKeydownHandler = null;
-
-function destroyTerminal() {
-  if (!window._terminalActive) return;
-  window._terminalActive = false;
-  _termAcceptingInput = false;
-  _termInputBuffer = '';
-  if (_termHiddenInput) {
-    _termHiddenInput.remove();
-    _termHiddenInput = null;
-  }
-  if (_termKeydownHandler) {
-    document.removeEventListener('keydown', _termKeydownHandler);
-    _termKeydownHandler = null;
-  }
-  $('#app').innerHTML = '';
-}
-
-function typeOutput(text, speed) {
-  speed = speed || 30;
-  return new Promise(function (resolve) {
-    var termOutput = $('#term-output');
-    if (!termOutput) { resolve(); return; }
-    var line = document.createElement('div');
-    line.className = 'term-line';
-    termOutput.appendChild(line);
-    termOutput.scrollTop = termOutput.scrollHeight;
-    var i = 0;
-    function type() {
-      if (i < text.length) {
-        line.textContent += text[i];
-
-        /* 2% glitch chance per character */
-        if (Math.random() < 0.02) {
-          var terminal = $('.terminal');
-          if (terminal) {
-            terminal.classList.add('terminal-glitch');
-            setTimeout(function () { terminal.classList.remove('terminal-glitch'); }, 150);
-          }
-        }
-
-        i++;
-        termOutput.scrollTop = termOutput.scrollHeight;
-        setTimeout(type, speed);
-      } else {
-        resolve();
-      }
-    }
-    type();
-  });
-}
-
-function terminalOutput(text) {
-  var termOutput = $('#term-output');
-  if (!termOutput) return;
-  var line = document.createElement('div');
-  line.className = 'term-line';
-  line.textContent = text;
-  termOutput.appendChild(line);
-  termOutput.scrollTop = termOutput.scrollHeight;
-}
-
-function updateTerminalPrompt() {
-  var prompt = $('#term-input-line .terminal-prompt');
-  if (prompt) {
-    prompt.textContent = '> ' + _termInputBuffer;
-  }
-}
-
-function showTerminalInput() {
-  var inputLine = $('#term-input-line');
-  if (inputLine) inputLine.style.display = 'flex';
-  if (_termHiddenInput) {
-    _termHiddenInput.style.display = 'block';
-    _termHiddenInput.value = '';
-    setTimeout(function () { _termHiddenInput.focus(); }, 50);
-  }
-  updateTerminalPrompt();
-}
-
-function hideTerminalInput() {
-  var inputLine = $('#term-input-line');
-  if (inputLine) inputLine.style.display = 'none';
-  if (_termHiddenInput) {
-    _termHiddenInput.style.display = 'none';
-    _termHiddenInput.value = '';
-  }
-}
-
-function advanceTerminalState(newState) {
-  _termState = newState;
-  _termInputBuffer = '';
-  handleTerminalState();
-}
-
-async function handleTerminalState() {
-  if (!window._terminalActive) return;
-  _termAcceptingInput = false;
-  hideTerminalInput();
-
-  switch (_termState) {
-    case 'boot':
-      await runBootSequence();
-      break;
-    case 'theme_select':
-      await typeOutput('选择模式：[M]神秘虚空  [N]霓虹熵  [S]静默信号', 30);
-      _termAcceptingInput = true;
-      showTerminalInput();
-      break;
-    case 'option_a':
-      terminalOutput('');
-      await typeOutput('输入决策参数：', 30);
-      await typeOutput('选项A：_', 30);
-      _termAcceptingInput = true;
-      showTerminalInput();
-      break;
-    case 'option_b':
-      await typeOutput('选项B：_', 30);
-      _termAcceptingInput = true;
-      showTerminalInput();
-      break;
-    case 'fetching':
-      await runFetching();
-      break;
-    case 'sample_1':
-    case 'sample_2':
-    case 'sample_3':
-    case 'sample_4':
-      await runSampleQuestion();
-      break;
-    case 'processing':
-      await runProcessing();
-      break;
-    case 'result':
-      await runTerminalResult();
-      break;
-  }
-}
-
-async function runBootSequence() {
-  terminalOutput('');
-  await typeOutput('环境熵观测器 v3.4.1', 25);
-  await typeOutput('正在连接现实流...', 30);
-  await typeOutput('连接已建立。', 20);
-  await typeOutput('正在扫描本地环境...', 30);
-
-  /* battery */
-  var batteryLine = '电量：--%';
-  try {
-    var bat = await navigator.getBattery();
-    batteryLine = '电量：' + Math.round(bat.level * 100) + '%';
-  } catch (e) { /* ignore */ }
-  await typeOutput(batteryLine, 30);
-
-  var timeLine = '本地时间：' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  await typeOutput(timeLine, 30);
-
-  var noiseLine = '噪声基准：' + (Math.random() * 0.8 + 0.1).toFixed(3);
-  await typeOutput(noiseLine, 30);
-
-  terminalOutput('');
-  advanceTerminalState('theme_select');
-}
-
-function handleTerminalInput(key, enterValue) {
-  if (!_termAcceptingInput) return;
-
-  if (key === 'Enter') {
-    var value = enterValue !== undefined ? enterValue : _termInputBuffer.trim();
-    _termInputBuffer = '';
-    updateTerminalPrompt();
-
-    switch (_termState) {
-      case 'theme_select':
-        var upper = value.toUpperCase();
-        if (upper === 'M' || upper === 'N' || upper === 'S') {
-          var chosenTheme = upper === 'M' ? 'mystic-void'
-            : upper === 'N' ? 'neon-entropy'
-            : 'silent-signal';
-          setTheme(chosenTheme);
-
-          /* If they chose a non-neon theme, exit terminal and use hash router */
-          if (chosenTheme !== 'neon-entropy') {
-            terminalOutput('主题：' + (chosenTheme === 'mystic-void' ? '神秘虚空' : '静默信号'));
-            terminalOutput('正在退出终端...');
-            destroyTerminal();
-            location.hash = 'decide';
-            return;
-          }
-
-          terminalOutput('主题：霓虹熵');
-          advanceTerminalState('option_a');
-        } else {
-          terminalOutput('无效选择。请按 [M]、[N] 或 [S]。');
-          _termAcceptingInput = true;
-          showTerminalInput();
-        }
-        break;
-
-      case 'option_a':
-        S.optionA = value;
-        terminalOutput('选项A：' + value);
-        advanceTerminalState('option_b');
-        break;
-
-      case 'option_b':
-        S.optionB = value;
-        terminalOutput('选项B：' + value);
-        advanceTerminalState('fetching');
-        break;
-
-      case 'sample_1':
-      case 'sample_2':
-      case 'sample_3':
-      case 'sample_4':
-        var idx = parseInt(_termState.split('_')[1]) - 1;
-        var q = S.questions[idx];
-        S.answers[q.id] = value;
-        terminalOutput('> ' + value);
-        terminalOutput('正在处理...');
-        /* advance to next sample or processing */
-        if (idx + 1 >= S.questions.length) {
-          advanceTerminalState('processing');
-        } else {
-          advanceTerminalState('sample_' + (idx + 2));
-        }
-        break;
-
-      case 'result':
-        if (value.toUpperCase() === 'R') {
-          /* restart */
-          S.optionA = ''; S.optionB = ''; S.questions = [];
-          S.answers = {}; S.currentQuestion = 0; S.result = null;
-          $('#term-output').innerHTML = '';
-          advanceTerminalState('boot');
-        } else if (value.toUpperCase() === 'T') {
-          /* new theme */
-          destroyTerminal();
-          S.optionA = ''; S.optionB = ''; S.questions = [];
-          S.answers = {}; S.currentQuestion = 0; S.result = null;
-          location.hash = 'theme';
-        }
-        break;
-    }
-  }
-}
-
-async function runFetching() {
-  terminalOutput('');
-  await typeOutput('正在生成信号采样...', 30);
-  terminalOutput('种子：0x' + Math.random().toString(16).slice(2, 10).toUpperCase());
-  terminalOutput('正在处理...');
-
-  S.questions = [];
-  S.answers = {};
-  S.currentQuestion = 0;
-  S.result = null;
-
-  try {
-    var data = await API.getQuestions(S.theme, S.optionA.trim(), S.optionB.trim());
-    S.questions = data.questions;
-    S.currentQuestion = 0;
-    advanceTerminalState('sample_1');
-  } catch (e) {
-    terminalOutput('错误：' + e.message);
-    terminalOutput('正在重新连接到引导...');
-    setTimeout(function () { advanceTerminalState('boot'); }, 2000);
-  }
-}
-
-async function runSampleQuestion() {
-  var idx = parseInt(_termState.split('_')[1]) - 1;
-  var q = S.questions[idx];
-
-  terminalOutput('');
-  await typeOutput('采样 ' + (idx + 1) + '/4：', 25);
-  await typeOutput(q.text, 30);
-
-  _termAcceptingInput = true;
-  showTerminalInput();
-}
-
-async function runProcessing() {
-  terminalOutput('');
-  await typeOutput('正在计算熵偏向...', 30);
-  await typeOutput('正在坍缩概率波...', 30);
-  await typeOutput('现实噪声已稳定。', 30);
-
-  try {
-    var data = await API.decide(S.theme, S.optionA, S.optionB, S.answers);
-    S.result = data;
-    advanceTerminalState('result');
-  } catch (e) {
-    terminalOutput('错误：' + e.message);
-    terminalOutput('正在返回引导...');
-    setTimeout(function () {
-      S.optionA = ''; S.optionB = ''; S.questions = [];
-      S.answers = {}; S.currentQuestion = 0; S.result = null;
-      $('#term-output').innerHTML = '';
-      advanceTerminalState('boot');
-    }, 2000);
-  }
-}
-
-async function runTerminalResult() {
-  var r = S.result;
-
-  /* Build centered bias line */
-  var biasText = '检测到世界偏向：' + r.bias;
-  var innerWidth = 34;
-  var padTotal = Math.max(0, innerWidth - biasText.length);
-  var padLeft = Math.floor(padTotal / 2);
-  var padRight = padTotal - padLeft;
-  var biasLine = '║' + ' '.repeat(padLeft) + biasText + ' '.repeat(padRight) + '║';
-
-  terminalOutput('');
-  await typeOutput('╔' + '═'.repeat(34) + '╗', 15);
-  await typeOutput(biasLine, 15);
-  await typeOutput('╚' + '═'.repeat(34) + '╝', 15);
-  terminalOutput('');
-  terminalOutput(r.verdict);
-  terminalOutput('');
-  terminalOutput('"' + r.finalLine + '"');
-  terminalOutput('');
-  terminalOutput('─'.repeat(26));
-  await typeOutput('按 [R] 重来  [T] 换主题', 25);
-
-  _termAcceptingInput = true;
-  showTerminalInput();
-}
-
-function startTerminal() {
-  if (window._terminalActive) return;
-
-  /* If coming from hash routing, update hash to something non-splash
-     so the router doesn't interfere */
-  if (location.hash.slice(1) !== 'splash') {
-    /* already not splash, terminal keeps control */
-  }
-
-  destroyTerminal();
-  window._terminalActive = true;
-
-  /* build terminal DOM */
-  var app = $('#app');
-  app.innerHTML = '';
-
-  var terminalApp = el('div', { id: 'terminal-app' });
-  var terminal = el('div', { className: 'terminal' });
-
-  var termOutput = el('div', { className: 'terminal-output', id: 'term-output' });
-  terminal.appendChild(termOutput);
-
-  var inputLine = el('div', { className: 'terminal-input-line', id: 'term-input-line' });
-  inputLine.appendChild(el('span', { className: 'terminal-prompt' }, '> _'));
-  inputLine.appendChild(el('span', { className: 'terminal-cursor' }));
-  inputLine.style.display = 'none';
-  terminal.appendChild(inputLine);
-
-  terminalApp.appendChild(terminal);
-  app.appendChild(terminalApp);
-
-  /* hidden input — native IME works perfectly in real input fields */
-  _termHiddenInput = el('input', {
-    type: 'text',
-    className: 'terminal-hidden-input',
-    autocomplete: 'off',
-    autocorrect: 'off',
-    autocapitalize: 'off',
-    spellcheck: false,
-  });
-  _termHiddenInput.style.display = 'none';
-  terminalApp.appendChild(_termHiddenInput);
-
-  /* Listen to input event for full text (IME-compatible) */
-  _termHiddenInput.addEventListener('input', function () {
-    if (!window._terminalActive || !_termAcceptingInput) return;
-    /* Sync the hidden input value to our buffer */
-    var val = _termHiddenInput.value;
-    _termInputBuffer = val;
-    updateTerminalPrompt();
-  });
-
-  /* Keydown only for Enter — handle special keys */
-  _termKeydownHandler = function (e) {
-    if (!window._terminalActive || !_termAcceptingInput) return;
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      var value = _termHiddenInput.value.trim();
-      _termHiddenInput.value = '';
-      _termInputBuffer = '';
-      updateTerminalPrompt();
-      handleTerminalInput('Enter', value);
-    }
-  };
-  document.addEventListener('keydown', _termKeydownHandler);
-
-  /* start boot sequence */
-  _termState = 'boot';
-  _termInputBuffer = '';
-  handleTerminalState();
 }
