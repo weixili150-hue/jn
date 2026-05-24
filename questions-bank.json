@@ -108,9 +108,9 @@
     {
       "id": "p015",
       "category": "phone",
-      "text": "眼睛离屏幕大概多少厘米",
-      "inputType": "number",
-      "placeholder": "手量一下"
+      "text": "手机最常用的三个APP，排第一个的是什么颜色",
+      "inputType": "chips",
+      "options": ["蓝色", "绿色", "红色", "白色/黑色", "其他"]
     },
     {
       "id": "p016",
@@ -444,9 +444,9 @@
     {
       "id": "b003",
       "category": "body",
-      "text": "现在坐着屁股离地面大概多少厘米",
-      "inputType": "number",
-      "placeholder": "感觉一下"
+      "text": "你现在的重心大概在身体哪个位置",
+      "inputType": "chips",
+      "options": ["上半身", "腰部", "下半身", "脚底"]
     },
     {
       "id": "b004",
@@ -724,9 +724,9 @@
     {
       "id": "b043",
       "category": "body",
-      "text": "头发是扎起来还是散着",
+      "text": "你现在感觉头皮是紧还是放松",
       "inputType": "chips",
-      "options": ["扎起来了", "散着"]
+      "options": ["偏紧", "偏放松", "没感觉"]
     },
     {
       "id": "b044",
@@ -780,9 +780,9 @@
     {
       "id": "b051",
       "category": "body",
-      "text": "脚趾在鞋里活动空间如何",
+      "text": "脚底现在接触的是什么材质",
       "inputType": "chips",
-      "options": ["宽松", "刚好", "挤"]
+      "options": ["地板/地毯", "拖鞋/鞋底", "袜子", "直接地面"]
     },
     {
       "id": "b052",
@@ -1977,9 +1977,9 @@
     {
       "id": "a042",
       "category": "absurd",
-      "text": "手机突然坏掉你第一反应是什么情绪",
+      "text": "手机如果突然坏掉，你第一个会借谁的手机",
       "inputType": "chips",
-      "options": ["慌", "平静", "烦", "解脱"]
+      "options": ["家人", "朋友", "同事", "路人", "不借"]
     },
     {
       "id": "a043",
@@ -1998,16 +1998,16 @@
     {
       "id": "a045",
       "category": "absurd",
-      "text": "用触觉描述你现在的情绪更像什么",
-      "inputType": "chips",
-      "options": ["软的", "硬的", "凉的", "温的", "刺的"]
+      "text": "你现在右手边50厘米内最不重要的东西是什么",
+      "inputType": "text",
+      "placeholder": "看一眼"
     },
     {
       "id": "a046",
       "category": "absurd",
-      "text": "你现在是夜晚人格还是白昼人格",
+      "text": "此刻如果世界是一张桌子，你觉得自己在桌子的哪个位置",
       "inputType": "chips",
-      "options": ["夜晚人格", "白昼人格", "中间"]
+      "options": ["中间", "边沿", "桌角", "桌子底下"]
     },
     {
       "id": "a047",
@@ -2019,9 +2019,9 @@
     {
       "id": "a048",
       "category": "absurd",
-      "text": "如果给今天选一个情绪是什么",
+      "text": "如果此刻房间有一个看不见的物体，它最可能在哪",
       "inputType": "chips",
-      "options": ["开心", "平静", "烦躁", "累"]
+      "options": ["左边", "右边", "后面", "上面", "墙角"]
     },
     {
       "id": "a049",
