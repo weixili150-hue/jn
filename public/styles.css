@@ -123,6 +123,30 @@ body {
 .result-bias-void { font-family:var(--font-display); font-size:3rem; font-weight:700; letter-spacing:-0.03em; color:var(--accent); margin-bottom:28px; }
 .result-verdict { font-family:var(--font-display); font-size:1.125rem; font-weight:500; line-height:1.6; margin-bottom:20px; color:var(--fg); }
 .result-interpretation { font-size:0.8125rem; color:var(--fg-muted); line-height:1.65; margin-bottom:32px; }
+
+/* ─── Result: observation & detail (new fields) ─── */
+.result-observation {
+  font-size:0.875rem; color:var(--fg-muted); line-height:1.65; margin-bottom:16px;
+  font-style:italic; opacity:0.85;
+}
+.result-detail {
+  font-size:0.8125rem; color:var(--fg-muted); line-height:1.7; margin-bottom:20px;
+  padding:12px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+}
+
+/* Silent Signal new fields */
+.result-observation-zen {
+  font-family:var(--font-cn); font-size:0.9375rem; font-weight:400; line-height:1.75;
+  color:var(--fg-muted); margin-bottom:28px; opacity:0.8;
+}
+.result-detail-zen {
+  font-family:var(--font-cn); font-size:0.875rem; font-weight:400; line-height:1.75;
+  color:var(--fg-muted); margin-bottom:32px; opacity:0.75;
+}
+.result-interpretation-zen {
+  font-family:var(--font-cn); font-size:0.9375rem; font-weight:400; line-height:1.75;
+  color:var(--fg-muted); margin-bottom:28px; opacity:0.8;
+}
 .result-final-void { font-family:var(--font-cn); font-size:1.25rem; font-weight:500; line-height:1.7; color:var(--accent); margin-bottom:32px; }
 .result-signals { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:32px; padding-top:24px; border-top:1px solid var(--border); }
 .result-signal-label { font-size:0.5625rem; font-weight:600; letter-spacing:0.12em; color:var(--fg-muted); margin-bottom:4px; }
@@ -306,6 +330,17 @@ body {
 [data-theme="silent-signal"] .result-signal-entry-zen { padding:8px 0; }
 .result-signal-entry-zen { display:none; }
 [data-theme="silent-signal"] .corner-bracket { display:none; }
+
+/* Show/hide new fields per theme */
+.result-observation-zen { display:none; }
+.result-detail-zen { display:none; }
+.result-interpretation-zen { display:none; }
+[data-theme="silent-signal"] .result-observation { display:none; }
+[data-theme="silent-signal"] .result-observation-zen { display:block; }
+[data-theme="silent-signal"] .result-detail { display:none; }
+[data-theme="silent-signal"] .result-detail-zen { display:block; }
+[data-theme="silent-signal"] .result-interpretation { display:none; }
+[data-theme="silent-signal"] .result-interpretation-zen { display:block; }
 
 /* ═══════════════════════════════════════════
    SHARED COMPONENT STYLES
