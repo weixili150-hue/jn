@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-const { buildQuestionsPrompt, buildResultPrompt } = require('./prompts/entropy');
+const { buildResultPrompt } = require('./prompts/entropy');
+const { sampleQuestions, tweakQuestions } = require('./questions-engine');
 
 const app = express();
 const PORT = process.env.PORT || 3459;
@@ -8,7 +9,11 @@ const PORT = process.env.PORT || 3459;
 app.use(express.json({ limit: '10kb' }));
 app.use(express.static('public'));
 
-// POST /api/questions — generate 4 random signal sampling questions
+// 结尾句黑名单（内存，重启清空）
+const finalLineBlacklist = [];
+const MAX_BLACKLIST = 50;
+
+// POST /api/questions — 本地题库随机采样（可选 AI 微调）
 app.post('/api/questions', async (req, res) => {
   const { theme, optionA, optionB } = req.body;
 
@@ -21,49 +26,22 @@ app.post('/api/questions', async (req, res) => {
     return res.status(400).json({ error: 'Invalid theme' });
   }
 
-  const apiKey = process.env.DEEPSEEK_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'AI API key not configured' });
-  }
-
   try {
-    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          { role: 'user', content: buildQuestionsPrompt(theme, optionA, optionB) },
-        ],
-        max_tokens: 2000,
-        temperature: 0.9,
-      }),
-      signal: AbortSignal.timeout(30000),
-    });
+    let questions = sampleQuestions(4);
 
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`DeepSeek API error ${response.status}: ${errText}`);
+    // 可选：AI 微调
+    if (process.env.ENABLE_AI_TWEAK === 'true') {
+      questions = await tweakQuestions(questions);
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) throw new Error('Empty response from AI');
-
-    const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const questions = JSON.parse(jsonStr);
-
-    return res.json(questions);
+    return res.json({ questions });
   } catch (e) {
-    console.error('Question generation failed:', e.message);
+    console.error('Question sampling failed:', e.message);
     return res.status(500).json({ error: 'Signal sampling failed. Please try again.' });
   }
 });
 
-// POST /api/decide — interpret answers and return oracle result
+// POST /api/decide — AI 判词（带黑名单）
 app.post('/api/decide', async (req, res) => {
   const { theme, optionA, optionB, answers } = req.body;
 
@@ -76,21 +54,15 @@ app.post('/api/decide', async (req, res) => {
     return res.status(500).json({ error: 'AI API key not configured' });
   }
 
-  // Generate random loading phrases for this session
-  const loadingPhrases = [
-    '正在同步环境熵...',
-    '外部信号聚集中...',
-    '世界偏向正在收敛...',
-    '现实噪声处理中...',
-    '时间切片分析中...',
-    '偶然密度计算中...',
-    '信息流正在沉淀...',
-    '正在监听宇宙低频...',
-    '环境残响解码中...',
-    '世界正在替你做决定...',
-  ];
-
   try {
+    const prompt = buildResultPrompt(
+      theme,
+      optionA,
+      optionB,
+      answers,
+      [...finalLineBlacklist]
+    );
+
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -100,7 +72,7 @@ app.post('/api/decide', async (req, res) => {
       body: JSON.stringify({
         model: 'deepseek-chat',
         messages: [
-          { role: 'user', content: buildResultPrompt(theme, optionA, optionB, answers) },
+          { role: 'user', content: prompt },
         ],
         max_tokens: 2000,
         temperature: 0.7,
@@ -120,7 +92,15 @@ app.post('/api/decide', async (req, res) => {
     const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     const result = JSON.parse(jsonStr);
 
-    return res.json({ ...result, loadingPhrases });
+    // 记录结尾句到黑名单
+    if (result.finalLine) {
+      finalLineBlacklist.push(result.finalLine);
+      if (finalLineBlacklist.length > MAX_BLACKLIST) {
+        finalLineBlacklist.shift();
+      }
+    }
+
+    return res.json(result);
   } catch (e) {
     console.error('Result generation failed:', e.message);
     return res.status(500).json({ error: 'Signal interpretation failed. The noise was too loud.' });
