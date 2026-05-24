@@ -322,9 +322,36 @@ async function runTerminalResult() {
   await typeOutput(biasLine, 15);
   await typeOutput('╚' + '═'.repeat(34) + '╝', 15);
   terminalOutput('');
+
+  if (r.observation) {
+    terminalOutput(r.observation);
+    terminalOutput('');
+  }
+
   terminalOutput(r.verdict);
+
+  if (r.interpretation) {
+    terminalOutput('');
+    terminalOutput(r.interpretation);
+  }
+
+  if (r.detail) {
+    terminalOutput('');
+    terminalOutput(r.detail);
+  }
+
   terminalOutput('');
   terminalOutput('"' + r.finalLine + '"');
+
+  if (r.signals && r.signals.length > 0) {
+    terminalOutput('');
+    terminalOutput('─'.repeat(26));
+    for (var i = 0; i < r.signals.length; i++) {
+      var s = r.signals[i];
+      terminalOutput(s.label + '：' + s.value);
+    }
+  }
+
   terminalOutput('');
   terminalOutput('─'.repeat(26));
   await typeOutput('按 [R] 重来  [T] 换主题', 25);
