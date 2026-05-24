@@ -28,18 +28,34 @@ window.Engine_Silent = {
       style: { animationDelay: '0s' },
     }, '偏向 ' + r.bias));
 
+    if (r.observation) {
+      view.appendChild(el('div', {
+        className: 'result-observation-zen zen-emerge',
+        style: { animationDelay: '1s' },
+      }, r.observation));
+    }
+
     view.appendChild(el('div', {
       className: 'result-verdict-zen zen-emerge',
-      style: { animationDelay: '2s' },
+      style: { animationDelay: '2.5s' },
     }, r.verdict));
 
-    view.appendChild(el('div', {
-      className: 'result-final-zen zen-emerge',
-      style: { animationDelay: '5s', fontStyle: 'italic' },
-    }, r.finalLine));
+    if (r.interpretation) {
+      view.appendChild(el('div', {
+        className: 'result-interpretation-zen zen-emerge',
+        style: { animationDelay: '3.5s' },
+      }, r.interpretation));
+    }
+
+    if (r.detail) {
+      view.appendChild(el('div', {
+        className: 'result-detail-zen zen-emerge',
+        style: { animationDelay: '4.5s' },
+      }, r.detail));
+    }
 
     if (r.signals) {
-      const signals = el('div', { className: 'result-signals-zen' });
+      const signals = el('div', { className: 'result-signals-zen zen-emerge', style: 'animation-delay:5.5s' });
       for (const s of r.signals) {
         signals.appendChild(el('div', { className: 'result-signal-entry-zen' },
           el('div', { className: 'result-signal-label' }, s.label),
@@ -48,6 +64,11 @@ window.Engine_Silent = {
       }
       view.appendChild(signals);
     }
+
+    view.appendChild(el('div', {
+      className: 'result-final-zen zen-emerge',
+      style: { animationDelay: '7s', fontStyle: 'italic' },
+    }, r.finalLine));
 
     view.appendChild(el('button', {
       className: 'btn-zen-text',

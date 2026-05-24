@@ -79,13 +79,22 @@ window.Engine_Mystic = {
   result: function () {
     const r = S.result;
     const view = el('div', { className: 'result-view' });
-    const card = el('div', { className: 'result-card result-card-void' });
+    const card = el('div', { className: 'result-card-void' });
 
     card.appendChild(el('div', { className: 'result-label' }, '环境熵观测报告'));
-    card.appendChild(el('div', { className: 'result-bias result-bias-void' }, '世界偏向 ' + r.bias));
+    card.appendChild(el('div', { className: 'result-bias-void' }, '世界偏向 ' + r.bias));
+
+    if (r.observation) {
+      card.appendChild(el('div', { className: 'result-observation' }, r.observation));
+    }
     card.appendChild(el('div', { className: 'result-verdict' }, r.verdict));
-    card.appendChild(el('div', { className: 'result-interpretation' }, r.interpretation));
-    card.appendChild(el('div', { className: 'result-final result-final-void' }, r.finalLine));
+    if (r.interpretation) {
+      card.appendChild(el('div', { className: 'result-interpretation' }, r.interpretation));
+    }
+    if (r.detail) {
+      card.appendChild(el('div', { className: 'result-detail' }, r.detail));
+    }
+    card.appendChild(el('div', { className: 'result-final-void' }, r.finalLine));
 
     if (r.signals) {
       const signals = el('div', { className: 'result-signals' });

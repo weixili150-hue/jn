@@ -95,9 +95,9 @@ function shareResult(r) {
   const T = S.theme;
   let shareText;
   if (T === 'neon-entropy') {
-    shareText = '// 环境熵观测报告\n\n世界偏向：' + r.bias + '\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
+    shareText = '// 环境熵观测报告\n\n世界偏向：' + r.bias + '\n' + r.verdict + '\n\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
   } else {
-    shareText = '\u{1F52E} 环境熵观测\n\n世界偏向 ' + r.bias + '\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
+    shareText = '\u{1F52E} 环境熵观测\n\n世界偏向 ' + r.bias + '\n\n' + r.verdict + '\n\n"' + r.finalLine + '"\n\n—— 环境熵观测器';
   }
   if (navigator.share) {
     navigator.share({ title: '环境熵观测', text: shareText }).catch(() => {});
