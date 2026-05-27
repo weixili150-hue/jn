@@ -125,14 +125,19 @@ function route() {
   app.classList.add('crossfading');
 
   setTimeout(() => {
-    switch (hash) {
-      case 'splash': renderSplash(); break;
-      case 'theme': renderThemeSelect(); break;
-      case 'decide': renderDecision(); break;
-      case 'sample': renderSample(); break;
-      case 'loading': renderLoading(); break;
-      case 'result': renderResult(); break;
-      default: location.hash = 'splash'; return;
+    try {
+      switch (hash) {
+        case 'splash': renderSplash(); break;
+        case 'theme': renderThemeSelect(); break;
+        case 'decide': renderDecision(); break;
+        case 'sample': renderSample(); break;
+        case 'loading': renderLoading(); break;
+        case 'result': renderResult(); break;
+        default: location.hash = 'splash'; return;
+      }
+    } catch(e) {
+      app.innerHTML = '<div style="color:red;padding:40px;text-align:center"><h3>出错了</h3><p>'+e.message+'</p><pre style="font-size:12px;margin-top:12px">'+e.stack+'</pre><button onclick="location.reload()" style="margin-top:20px;padding:14px 32px">刷新页面</button></div>';
+      console.error(e);
     }
     requestAnimationFrame(() => {
       app.classList.remove('crossfading');
