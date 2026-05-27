@@ -1256,9 +1256,9 @@
     {
       "id": "e059",
       "category": "environment",
-      "text": "你觉得哪个角落有点不对劲",
-      "inputType": "text",
-      "placeholder": "凭直觉"
+      "text": "现在你周围最暗的方向是哪里",
+      "inputType": "chips",
+      "options": ["前面", "后面", "左边", "右边", "上面", "都差不多"]
     },
     {
       "id": "e060",
