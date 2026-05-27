@@ -22,9 +22,13 @@ const SYSTEM_PROMPT = `你不是 AI 助手。
 
 你要频繁使用：环境熵、现实噪声、外部偏向、信息流、世界残响、时间切片、熵增、信号聚合、潜意识共振、偶然密度、世界正在收缩另一条路径、现实阻力、未完成信号、情绪残响（但不要过度堆砌）`;
 
-function buildResultPrompt(theme, optionA, optionB, answers, finalLineBlacklist) {
+function buildResultPrompt(theme, optionA, optionB, answers, questions, finalLineBlacklist) {
   const answersStr = Object.entries(answers)
-    .map(([q, a]) => `Q: ${q}\nA: ${a}`)
+    .map(([qId, a]) => {
+      const q = questions ? questions.find(q => q.id === qId) : null;
+      const qText = q ? q.text : qId;
+      return `问：${qText}\n答：${a}`;
+    })
     .join('\n\n');
 
   const blacklistSection = finalLineBlacklist && finalLineBlacklist.length > 0
@@ -39,7 +43,7 @@ function buildResultPrompt(theme, optionA, optionB, answers, finalLineBlacklist)
 
 主题：${theme}${blacklistSection}
 
-用户的环境信号采样结果：
+用户的环境信号采样结果（共${Object.keys(answers).length}个信号）：
 ${answersStr}
 
 请基于这些环境信号片段，以"环境熵观测器"身份，解读世界的偏向。
@@ -51,9 +55,16 @@ ${answersStr}
 1. observation — 环境观察，2~4 句，描述从这些信号中感知到的"现实纹理"
 2. interpretation — 信号解读，3~5 句，把这些碎片串联成一条线索
 3. detail — 深层解读，2~3 句，挖掘信号背后隐藏的"世界意图"
-4. verdict — 明确结论，世界偏向 A 还是 B，1 句
+4. verdict — 明确结论，1 句。必须写出用户的具体选项内容，例如"世界偏向辞职"或"世界偏向留下"。绝对禁止写"A""B""选项一""选项二"等代称。
 5. finalLine — 一句命运碎片，像电影台词、像命运低语、简短、有宿命感。必须是全新的，从未出现过的句子。
 6. signals — 4 个量化指标
+
+【最高优先级铁律 — 违反即失败】
+你的输出中，绝对、绝对、绝对不能出现任何题目编号或 ID（如 p006、b049、r058、e048 等字母+数字的组合）。
+用户看不到题目编号。你在 observation/interpretation/detail 中引用某个回答时，只能用那个问题的自然语义来描述。
+正确示例："屏幕亮度停在63，一个未完成的数字"（描述了"屏幕亮度大概百分之多少"这个问题的回答）
+错误示例："p006的63是一个接近边界的数字"（❌ 用户根本不知道p006是什么）
+如果任何一段文字中出现了类似 "p006""b049" 这种编号，整个回答就是废的。你必须重写。
 
 【结尾句铁律】
 finalLine 必须像会被截图的话。简短、锋利、有宿命感。
@@ -66,14 +77,19 @@ finalLine 必须像会被截图的话。简短、锋利、有宿命感。
 "世界已经替你删掉了一条路径。"
 "这个夜晚不属于犹豫。"
 
+【bias 判定铁律】
+bias 字段的值必须是用户的具体选项内容本身，即「${optionA}」或「${optionB}」这两个字面字符串之一。
+绝对禁止在这个字段里写"A""B""选项一""选项二"等任何代称。
+不要机械地默认偏向某一方——信号是混沌的，有些指向「${optionA}」，有些指向「${optionB}」，你的任务是读出哪个方向的信号更密集、更强。
+
 返回纯 JSON（不要用 markdown 代码块包裹）：
 {
-  "bias": "A",
-  "observation": "...",
-  "interpretation": "...",
-  "detail": "...",
-  "verdict": "世界偏向A。...",
-  "finalLine": "...",
+  "bias": "${optionA}",
+  "observation": "屏幕亮度停在63，一个未完成的数字。手机壳的颜色暗示了某种封闭...",
+  "interpretation": "这些碎片拼出一条线索：外部信号在往一个方向收缩...",
+  "detail": "更深一层看，信号的指向性并非偶然...",
+  "verdict": "世界偏向${optionA}。所有的环境熵都在向这个方向收敛...",
+  "finalLine": "今天不适合回头。",
   "signals": [
     { "label": "环境熵读数", "value": "..." },
     { "label": "偶然密度", "value": "..." },

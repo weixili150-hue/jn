@@ -467,7 +467,7 @@ function renderLoading() {
   fetch('/api/decide', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ theme: S.theme, optionA: S.optionA, optionB: S.optionB, answers: S.answers }),
+    body: JSON.stringify({ theme: S.theme, optionA: S.optionA, optionB: S.optionB, answers: S.answers, questions: S.questions }),
     signal: controller.signal,
   })
     .then(res => res.json().then(data => ({ ok: res.ok, data })))

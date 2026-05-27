@@ -43,7 +43,7 @@ app.post('/api/questions', async (req, res) => {
 
 // POST /api/decide — AI 判词（带黑名单）
 app.post('/api/decide', async (req, res) => {
-  const { theme, optionA, optionB, answers } = req.body;
+  const { theme, optionA, optionB, answers, questions } = req.body;
 
   if (!theme || !optionA || !optionB || !answers) {
     return res.status(400).json({ error: 'theme, optionA, optionB, and answers are required' });
@@ -60,6 +60,7 @@ app.post('/api/decide', async (req, res) => {
       optionA,
       optionB,
       answers,
+      questions || [],
       [...finalLineBlacklist]
     );
 

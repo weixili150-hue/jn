@@ -1,10 +1,25 @@
 {
   "categories": {
-    "body": { "weight": 1.0, "label": "身体细节" },
-    "phone": { "weight": 1.0, "label": "手机细节" },
-    "environment": { "weight": 1.0, "label": "环境细节" },
-    "reality": { "weight": 1.0, "label": "现实细节" },
-    "absurd": { "weight": 1.0, "label": "轻微荒诞" }
+    "body": {
+      "weight": 1,
+      "label": "身体细节"
+    },
+    "phone": {
+      "weight": 1,
+      "label": "手机细节"
+    },
+    "environment": {
+      "weight": 1,
+      "label": "环境细节"
+    },
+    "reality": {
+      "weight": 1,
+      "label": "现实细节"
+    },
+    "absurd": {
+      "weight": 1,
+      "label": "轻微荒诞"
+    }
   },
   "questions": [
     {
@@ -110,7 +125,13 @@
       "category": "phone",
       "text": "手机最常用的三个APP，排第一个的是什么颜色",
       "inputType": "chips",
-      "options": ["蓝色", "绿色", "红色", "白色/黑色", "其他"]
+      "options": [
+        "蓝色",
+        "绿色",
+        "红色",
+        "白色/黑色",
+        "其他"
+      ]
     },
     {
       "id": "p016",
@@ -157,7 +178,7 @@
     {
       "id": "p022",
       "category": "phone",
-      "text": "桌面文件夹有几个",
+      "text": "手机桌面文件夹有几个",
       "inputType": "number",
       "placeholder": "数一下"
     },
@@ -222,168 +243,254 @@
       "category": "phone",
       "text": "手机摸起来偏热还是偏凉",
       "inputType": "chips",
-      "options": ["偏热", "偏凉", "刚好"]
+      "options": [
+        "偏热",
+        "偏凉",
+        "刚好"
+      ]
     },
     {
       "id": "p032",
       "category": "phone",
       "text": "最近一条通知来自哪个APP",
       "inputType": "chips",
-      "options": ["微信", "短信", "邮件", "其他"]
+      "options": [
+        "微信",
+        "短信",
+        "邮件",
+        "其他"
+      ]
     },
     {
       "id": "p033",
       "category": "phone",
       "text": "屏幕是竖屏还是横屏",
       "inputType": "chips",
-      "options": ["竖屏", "横屏"]
+      "options": [
+        "竖屏",
+        "横屏"
+      ]
     },
     {
       "id": "p034",
       "category": "phone",
       "text": "铃声模式是什么",
       "inputType": "chips",
-      "options": ["响铃", "静音", "振动"]
+      "options": [
+        "响铃",
+        "静音",
+        "振动"
+      ]
     },
     {
       "id": "p035",
       "category": "phone",
       "text": "在用WiFi还是流量",
       "inputType": "chips",
-      "options": ["WiFi", "移动数据"]
+      "options": [
+        "WiFi",
+        "移动数据"
+      ]
     },
     {
       "id": "p036",
       "category": "phone",
       "text": "手机壳是什么颜色",
       "inputType": "chips",
-      "options": ["透明", "纯色", "有图案", "无壳"]
+      "options": [
+        "透明",
+        "纯色",
+        "有图案",
+        "无壳"
+      ]
     },
     {
       "id": "p037",
       "category": "phone",
       "text": "输入法当前是什么语言",
       "inputType": "chips",
-      "options": ["中文", "英文", "其他"]
+      "options": [
+        "中文",
+        "英文",
+        "其他"
+      ]
     },
     {
       "id": "p038",
       "category": "phone",
       "text": "手机在充电吗",
       "inputType": "chips",
-      "options": ["在充电", "没在充"]
+      "options": [
+        "在充电",
+        "没在充"
+      ]
     },
     {
       "id": "p039",
       "category": "phone",
       "text": "单手还是双手在操作手机",
       "inputType": "chips",
-      "options": ["单手", "双手"]
+      "options": [
+        "单手",
+        "双手"
+      ]
     },
     {
       "id": "p040",
       "category": "phone",
       "text": "省电模式开着吗",
       "inputType": "chips",
-      "options": ["开着", "关着"]
+      "options": [
+        "开着",
+        "关着"
+      ]
     },
     {
       "id": "p041",
       "category": "phone",
       "text": "现在戴着耳机吗",
       "inputType": "chips",
-      "options": ["有线耳机", "无线耳机", "没戴"]
+      "options": [
+        "有线耳机",
+        "无线耳机",
+        "没戴"
+      ]
     },
     {
       "id": "p042",
       "category": "phone",
       "text": "桌面壁纸偏深色还是偏浅色",
       "inputType": "chips",
-      "options": ["深色", "浅色"]
+      "options": [
+        "深色",
+        "浅色"
+      ]
     },
     {
       "id": "p043",
       "category": "phone",
       "text": "屏幕有贴膜吗",
       "inputType": "chips",
-      "options": ["贴了", "没贴"]
+      "options": [
+        "贴了",
+        "没贴"
+      ]
     },
     {
       "id": "p044",
       "category": "phone",
       "text": "最近下载的APP是什么类型",
       "inputType": "chips",
-      "options": ["游戏", "工具", "社交", "其他"]
+      "options": [
+        "游戏",
+        "工具",
+        "社交",
+        "其他"
+      ]
     },
     {
       "id": "p045",
       "category": "phone",
       "text": "手机戴着壳还是裸机",
       "inputType": "chips",
-      "options": ["有壳", "裸机"]
+      "options": [
+        "有壳",
+        "裸机"
+      ]
     },
     {
       "id": "p046",
       "category": "phone",
       "text": "悬浮窗或小窗有在显示吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "p047",
       "category": "phone",
       "text": "计时器或秒表正在跑吗",
       "inputType": "chips",
-      "options": ["在跑", "没跑"]
+      "options": [
+        "在跑",
+        "没跑"
+      ]
     },
     {
       "id": "p048",
       "category": "phone",
       "text": "最近一张照片是拍的还是截图的",
       "inputType": "chips",
-      "options": ["拍的", "截图"]
+      "options": [
+        "拍的",
+        "截图"
+      ]
     },
     {
       "id": "p049",
       "category": "phone",
       "text": "手机放在什么表面上",
       "inputType": "chips",
-      "options": ["硬的", "软的", "手上", "口袋"]
+      "options": [
+        "硬的",
+        "软的",
+        "手上",
+        "口袋"
+      ]
     },
     {
       "id": "p050",
       "category": "phone",
       "text": "最近一条微信是文字还是语音",
       "inputType": "chips",
-      "options": ["文字", "语音"]
+      "options": [
+        "文字",
+        "语音"
+      ]
     },
     {
       "id": "p051",
       "category": "phone",
       "text": "屏幕亮度感觉偏亮还是偏暗",
       "inputType": "chips",
-      "options": ["偏亮", "偏暗", "刚好"]
+      "options": [
+        "偏亮",
+        "偏暗",
+        "刚好"
+      ]
     },
     {
       "id": "p052",
       "category": "phone",
       "text": "最近看的视频是横屏还是竖屏",
       "inputType": "chips",
-      "options": ["横屏", "竖屏"]
+      "options": [
+        "横屏",
+        "竖屏"
+      ]
     },
     {
       "id": "p053",
       "category": "phone",
       "text": "手机在身体的哪一侧",
       "inputType": "chips",
-      "options": ["左侧", "右侧", "正前方"]
+      "options": [
+        "左侧",
+        "右侧",
+        "正前方"
+      ]
     },
     {
       "id": "p054",
       "category": "phone",
       "text": "最近刷到的主要内容是图文还是视频",
       "inputType": "chips",
-      "options": ["图文", "视频"]
+      "options": [
+        "图文",
+        "视频"
+      ]
     },
     {
       "id": "p055",
@@ -446,7 +553,12 @@
       "category": "body",
       "text": "你现在的重心大概在身体哪个位置",
       "inputType": "chips",
-      "options": ["上半身", "腰部", "下半身", "脚底"]
+      "options": [
+        "上半身",
+        "腰部",
+        "下半身",
+        "脚底"
+      ]
     },
     {
       "id": "b004",
@@ -640,170 +752,258 @@
     {
       "id": "b031",
       "category": "body",
-      "text": "坐姿更偏向哪一边",
+      "text": "身体重心更偏向哪一边",
       "inputType": "chips",
-      "options": ["偏左", "偏右", "正中"]
+      "options": [
+        "偏左",
+        "偏右",
+        "正中"
+      ]
     },
     {
       "id": "b032",
       "category": "body",
       "text": "左右手哪只手更暖和",
       "inputType": "chips",
-      "options": ["左手", "右手", "差不多"]
+      "options": [
+        "左手",
+        "右手",
+        "差不多"
+      ]
     },
     {
       "id": "b033",
       "category": "body",
       "text": "身体哪个部位现在最有存在感",
       "inputType": "chips",
-      "options": ["头", "肩膀", "腰", "腿", "手"]
+      "options": [
+        "头",
+        "肩膀",
+        "腰",
+        "腿",
+        "手"
+      ]
     },
     {
       "id": "b034",
       "category": "body",
       "text": "身上有没有哪里在痛或酸",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "b035",
       "category": "body",
       "text": "呼吸感觉偏深还是偏浅",
       "inputType": "chips",
-      "options": ["偏深", "偏浅", "正常"]
+      "options": [
+        "偏深",
+        "偏浅",
+        "正常"
+      ]
     },
     {
       "id": "b036",
       "category": "body",
       "text": "腿现在是伸直还是弯曲",
       "inputType": "chips",
-      "options": ["伸直", "弯曲"]
+      "options": [
+        "伸直",
+        "弯曲"
+      ]
     },
     {
       "id": "b037",
       "category": "body",
       "text": "左右肩膀一样高吗",
       "inputType": "chips",
-      "options": ["左高右低", "左低右高", "一样平"]
+      "options": [
+        "左高右低",
+        "左低右高",
+        "一样平"
+      ]
     },
     {
       "id": "b038",
       "category": "body",
       "text": "背后有靠背还是悬空",
       "inputType": "chips",
-      "options": ["有靠", "悬空"]
+      "options": [
+        "有靠",
+        "悬空"
+      ]
     },
     {
       "id": "b039",
       "category": "body",
       "text": "脚踝是交叠着还是分开的",
       "inputType": "chips",
-      "options": ["交叠", "分开"]
+      "options": [
+        "交叠",
+        "分开"
+      ]
     },
     {
       "id": "b040",
       "category": "body",
       "text": "上下牙齿是咬合着还是分开的",
       "inputType": "chips",
-      "options": ["咬着", "分开"]
+      "options": [
+        "咬着",
+        "分开"
+      ]
     },
     {
       "id": "b041",
       "category": "body",
       "text": "眉间是皱着还是舒展的",
       "inputType": "chips",
-      "options": ["皱着", "舒展"]
+      "options": [
+        "皱着",
+        "舒展"
+      ]
     },
     {
       "id": "b042",
       "category": "body",
       "text": "感觉哪边鼻孔更通畅",
       "inputType": "chips",
-      "options": ["左边", "右边", "都通", "都不通"]
+      "options": [
+        "左边",
+        "右边",
+        "都通",
+        "都不通"
+      ]
     },
     {
       "id": "b043",
       "category": "body",
       "text": "你现在感觉头皮是紧还是放松",
       "inputType": "chips",
-      "options": ["偏紧", "偏放松", "没感觉"]
+      "options": [
+        "偏紧",
+        "偏放松",
+        "没感觉"
+      ]
     },
     {
       "id": "b044",
       "category": "body",
       "text": "手指上戴着戒指吗",
       "inputType": "chips",
-      "options": ["戴着", "没有"]
+      "options": [
+        "戴着",
+        "没有"
+      ]
     },
     {
       "id": "b045",
       "category": "body",
       "text": "手腕上戴着表或手环吗",
       "inputType": "chips",
-      "options": ["戴着", "没有"]
+      "options": [
+        "戴着",
+        "没有"
+      ]
     },
     {
       "id": "b046",
       "category": "body",
       "text": "袖口感觉偏松还是偏紧",
       "inputType": "chips",
-      "options": ["偏松", "偏紧", "刚好"]
+      "options": [
+        "偏松",
+        "偏紧",
+        "刚好"
+      ]
     },
     {
       "id": "b047",
       "category": "body",
       "text": "裤腰或腰带感觉勒吗",
       "inputType": "chips",
-      "options": ["勒", "松", "刚好"]
+      "options": [
+        "勒",
+        "松",
+        "刚好"
+      ]
     },
     {
       "id": "b048",
       "category": "body",
       "text": "现在戴着眼镜或隐形吗",
       "inputType": "chips",
-      "options": ["眼镜", "隐形", "都没戴"]
+      "options": [
+        "眼镜",
+        "隐形",
+        "都没戴"
+      ]
     },
     {
       "id": "b049",
       "category": "body",
       "text": "胳膊是交叉着还是自然放着",
       "inputType": "chips",
-      "options": ["交叉", "自然放着"]
+      "options": [
+        "交叉",
+        "自然放着"
+      ]
     },
     {
       "id": "b050",
       "category": "body",
       "text": "手在托腮或撑着头吗",
       "inputType": "chips",
-      "options": ["在托/撑", "没有"]
+      "options": [
+        "在托/撑",
+        "没有"
+      ]
     },
     {
       "id": "b051",
       "category": "body",
       "text": "脚底现在接触的是什么材质",
       "inputType": "chips",
-      "options": ["地板/地毯", "拖鞋/鞋底", "袜子", "直接地面"]
+      "options": [
+        "地板/地毯",
+        "拖鞋/鞋底",
+        "袜子",
+        "直接地面"
+      ]
     },
     {
       "id": "b052",
       "category": "body",
       "text": "最近碰过的东西偏硬还是偏软",
       "inputType": "chips",
-      "options": ["偏硬", "偏软"]
+      "options": [
+        "偏硬",
+        "偏软"
+      ]
     },
     {
       "id": "b053",
       "category": "body",
       "text": "眼前有飞蚊或光斑吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "b054",
       "category": "body",
       "text": "脚掌是全部着地还是部分悬空",
       "inputType": "chips",
-      "options": ["全部着地", "部分悬空"]
+      "options": [
+        "全部着地",
+        "部分悬空",
+        "没着地/躺着"
+      ]
     },
     {
       "id": "b055",
@@ -845,7 +1045,13 @@
       "category": "body",
       "text": "现在身体哪块肌肉最放松",
       "inputType": "chips",
-      "options": ["脸", "肩颈", "手臂", "腿", "都差不多"]
+      "options": [
+        "脸",
+        "肩颈",
+        "手臂",
+        "腿",
+        "都差不多"
+      ]
     },
     {
       "id": "e001",
@@ -885,16 +1091,28 @@
     {
       "id": "e006",
       "category": "environment",
-      "text": "离你最近的门大概几米",
-      "inputType": "number",
-      "placeholder": "目测"
+      "text": "离你最近的门大概多远",
+      "inputType": "chips",
+      "options": [
+        "1米以内",
+        "1-3米",
+        "3-10米",
+        "10米以上",
+        "看不到/没有"
+      ]
     },
     {
       "id": "e007",
       "category": "environment",
-      "text": "离你最近的窗户大概几米",
-      "inputType": "number",
-      "placeholder": "目测"
+      "text": "离你最近的窗户大概多远",
+      "inputType": "chips",
+      "options": [
+        "1米以内",
+        "1-3米",
+        "3-10米",
+        "10米以上",
+        "看不到/没有"
+      ]
     },
     {
       "id": "e008",
@@ -927,9 +1145,9 @@
     {
       "id": "e012",
       "category": "environment",
-      "text": "这个空间的天花板大概几米高",
+      "text": "你所在空间的高度大概几米",
       "inputType": "number",
-      "placeholder": "目测"
+      "placeholder": "户外写99"
     },
     {
       "id": "e013",
@@ -963,8 +1181,14 @@
       "id": "e017",
       "category": "environment",
       "text": "天花板上有几个灯",
-      "inputType": "number",
-      "placeholder": "抬头看"
+      "inputType": "chips",
+      "options": [
+        "0个",
+        "1-2个",
+        "3-5个",
+        "6个以上",
+        "没天花板/户外"
+      ]
     },
     {
       "id": "e018",
@@ -990,9 +1214,15 @@
     {
       "id": "e021",
       "category": "environment",
-      "text": "离最近的楼梯或电梯大概几米",
-      "inputType": "number",
-      "placeholder": "目测"
+      "text": "离最近的楼梯或电梯大概多远",
+      "inputType": "chips",
+      "options": [
+        "1米以内",
+        "1-5米",
+        "5-20米",
+        "20米以上",
+        "看不到/没有"
+      ]
     },
     {
       "id": "e022",
@@ -1018,9 +1248,15 @@
     {
       "id": "e025",
       "category": "environment",
-      "text": "离你最近的出口大概几米",
-      "inputType": "number",
-      "placeholder": "看一下"
+      "text": "离你最近的出口大概多远",
+      "inputType": "chips",
+      "options": [
+        "1米以内",
+        "1-5米",
+        "5-20米",
+        "20米以上",
+        "不确定"
+      ]
     },
     {
       "id": "e026",
@@ -1062,168 +1298,275 @@
       "category": "environment",
       "text": "最近的人穿什么颜色的衣服",
       "inputType": "chips",
-      "options": ["深色", "浅色", "彩色", "没看到人"]
+      "options": [
+        "深色",
+        "浅色",
+        "彩色",
+        "没看到人"
+      ]
     },
     {
       "id": "e032",
       "category": "environment",
       "text": "附近最亮的光是自然光还是人造光",
       "inputType": "chips",
-      "options": ["自然光", "人造光"]
+      "options": [
+        "自然光",
+        "人造光"
+      ]
     },
     {
       "id": "e033",
       "category": "environment",
       "text": "最近的声音像机械还是像自然声",
       "inputType": "chips",
-      "options": ["机械声", "自然声"]
+      "options": [
+        "机械声",
+        "自然声"
+      ]
     },
     {
       "id": "e034",
       "category": "environment",
       "text": "空气感觉偏冷还是偏闷",
       "inputType": "chips",
-      "options": ["偏冷", "偏闷", "舒适"]
+      "options": [
+        "偏冷",
+        "偏闷",
+        "舒适"
+      ]
     },
     {
       "id": "e035",
       "category": "environment",
       "text": "主要光线是从哪个方向来的",
       "inputType": "chips",
-      "options": ["左边", "右边", "上方", "前方"]
+      "options": [
+        "左边",
+        "右边",
+        "上方",
+        "前方"
+      ]
     },
     {
       "id": "e036",
       "category": "environment",
       "text": "空间感觉是开放还是封闭",
       "inputType": "chips",
-      "options": ["开放", "封闭"]
+      "options": [
+        "开放",
+        "封闭"
+      ]
     },
     {
       "id": "e037",
       "category": "environment",
       "text": "灯光颜色偏冷白还是暖黄",
       "inputType": "chips",
-      "options": ["暖黄", "冷白", "自然白", "没开灯"]
+      "options": [
+        "暖黄",
+        "冷白",
+        "自然白",
+        "没开灯"
+      ]
     },
     {
       "id": "e038",
       "category": "environment",
       "text": "地面是什么材质",
       "inputType": "chips",
-      "options": ["地板", "瓷砖", "地毯", "水泥", "其他"]
+      "options": [
+        "地板",
+        "瓷砖",
+        "地毯",
+        "水泥",
+        "草地/泥土",
+        "柏油/石板",
+        "其他"
+      ]
     },
     {
       "id": "e039",
       "category": "environment",
       "text": "头顶上方有什么",
       "inputType": "chips",
-      "options": ["天花板", "天空", "灯具", "什么都没有"]
+      "options": [
+        "天花板",
+        "天空",
+        "灯具",
+        "什么都没有"
+      ]
     },
     {
       "id": "e040",
       "category": "environment",
       "text": "窗外能看到什么",
       "inputType": "chips",
-      "options": ["建筑", "天空", "树", "路", "没窗户"]
+      "options": [
+        "建筑",
+        "天空",
+        "树",
+        "路",
+        "没窗户"
+      ]
     },
     {
       "id": "e041",
       "category": "environment",
       "text": "现在能看到天空吗",
       "inputType": "chips",
-      "options": ["能看到", "看不到"]
+      "options": [
+        "能看到",
+        "看不到"
+      ]
     },
     {
       "id": "e042",
       "category": "environment",
       "text": "最近听到的声音是人声还是其他",
       "inputType": "chips",
-      "options": ["人声", "其他声音"]
+      "options": [
+        "人声",
+        "其他声音"
+      ]
     },
     {
       "id": "e043",
       "category": "environment",
       "text": "空间里最响的声音来自什么",
       "inputType": "chips",
-      "options": ["机器", "人声", "交通", "音乐", "没有明显声音"]
+      "options": [
+        "机器",
+        "人声",
+        "交通",
+        "音乐",
+        "没有明显声音"
+      ]
     },
     {
       "id": "e044",
       "category": "environment",
       "text": "你附近的空间是满的还是空的",
       "inputType": "chips",
-      "options": ["满的", "空的", "适中"]
+      "options": [
+        "满的",
+        "空的",
+        "适中"
+      ]
     },
     {
       "id": "e045",
       "category": "environment",
       "text": "附近有苍蝇蚊子或虫子吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "e046",
       "category": "environment",
       "text": "最近的反光面是什么",
       "inputType": "chips",
-      "options": ["屏幕", "玻璃", "镜子", "水面", "没有"]
+      "options": [
+        "屏幕",
+        "玻璃",
+        "镜子",
+        "水面",
+        "没有"
+      ]
     },
     {
       "id": "e047",
       "category": "environment",
       "text": "环境光线偏亮还是偏暗",
       "inputType": "chips",
-      "options": ["偏亮", "偏暗", "适中"]
+      "options": [
+        "偏亮",
+        "偏暗",
+        "适中"
+      ]
     },
     {
       "id": "e048",
       "category": "environment",
       "text": "最近摸到的东西是金属还是木头还是其他",
       "inputType": "chips",
-      "options": ["金属", "木头", "塑料", "布料", "其他"]
+      "options": [
+        "金属",
+        "木头",
+        "塑料",
+        "布料",
+        "其他"
+      ]
     },
     {
       "id": "e049",
       "category": "environment",
       "text": "身体有没有碰到特别凉的东西",
       "inputType": "chips",
-      "options": ["有，碰到了", "没有"]
+      "options": [
+        "有，碰到了",
+        "没有"
+      ]
     },
     {
       "id": "e050",
       "category": "environment",
       "text": "空间里最占地方的物体是什么类型",
       "inputType": "chips",
-      "options": ["家具", "人", "设备", "交通工具", "其他"]
+      "options": [
+        "家具",
+        "人",
+        "设备",
+        "交通工具",
+        "其他"
+      ]
     },
     {
       "id": "e051",
       "category": "environment",
       "text": "哪个方向视野最开阔",
       "inputType": "chips",
-      "options": ["左边", "右边", "前方", "后方"]
+      "options": [
+        "左边",
+        "右边",
+        "前方",
+        "后方"
+      ]
     },
     {
       "id": "e052",
       "category": "environment",
       "text": "周围有人在说话吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "e053",
       "category": "environment",
       "text": "有音乐或视频在播放吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "e054",
       "category": "environment",
       "text": "这个空间的光线更像上午还是傍晚",
       "inputType": "chips",
-      "options": ["上午", "傍晚", "深夜", "正午"]
+      "options": [
+        "上午",
+        "傍晚",
+        "深夜",
+        "正午"
+      ]
     },
     {
       "id": "e055",
@@ -1258,7 +1601,14 @@
       "category": "environment",
       "text": "现在你周围最暗的方向是哪里",
       "inputType": "chips",
-      "options": ["前面", "后面", "左边", "右边", "上面", "都差不多"]
+      "options": [
+        "前面",
+        "后面",
+        "左边",
+        "右边",
+        "上面",
+        "都差不多"
+      ]
     },
     {
       "id": "e060",
@@ -1396,7 +1746,7 @@
     {
       "id": "r019",
       "category": "reality",
-      "text": "今天大概坐下了几次",
+      "text": "今天姿势大概换了多少次（坐/站/躺互相切换）",
       "inputType": "number",
       "placeholder": "回想"
     },
@@ -1482,168 +1832,260 @@
       "category": "reality",
       "text": "脑子里突然出现的人是认识的吗",
       "inputType": "chips",
-      "options": ["认识", "不认识"]
+      "options": [
+        "认识",
+        "不认识"
+      ]
     },
     {
       "id": "r032",
       "category": "reality",
       "text": "今天最久盯着看的是屏幕还是窗外",
       "inputType": "chips",
-      "options": ["屏幕", "窗外", "其他"]
+      "options": [
+        "屏幕",
+        "窗外",
+        "其他"
+      ]
     },
     {
       "id": "r033",
       "category": "reality",
       "text": "今天说第一句话是跟谁说的",
       "inputType": "chips",
-      "options": ["家人", "同事/同学", "陌生人", "自己"]
+      "options": [
+        "家人",
+        "同事/同学",
+        "陌生人",
+        "自己"
+      ]
     },
     {
       "id": "r034",
       "category": "reality",
       "text": "今天有东西掉地上过吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "r035",
       "category": "reality",
       "text": "最近一次拍照是拍什么",
       "inputType": "chips",
-      "options": ["自拍", "风景", "食物", "截图", "没拍"]
+      "options": [
+        "自拍",
+        "风景",
+        "食物",
+        "截图",
+        "没拍"
+      ]
     },
     {
       "id": "r036",
       "category": "reality",
       "text": "今天下雨或下雪了吗",
       "inputType": "chips",
-      "options": ["下了", "没下", "阴天"]
+      "options": [
+        "下了",
+        "没下",
+        "阴天"
+      ]
     },
     {
       "id": "r037",
       "category": "reality",
       "text": "最近一次等红灯时在做什么",
       "inputType": "chips",
-      "options": ["走路", "骑车", "开车", "没等"]
+      "options": [
+        "走路",
+        "骑车",
+        "开车",
+        "没等"
+      ]
     },
     {
       "id": "r038",
       "category": "reality",
       "text": "最近收到的消息来自什么平台",
       "inputType": "chips",
-      "options": ["微信", "短信", "邮件", "其他"]
+      "options": [
+        "微信",
+        "短信",
+        "邮件",
+        "其他"
+      ]
     },
     {
       "id": "r039",
       "category": "reality",
       "text": "最近发出的消息在哪个平台",
       "inputType": "chips",
-      "options": ["微信", "短信", "邮件", "其他"]
+      "options": [
+        "微信",
+        "短信",
+        "邮件",
+        "其他"
+      ]
     },
     {
       "id": "r040",
       "category": "reality",
       "text": "今天碰到过陌生人吗",
       "inputType": "chips",
-      "options": ["碰到过", "没有"]
+      "options": [
+        "碰到过",
+        "没有"
+      ]
     },
     {
       "id": "r041",
       "category": "reality",
       "text": "最近一次关灯是主动还是被动",
       "inputType": "chips",
-      "options": ["主动关", "被动关", "没关过"]
+      "options": [
+        "主动关",
+        "被动关",
+        "没关过"
+      ]
     },
     {
       "id": "r042",
       "category": "reality",
       "text": "今天吃的食物偏热还是偏冷",
       "inputType": "chips",
-      "options": ["偏热", "偏冷", "都有"]
+      "options": [
+        "偏热",
+        "偏冷",
+        "都有"
+      ]
     },
     {
       "id": "r043",
       "category": "reality",
       "text": "今天有收到快递或外卖吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "r044",
       "category": "reality",
       "text": "最近一次开窗是为了什么",
       "inputType": "chips",
-      "options": ["通风", "其他", "没开过"]
+      "options": [
+        "通风",
+        "其他",
+        "没开过"
+      ]
     },
     {
       "id": "r045",
       "category": "reality",
       "text": "今天有给人让座或让路吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "r046",
       "category": "reality",
       "text": "最近一次脱鞋是因为什么",
       "inputType": "chips",
-      "options": ["到室内", "上床", "其他"]
+      "options": [
+        "到室内",
+        "上床",
+        "其他"
+      ]
     },
     {
       "id": "r047",
       "category": "reality",
       "text": "今天有在某处发呆或逗留吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "r048",
       "category": "reality",
       "text": "最近一次看到镜中的自己是无意还是有意",
       "inputType": "chips",
-      "options": ["无意", "有意"]
+      "options": [
+        "无意",
+        "有意"
+      ]
     },
     {
       "id": "r049",
       "category": "reality",
       "text": "今天感觉时间过得快还是慢",
       "inputType": "chips",
-      "options": ["特别快", "特别慢", "正常"]
+      "options": [
+        "特别快",
+        "特别慢",
+        "正常"
+      ]
     },
     {
       "id": "r050",
       "category": "reality",
       "text": "最近一次站起来时头晕了吗",
       "inputType": "chips",
-      "options": ["晕了", "没晕", "最近没站起来"]
+      "options": [
+        "晕了",
+        "没晕",
+        "最近没站起来"
+      ]
     },
     {
       "id": "r051",
       "category": "reality",
       "text": "最近跨过障碍物是在室内还是室外",
       "inputType": "chips",
-      "options": ["室内", "室外", "没有"]
+      "options": [
+        "室内",
+        "室外",
+        "没有"
+      ]
     },
     {
       "id": "r052",
       "category": "reality",
       "text": "今天突然想起很久以前的事了吗",
       "inputType": "chips",
-      "options": ["想了", "没有"]
+      "options": [
+        "想了",
+        "没有"
+      ]
     },
     {
       "id": "r053",
       "category": "reality",
       "text": "今天有看到镜子之外的反射吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "r054",
       "category": "reality",
       "text": "今天有感觉某个瞬间像电影画面吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "r055",
@@ -1685,7 +2127,12 @@
       "category": "reality",
       "text": "今天不小心碰到陌生人的是哪个部位",
       "inputType": "chips",
-      "options": ["肩膀", "手臂", "手", "没碰到"]
+      "options": [
+        "肩膀",
+        "手臂",
+        "手",
+        "没碰到"
+      ]
     },
     {
       "id": "a001",
@@ -1697,9 +2144,9 @@
     {
       "id": "a002",
       "category": "absurd",
-      "text": "左脚离最近的家具大概多少厘米",
+      "text": "左脚离最近的障碍物大概多少厘米",
       "inputType": "number",
-      "placeholder": "目测"
+      "placeholder": "没有就写0"
     },
     {
       "id": "a003",
@@ -1853,7 +2300,13 @@
       "category": "absurd",
       "text": "如果你变成空气，会先飘向哪个方向",
       "inputType": "chips",
-      "options": ["左边", "右边", "上面", "前面", "后面"]
+      "options": [
+        "左边",
+        "右边",
+        "上面",
+        "前面",
+        "后面"
+      ]
     },
     {
       "id": "a025",
@@ -1881,7 +2334,13 @@
       "category": "absurd",
       "text": "如果你突然变轻了，第一个飘起来的是哪个部位",
       "inputType": "chips",
-      "options": ["头", "手臂", "腿", "整个人", "不会飘"]
+      "options": [
+        "头",
+        "手臂",
+        "腿",
+        "整个人",
+        "不会飘"
+      ]
     },
     {
       "id": "a029",
@@ -1902,98 +2361,161 @@
       "category": "absurd",
       "text": "右边最近的东西是软的还是硬的",
       "inputType": "chips",
-      "options": ["软的", "硬的"]
+      "options": [
+        "软的",
+        "硬的"
+      ]
     },
     {
       "id": "a032",
       "category": "absurd",
       "text": "附近有可以捏的软东西吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "a033",
       "category": "absurd",
       "text": "如果能穿越回今早你会做什么",
       "inputType": "chips",
-      "options": ["继续睡", "吃顿好的", "换个路线", "什么也不改"]
+      "options": [
+        "继续睡",
+        "吃顿好的",
+        "换个路线",
+        "什么也不改"
+      ]
     },
     {
       "id": "a034",
       "category": "absurd",
-      "text": "手指敲桌面听起来是闷还是脆",
+      "text": "手指敲手边最近的东西，声音偏闷还是偏脆",
       "inputType": "chips",
-      "options": ["闷", "脆", "空洞", "实心"]
+      "options": [
+        "偏闷",
+        "偏脆",
+        "空洞",
+        "手边没东西可敲"
+      ]
     },
     {
       "id": "a035",
       "category": "absurd",
       "text": "时间流速感比正常快还是慢",
       "inputType": "chips",
-      "options": ["快", "慢", "正常"]
+      "options": [
+        "快",
+        "慢",
+        "正常"
+      ]
     },
     {
       "id": "a036",
       "category": "absurd",
       "text": "如果给此刻配个BGM是什么风格",
       "inputType": "chips",
-      "options": ["安静", "摇滚", "电子", "爵士", "没有"]
+      "options": [
+        "安静",
+        "摇滚",
+        "电子",
+        "爵士",
+        "没有"
+      ]
     },
     {
       "id": "a037",
       "category": "absurd",
       "text": "最近感觉自己被什么东西注视着吗",
       "inputType": "chips",
-      "options": ["有", "没有"]
+      "options": [
+        "有",
+        "没有"
+      ]
     },
     {
       "id": "a038",
       "category": "absurd",
       "text": "平行宇宙的你这秒在干嘛",
       "inputType": "chips",
-      "options": ["也在看手机", "在工作", "在玩", "在睡觉"]
+      "options": [
+        "也在看手机",
+        "在工作",
+        "在玩",
+        "在睡觉"
+      ]
     },
     {
       "id": "a039",
       "category": "absurd",
       "text": "你的影子现在在哪个方向",
       "inputType": "chips",
-      "options": ["左边", "右边", "前面", "后面", "看不到"]
+      "options": [
+        "左边",
+        "右边",
+        "前面",
+        "后面",
+        "看不到"
+      ]
     },
     {
       "id": "a040",
       "category": "absurd",
       "text": "闭眼看到的光斑大多是什么形状",
       "inputType": "chips",
-      "options": ["圆形", "不规则", "线条", "没有光斑"]
+      "options": [
+        "圆形",
+        "不规则",
+        "线条",
+        "没有光斑"
+      ]
     },
     {
       "id": "a041",
       "category": "absurd",
       "text": "你附近最贵的东西是你的还是别人的",
       "inputType": "chips",
-      "options": ["我的", "别人的", "公共的"]
+      "options": [
+        "我的",
+        "别人的",
+        "公共的"
+      ]
     },
     {
       "id": "a042",
       "category": "absurd",
       "text": "手机如果突然坏掉，你第一个会借谁的手机",
       "inputType": "chips",
-      "options": ["家人", "朋友", "同事", "路人", "不借"]
+      "options": [
+        "家人",
+        "朋友",
+        "同事",
+        "路人",
+        "不借"
+      ]
     },
     {
       "id": "a043",
       "category": "absurd",
       "text": "现在\"左\"的概率大还是\"右\"的概率大",
       "inputType": "chips",
-      "options": ["左", "右", "一样"]
+      "options": [
+        "左",
+        "右",
+        "一样"
+      ]
     },
     {
       "id": "a044",
       "category": "absurd",
       "text": "你觉得离你最近的人此刻在想你吗",
       "inputType": "chips",
-      "options": ["在想", "没在想", "不知道"]
+      "options": [
+        "在想",
+        "没在想",
+        "不知道"
+      ]
     },
     {
       "id": "a045",
@@ -2007,63 +2529,110 @@
       "category": "absurd",
       "text": "此刻如果世界是一张桌子，你觉得自己在桌子的哪个位置",
       "inputType": "chips",
-      "options": ["中间", "边沿", "桌角", "桌子底下"]
+      "options": [
+        "中间",
+        "边沿",
+        "桌角",
+        "桌子底下"
+      ]
     },
     {
       "id": "a047",
       "category": "absurd",
       "text": "手边的空间哪个方向感觉更软",
       "inputType": "chips",
-      "options": ["左边", "右边", "前面", "上面"]
+      "options": [
+        "左边",
+        "右边",
+        "前面",
+        "上面"
+      ]
     },
     {
       "id": "a048",
       "category": "absurd",
       "text": "如果此刻房间有一个看不见的物体，它最可能在哪",
       "inputType": "chips",
-      "options": ["左边", "右边", "后面", "上面", "墙角"]
+      "options": [
+        "左边",
+        "右边",
+        "后面",
+        "上面",
+        "墙角"
+      ]
     },
     {
       "id": "a049",
       "category": "absurd",
       "text": "你今天主要是说话多还是听别人说话多",
       "inputType": "chips",
-      "options": ["说话多", "听别人多", "差不多", "都没怎么说话"]
+      "options": [
+        "说话多",
+        "听别人多",
+        "差不多",
+        "都没怎么说话"
+      ]
     },
     {
       "id": "a050",
       "category": "absurd",
       "text": "如果此刻地球停转你会往哪边倒",
       "inputType": "chips",
-      "options": ["前面", "后面", "左边", "右边", "不会倒"]
+      "options": [
+        "前面",
+        "后面",
+        "左边",
+        "右边",
+        "不会倒"
+      ]
     },
     {
       "id": "a051",
       "category": "absurd",
       "text": "如果伸手摸你周围的空气，是稠的还是稀的",
       "inputType": "chips",
-      "options": ["稠的", "稀的", "像水", "像雾"]
+      "options": [
+        "稠的",
+        "稀的",
+        "像水",
+        "像雾"
+      ]
     },
     {
       "id": "a052",
       "category": "absurd",
       "text": "现在哪个方向的声音最像机器",
       "inputType": "chips",
-      "options": ["左边", "右边", "前方", "后方", "没有"]
+      "options": [
+        "左边",
+        "右边",
+        "前方",
+        "后方",
+        "没有"
+      ]
     },
     {
       "id": "a053",
       "category": "absurd",
       "text": "如果时间暂停一秒你会注意到什么变化",
       "inputType": "chips",
-      "options": ["声音消失", "光线变化", "自己的心跳", "什么也没有"]
+      "options": [
+        "声音消失",
+        "光线变化",
+        "自己的心跳",
+        "什么也没有"
+      ]
     },
     {
       "id": "a054",
       "category": "absurd",
       "text": "你觉得自己更靠近早上还是晚上",
       "inputType": "chips",
-      "options": ["早上", "晚上", "刚好中间"]
+      "options": [
+        "早上",
+        "晚上",
+        "刚好中间"
+      ]
     },
     {
       "id": "a055",
@@ -2106,6 +2675,1791 @@
       "text": "最近看了但没真正在看的东西是什么",
       "inputType": "text",
       "placeholder": "走神时刻"
+    },
+    {
+      "id": "p061",
+      "category": "phone",
+      "text": "手机通知栏现在有几条消息",
+      "inputType": "number",
+      "placeholder": "看一眼"
+    },
+    {
+      "id": "p062",
+      "category": "phone",
+      "text": "最近一条短信是几小时前收到的",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "p063",
+      "category": "phone",
+      "text": "今天手机震动了大概几次",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "p064",
+      "category": "phone",
+      "text": "今天打开最多的APP是什么类型",
+      "inputType": "chips",
+      "options": [
+        "社交",
+        "视频",
+        "工具",
+        "游戏",
+        "其他"
+      ]
+    },
+    {
+      "id": "p065",
+      "category": "phone",
+      "text": "手机键盘声音开着还是关着",
+      "inputType": "chips",
+      "options": [
+        "开着",
+        "关着"
+      ]
+    },
+    {
+      "id": "p066",
+      "category": "phone",
+      "text": "手机顶部状态栏有几个小图标",
+      "inputType": "number",
+      "placeholder": "数一下"
+    },
+    {
+      "id": "p067",
+      "category": "phone",
+      "text": "今天手机拿起又放下了大概多少次",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "p068",
+      "category": "phone",
+      "text": "手机上大概装了多少个APP",
+      "inputType": "number",
+      "placeholder": "猜一下"
+    },
+    {
+      "id": "p069",
+      "category": "phone",
+      "text": "手机字体大小是偏大还是偏小",
+      "inputType": "chips",
+      "options": [
+        "偏大",
+        "偏小",
+        "默认"
+      ]
+    },
+    {
+      "id": "p070",
+      "category": "phone",
+      "text": "今天复制粘贴了几次",
+      "inputType": "number",
+      "placeholder": "大概"
+    },
+    {
+      "id": "p071",
+      "category": "phone",
+      "text": "手机最近弹过低电量提醒吗",
+      "inputType": "chips",
+      "options": [
+        "弹过，今天",
+        "弹过，前几天",
+        "没弹过"
+      ]
+    },
+    {
+      "id": "p072",
+      "category": "phone",
+      "text": "锁屏界面上有几个通知",
+      "inputType": "number",
+      "placeholder": "按一下电源键看"
+    },
+    {
+      "id": "p073",
+      "category": "phone",
+      "text": "今天在APP之间切换了大概多少次",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "p074",
+      "category": "phone",
+      "text": "输入法皮肤是深色还是浅色",
+      "inputType": "chips",
+      "options": [
+        "深色",
+        "浅色",
+        "默认"
+      ]
+    },
+    {
+      "id": "p075",
+      "category": "phone",
+      "text": "自动旋转屏幕开着还是锁着",
+      "inputType": "chips",
+      "options": [
+        "开着",
+        "锁着"
+      ]
+    },
+    {
+      "id": "p076",
+      "category": "phone",
+      "text": "今天手机上打了大概多少字",
+      "inputType": "number",
+      "placeholder": "粗估"
+    },
+    {
+      "id": "p077",
+      "category": "phone",
+      "text": "手机连着几个蓝牙设备",
+      "inputType": "number",
+      "placeholder": "设置里看"
+    },
+    {
+      "id": "p078",
+      "category": "phone",
+      "text": "今天误触屏幕大概几次",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "p079",
+      "category": "phone",
+      "text": "天气APP显示现在室外多少度",
+      "inputType": "number",
+      "placeholder": "打开看"
+    },
+    {
+      "id": "p080",
+      "category": "phone",
+      "text": "手机在口袋/包里还是在外面",
+      "inputType": "chips",
+      "options": [
+        "口袋/包里",
+        "桌面上",
+        "手上",
+        "其他地方"
+      ]
+    },
+    {
+      "id": "p081",
+      "category": "phone",
+      "text": "今天用手机付了几次款",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "p082",
+      "category": "phone",
+      "text": "最近一个APP通知是几点推送的",
+      "inputType": "number",
+      "placeholder": "下拉看"
+    },
+    {
+      "id": "p083",
+      "category": "phone",
+      "text": "今天在手机上看了几段视频",
+      "inputType": "number",
+      "placeholder": "大概"
+    },
+    {
+      "id": "p084",
+      "category": "phone",
+      "text": "手机握法是单手还是双手",
+      "inputType": "chips",
+      "options": [
+        "单手拇指",
+        "单手食指",
+        "双手横握",
+        "没握着手机"
+      ]
+    },
+    {
+      "id": "p085",
+      "category": "phone",
+      "text": "今天用语音发了几条消息",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "p086",
+      "category": "phone",
+      "text": "手机计算器上次算了什么",
+      "inputType": "text",
+      "placeholder": "打开看"
+    },
+    {
+      "id": "p087",
+      "category": "phone",
+      "text": "今天截了几张屏",
+      "inputType": "number",
+      "placeholder": "翻相册"
+    },
+    {
+      "id": "p088",
+      "category": "phone",
+      "text": "日历最近一个提醒是几点的",
+      "inputType": "number",
+      "placeholder": "打开看"
+    },
+    {
+      "id": "p089",
+      "category": "phone",
+      "text": "最近删除的APP叫什么",
+      "inputType": "text",
+      "placeholder": "回忆"
+    },
+    {
+      "id": "p090",
+      "category": "phone",
+      "text": "手机最常用的emoji是哪个",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "p091",
+      "category": "phone",
+      "text": "最近拍的短视频大概几秒",
+      "inputType": "number",
+      "placeholder": "翻相册"
+    },
+    {
+      "id": "p092",
+      "category": "phone",
+      "text": "手机通讯录里大概有多少联系人",
+      "inputType": "number",
+      "placeholder": "猜"
+    },
+    {
+      "id": "p093",
+      "category": "phone",
+      "text": "今天在哪个APP上花的时间第二多",
+      "inputType": "text",
+      "placeholder": "看屏幕使用时间"
+    },
+    {
+      "id": "p094",
+      "category": "phone",
+      "text": "最近拍的一张照片里有几个人",
+      "inputType": "number",
+      "placeholder": "翻相册"
+    },
+    {
+      "id": "p095",
+      "category": "phone",
+      "text": "手机有没有开深色模式",
+      "inputType": "chips",
+      "options": [
+        "开了",
+        "没开"
+      ]
+    },
+    {
+      "id": "p096",
+      "category": "phone",
+      "text": "今天发的消息里出现最多的词是什么",
+      "inputType": "text",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "p097",
+      "category": "phone",
+      "text": "手机屏幕现在有裂痕或划痕吗",
+      "inputType": "chips",
+      "options": [
+        "有裂痕",
+        "有划痕",
+        "完好"
+      ]
+    },
+    {
+      "id": "p098",
+      "category": "phone",
+      "text": "最近一次分享链接是分享给谁",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "p099",
+      "category": "phone",
+      "text": "手机里占用空间最大的APP是什么",
+      "inputType": "text",
+      "placeholder": "设置-存储里看"
+    },
+    {
+      "id": "p100",
+      "category": "phone",
+      "text": "今天几次想看时间拿起手机却忘了看",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b061",
+      "category": "body",
+      "text": "左手小拇指指甲大概多长(mm)",
+      "inputType": "number",
+      "placeholder": "看一眼"
+    },
+    {
+      "id": "b062",
+      "category": "body",
+      "text": "右眼眨一下现在是什么感觉",
+      "inputType": "chips",
+      "options": [
+        "干涩",
+        "湿润",
+        "正常"
+      ]
+    },
+    {
+      "id": "b063",
+      "category": "body",
+      "text": "头顶到脚底大概多少厘米",
+      "inputType": "number",
+      "placeholder": "知道身高就写"
+    },
+    {
+      "id": "b064",
+      "category": "body",
+      "text": "今天挠了几次痒",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "b065",
+      "category": "body",
+      "text": "牙齿现在是咬合着还是分开的",
+      "inputType": "chips",
+      "options": [
+        "咬着",
+        "分开",
+        "微张"
+      ]
+    },
+    {
+      "id": "b066",
+      "category": "body",
+      "text": "手掌纹路看起来偏深还是偏浅",
+      "inputType": "chips",
+      "options": [
+        "偏深",
+        "偏浅"
+      ]
+    },
+    {
+      "id": "b067",
+      "category": "body",
+      "text": "耳垂摸起来偏冷还是偏暖",
+      "inputType": "chips",
+      "options": [
+        "偏冷",
+        "偏暖"
+      ]
+    },
+    {
+      "id": "b068",
+      "category": "body",
+      "text": "现在能听到自己的呼吸声吗",
+      "inputType": "chips",
+      "options": [
+        "能",
+        "不能"
+      ]
+    },
+    {
+      "id": "b069",
+      "category": "body",
+      "text": "手腕转一圈，灵活度1-10",
+      "inputType": "number",
+      "placeholder": "转一下"
+    },
+    {
+      "id": "b070",
+      "category": "body",
+      "text": "今天洗了几次脸",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b071",
+      "category": "body",
+      "text": "舌头现在尝到什么味道",
+      "inputType": "chips",
+      "options": [
+        "没味道",
+        "微甜",
+        "微苦",
+        "微咸",
+        "其他"
+      ]
+    },
+    {
+      "id": "b072",
+      "category": "body",
+      "text": "指甲缝看起来干净吗",
+      "inputType": "chips",
+      "options": [
+        "干净",
+        "有点脏"
+      ]
+    },
+    {
+      "id": "b073",
+      "category": "body",
+      "text": "头发碰到耳朵了吗",
+      "inputType": "chips",
+      "options": [
+        "碰到了",
+        "没碰到",
+        "短发/没头发"
+      ]
+    },
+    {
+      "id": "b074",
+      "category": "body",
+      "text": "随便按一个手指关节，响了吗",
+      "inputType": "chips",
+      "options": [
+        "响了",
+        "没响"
+      ]
+    },
+    {
+      "id": "b075",
+      "category": "body",
+      "text": "舌头顶在上颚还是下颚",
+      "inputType": "chips",
+      "options": [
+        "上颚",
+        "下颚",
+        "中间"
+      ]
+    },
+    {
+      "id": "b076",
+      "category": "body",
+      "text": "眼睛现在聚焦在近处还是远处",
+      "inputType": "chips",
+      "options": [
+        "近处（屏幕）",
+        "远处",
+        "飘忽不定"
+      ]
+    },
+    {
+      "id": "b077",
+      "category": "body",
+      "text": "今天梳了几次头发",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b078",
+      "category": "body",
+      "text": "肚子今天叫了几次",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b079",
+      "category": "body",
+      "text": "小腿肚现在放松还是紧绷",
+      "inputType": "chips",
+      "options": [
+        "放松",
+        "紧绷"
+      ]
+    },
+    {
+      "id": "b080",
+      "category": "body",
+      "text": "今天上了几次厕所",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b081",
+      "category": "body",
+      "text": "今天眼角的分泌物多吗",
+      "inputType": "chips",
+      "options": [
+        "多",
+        "少",
+        "没有"
+      ]
+    },
+    {
+      "id": "b082",
+      "category": "body",
+      "text": "吞一下口水，喉咙通畅吗",
+      "inputType": "chips",
+      "options": [
+        "通畅",
+        "有点堵"
+      ]
+    },
+    {
+      "id": "b083",
+      "category": "body",
+      "text": "最近一次伸懒腰是几分钟前",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b084",
+      "category": "body",
+      "text": "今天擦了几次鼻子或眼睛",
+      "inputType": "number",
+      "placeholder": "大概"
+    },
+    {
+      "id": "b085",
+      "category": "body",
+      "text": "脖子往左转到最大角度（度）",
+      "inputType": "number",
+      "placeholder": "转一下"
+    },
+    {
+      "id": "b086",
+      "category": "body",
+      "text": "现在能感觉到袜子边缘吗",
+      "inputType": "chips",
+      "options": [
+        "能",
+        "不能",
+        "没穿袜子"
+      ]
+    },
+    {
+      "id": "b087",
+      "category": "body",
+      "text": "手腕脉搏感觉偏快还是偏慢",
+      "inputType": "chips",
+      "options": [
+        "偏快",
+        "偏慢",
+        "正常"
+      ]
+    },
+    {
+      "id": "b088",
+      "category": "body",
+      "text": "最近一次闭眼超过5秒是几分钟前",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b089",
+      "category": "body",
+      "text": "脚踝转一圈大概能转几度",
+      "inputType": "number",
+      "placeholder": "转一下估"
+    },
+    {
+      "id": "b090",
+      "category": "body",
+      "text": "试着打一个哈欠，打出来了吗",
+      "inputType": "chips",
+      "options": [
+        "打出来了",
+        "没打出来"
+      ]
+    },
+    {
+      "id": "b091",
+      "category": "body",
+      "text": "今天听到自己关节响了大概几次",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b092",
+      "category": "body",
+      "text": "舌苔看起来偏厚还是偏薄",
+      "inputType": "chips",
+      "options": [
+        "偏厚",
+        "偏薄",
+        "正常",
+        "看不到"
+      ]
+    },
+    {
+      "id": "b093",
+      "category": "body",
+      "text": "耸一下肩膀，紧张度1-10",
+      "inputType": "number",
+      "placeholder": "耸一下"
+    },
+    {
+      "id": "b094",
+      "category": "body",
+      "text": "今天用手指弹了几次东西",
+      "inputType": "number",
+      "placeholder": "大概"
+    },
+    {
+      "id": "b095",
+      "category": "body",
+      "text": "眼睛里有没有异物感",
+      "inputType": "chips",
+      "options": [
+        "有，左边",
+        "有，右边",
+        "都有",
+        "都没有"
+      ]
+    },
+    {
+      "id": "b096",
+      "category": "body",
+      "text": "最近碰过的最热的东西大概多少度",
+      "inputType": "number",
+      "placeholder": "估算"
+    },
+    {
+      "id": "b097",
+      "category": "body",
+      "text": "现在脚趾能全部张开吗",
+      "inputType": "chips",
+      "options": [
+        "能",
+        "不能",
+        "穿着鞋不好判断"
+      ]
+    },
+    {
+      "id": "b098",
+      "category": "body",
+      "text": "今天打了几次喷嚏",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "b099",
+      "category": "body",
+      "text": "鼻梁或耳根有没有出油",
+      "inputType": "chips",
+      "options": [
+        "有，鼻梁",
+        "有，耳根",
+        "都有",
+        "都没有"
+      ]
+    },
+    {
+      "id": "b100",
+      "category": "body",
+      "text": "左右手握力哪边更大",
+      "inputType": "chips",
+      "options": [
+        "左手",
+        "右手",
+        "差不多"
+      ]
+    },
+    {
+      "id": "e061",
+      "category": "environment",
+      "text": "抬头能看到云吗",
+      "inputType": "chips",
+      "options": [
+        "白云",
+        "乌云",
+        "没云",
+        "看不到天空"
+      ]
+    },
+    {
+      "id": "e062",
+      "category": "environment",
+      "text": "最近的人穿什么颜色的上衣",
+      "inputType": "chips",
+      "options": [
+        "深色",
+        "浅色",
+        "亮色",
+        "没看到人"
+      ]
+    },
+    {
+      "id": "e063",
+      "category": "environment",
+      "text": "耳边能听到低频嗡嗡声吗",
+      "inputType": "chips",
+      "options": [
+        "能",
+        "不能"
+      ]
+    },
+    {
+      "id": "e064",
+      "category": "environment",
+      "text": "附近有几个能发出声音的东西",
+      "inputType": "number",
+      "placeholder": "听一下"
+    },
+    {
+      "id": "e065",
+      "category": "environment",
+      "text": "空气闻起来偏干还是偏湿",
+      "inputType": "chips",
+      "options": [
+        "偏干",
+        "偏湿"
+      ]
+    },
+    {
+      "id": "e066",
+      "category": "environment",
+      "text": "能看到几根线（电线/耳机线/充电线都算）",
+      "inputType": "number",
+      "placeholder": "扫视"
+    },
+    {
+      "id": "e067",
+      "category": "environment",
+      "text": "最近一个移动的物体是什么",
+      "inputType": "chips",
+      "options": [
+        "人",
+        "车",
+        "动物",
+        "树叶/植物",
+        "没有移动的东西"
+      ]
+    },
+    {
+      "id": "e068",
+      "category": "environment",
+      "text": "光打在脸上的角度大概多少度（正上方=90）",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "e069",
+      "category": "environment",
+      "text": "能看到几条明显的直线（建筑边/道路/杆）",
+      "inputType": "number",
+      "placeholder": "找直线"
+    },
+    {
+      "id": "e070",
+      "category": "environment",
+      "text": "附近最吵的东西离你大概几米",
+      "inputType": "number",
+      "placeholder": "听声辨位"
+    },
+    {
+      "id": "e071",
+      "category": "environment",
+      "text": "能看到清晰的影子吗",
+      "inputType": "chips",
+      "options": [
+        "有清晰影子",
+        "有模糊影子",
+        "没有影子"
+      ]
+    },
+    {
+      "id": "e072",
+      "category": "environment",
+      "text": "附近有正在运转的机器吗",
+      "inputType": "chips",
+      "options": [
+        "有",
+        "没有"
+      ]
+    },
+    {
+      "id": "e073",
+      "category": "environment",
+      "text": "能看到几个蓝色物体",
+      "inputType": "number",
+      "placeholder": "找蓝色"
+    },
+    {
+      "id": "e074",
+      "category": "environment",
+      "text": "脚下的地面是平的还是斜的",
+      "inputType": "chips",
+      "options": [
+        "平的",
+        "微斜",
+        "明显倾斜"
+      ]
+    },
+    {
+      "id": "e075",
+      "category": "environment",
+      "text": "头顶上方最近的东西离你大概几米",
+      "inputType": "number",
+      "placeholder": "抬头估"
+    },
+    {
+      "id": "e076",
+      "category": "environment",
+      "text": "能闻到烟味或食物味吗",
+      "inputType": "chips",
+      "options": [
+        "烟味",
+        "食物味",
+        "两种都有",
+        "都没有"
+      ]
+    },
+    {
+      "id": "e077",
+      "category": "environment",
+      "text": "空气中有可见的灰尘或颗粒吗",
+      "inputType": "chips",
+      "options": [
+        "能看到灰尘",
+        "感觉有但看不到",
+        "都没有"
+      ]
+    },
+    {
+      "id": "e078",
+      "category": "environment",
+      "text": "附近有几个可以坐的地方",
+      "inputType": "number",
+      "placeholder": "扫视"
+    },
+    {
+      "id": "e079",
+      "category": "environment",
+      "text": "现在有风吹在哪个部位",
+      "inputType": "chips",
+      "options": [
+        "脸上",
+        "手上",
+        "全身",
+        "没感觉到风"
+      ]
+    },
+    {
+      "id": "e080",
+      "category": "environment",
+      "text": "能看到几盏正在亮的灯",
+      "inputType": "number",
+      "placeholder": "扫视"
+    },
+    {
+      "id": "e081",
+      "category": "environment",
+      "text": "空间回音感1-10（拍一下手）",
+      "inputType": "number",
+      "placeholder": "拍手试试"
+    },
+    {
+      "id": "e082",
+      "category": "environment",
+      "text": "最近的水源（水龙头/河/饮水机）大概几米",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "e083",
+      "category": "environment",
+      "text": "附近最鲜艳的东西是什么颜色",
+      "inputType": "chips",
+      "options": [
+        "红",
+        "黄",
+        "蓝",
+        "绿",
+        "没有鲜艳的"
+      ]
+    },
+    {
+      "id": "e084",
+      "category": "environment",
+      "text": "空气湿度体感",
+      "inputType": "chips",
+      "options": [
+        "潮湿",
+        "干燥",
+        "适中"
+      ]
+    },
+    {
+      "id": "e085",
+      "category": "environment",
+      "text": "能看到几个发光或反光的点",
+      "inputType": "number",
+      "placeholder": "扫视"
+    },
+    {
+      "id": "e086",
+      "category": "environment",
+      "text": "最近听到的交通声大概来自哪个方向",
+      "inputType": "chips",
+      "options": [
+        "左边",
+        "右边",
+        "前方",
+        "后方",
+        "没听到交通声"
+      ]
+    },
+    {
+      "id": "e087",
+      "category": "environment",
+      "text": "周围有动物吗（鸟/猫/狗/虫都算）",
+      "inputType": "chips",
+      "options": [
+        "有，看到了",
+        "有，只听到声音",
+        "没有"
+      ]
+    },
+    {
+      "id": "e088",
+      "category": "environment",
+      "text": "头顶正上方是什么",
+      "inputType": "chips",
+      "options": [
+        "天花板",
+        "天空",
+        "树冠",
+        "伞/棚",
+        "其他"
+      ]
+    },
+    {
+      "id": "e089",
+      "category": "environment",
+      "text": "现在体感温度大概几度",
+      "inputType": "number",
+      "placeholder": "感觉就好"
+    },
+    {
+      "id": "e090",
+      "category": "environment",
+      "text": "附近最高的东西大概几米",
+      "inputType": "number",
+      "placeholder": "目测"
+    },
+    {
+      "id": "e091",
+      "category": "environment",
+      "text": "空间里漫反射的光偏什么色调",
+      "inputType": "chips",
+      "options": [
+        "暖黄",
+        "冷白",
+        "蓝色调",
+        "自然光",
+        "很暗看不清"
+      ]
+    },
+    {
+      "id": "e092",
+      "category": "environment",
+      "text": "最近一个发出声音的是什么",
+      "inputType": "chips",
+      "options": [
+        "人说话",
+        "电器",
+        "交通工具",
+        "动物/鸟",
+        "没有声音"
+      ]
+    },
+    {
+      "id": "e093",
+      "category": "environment",
+      "text": "视力范围内能看到几棵树",
+      "inputType": "number",
+      "placeholder": "数一下"
+    },
+    {
+      "id": "e094",
+      "category": "environment",
+      "text": "脚下地面是硬的还是软的",
+      "inputType": "chips",
+      "options": [
+        "硬的",
+        "软的"
+      ]
+    },
+    {
+      "id": "e095",
+      "category": "environment",
+      "text": "抬头能看到几只鸟",
+      "inputType": "number",
+      "placeholder": "找鸟"
+    },
+    {
+      "id": "e096",
+      "category": "environment",
+      "text": "刚才有风吹过吗",
+      "inputType": "chips",
+      "options": [
+        "有明显阵风",
+        "微微有风",
+        "完全没风"
+      ]
+    },
+    {
+      "id": "e097",
+      "category": "environment",
+      "text": "周围有几种不同的声音来源",
+      "inputType": "number",
+      "placeholder": "闭眼听"
+    },
+    {
+      "id": "e098",
+      "category": "environment",
+      "text": "你能看到几面墙",
+      "inputType": "number",
+      "placeholder": "扫视计数"
+    },
+    {
+      "id": "e099",
+      "category": "environment",
+      "text": "最近听到的有节奏的声音是什么",
+      "inputType": "text",
+      "placeholder": "听一下（没有写无）"
+    },
+    {
+      "id": "e100",
+      "category": "environment",
+      "text": "这个空间最暗的方向是哪里",
+      "inputType": "chips",
+      "options": [
+        "左边",
+        "右边",
+        "后面",
+        "上面",
+        "下面",
+        "都差不多亮"
+      ]
+    },
+    {
+      "id": "r061",
+      "category": "reality",
+      "text": "今天打开了几次冰箱",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r062",
+      "category": "reality",
+      "text": "最近一次被吓一跳是几小时前",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r063",
+      "category": "reality",
+      "text": "今天收到了几封邮件",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r064",
+      "category": "reality",
+      "text": "最近一次照镜子时是什么表情",
+      "inputType": "chips",
+      "options": [
+        "没表情",
+        "微笑",
+        "皱眉",
+        "没注意"
+      ]
+    },
+    {
+      "id": "r065",
+      "category": "reality",
+      "text": "今天用了几张纸巾",
+      "inputType": "number",
+      "placeholder": "大概"
+    },
+    {
+      "id": "r066",
+      "category": "reality",
+      "text": "最近一次翻包或翻口袋找了什么",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r067",
+      "category": "reality",
+      "text": "今天有几个瞬间觉得自己忘了什么",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "r068",
+      "category": "reality",
+      "text": "最近一次按开关是开灯还是关灯",
+      "inputType": "chips",
+      "options": [
+        "开灯",
+        "关灯",
+        "其他开关",
+        "没按过"
+      ]
+    },
+    {
+      "id": "r069",
+      "category": "reality",
+      "text": "今天喝第一口水是几点",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r070",
+      "category": "reality",
+      "text": "今天走路时给别人让了几次路",
+      "inputType": "number",
+      "placeholder": "大概"
+    },
+    {
+      "id": "r071",
+      "category": "reality",
+      "text": "最近一次扫码是扫什么",
+      "inputType": "chips",
+      "options": [
+        "付款",
+        "点餐",
+        "加好友",
+        "健康码/其他"
+      ]
+    },
+    {
+      "id": "r072",
+      "category": "reality",
+      "text": "今天东西掉地上几次",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r073",
+      "category": "reality",
+      "text": "最近一次戴耳机听了什么",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r074",
+      "category": "reality",
+      "text": "今天有找不到东西后来找到了吗",
+      "inputType": "chips",
+      "options": [
+        "有，找到了",
+        "有，还没找到",
+        "没有找不到的"
+      ]
+    },
+    {
+      "id": "r075",
+      "category": "reality",
+      "text": "最近一次关闹钟是几点",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r076",
+      "category": "reality",
+      "text": "今天有过自言自语吗",
+      "inputType": "chips",
+      "options": [
+        "有",
+        "没有"
+      ]
+    },
+    {
+      "id": "r077",
+      "category": "reality",
+      "text": "今天注意到今天是几号了吗",
+      "inputType": "chips",
+      "options": [
+        "注意到了",
+        "没注意"
+      ]
+    },
+    {
+      "id": "r078",
+      "category": "reality",
+      "text": "最近一次把东西放错地方是什么",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r079",
+      "category": "reality",
+      "text": "今天第一次看窗外是几点",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r080",
+      "category": "reality",
+      "text": "今天拿起东西又放回去大概几次",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "r081",
+      "category": "reality",
+      "text": "今天有忘记带什么东西出门吗",
+      "inputType": "chips",
+      "options": [
+        "有",
+        "没有",
+        "没出门"
+      ]
+    },
+    {
+      "id": "r082",
+      "category": "reality",
+      "text": "今天收到纸质的东西了吗（传单/收据/名片）",
+      "inputType": "chips",
+      "options": [
+        "收到了",
+        "没有"
+      ]
+    },
+    {
+      "id": "r083",
+      "category": "reality",
+      "text": "最近一次拉开抽屉或柜子拿了什么",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r084",
+      "category": "reality",
+      "text": "今天有看到别人戴耳机吗",
+      "inputType": "chips",
+      "options": [
+        "看到了",
+        "没注意"
+      ]
+    },
+    {
+      "id": "r085",
+      "category": "reality",
+      "text": "现在身上穿的衣服有几个口袋",
+      "inputType": "number",
+      "placeholder": "摸一下"
+    },
+    {
+      "id": "r086",
+      "category": "reality",
+      "text": "最近一次被阳光或灯光晃到眼是什么时候",
+      "inputType": "chips",
+      "options": [
+        "几分钟前",
+        "几小时前",
+        "今天没有"
+      ]
+    },
+    {
+      "id": "r087",
+      "category": "reality",
+      "text": "最近一次撕开包装是撕什么",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r088",
+      "category": "reality",
+      "text": "今天注意到花或植物了吗",
+      "inputType": "chips",
+      "options": [
+        "看到了",
+        "闻到了",
+        "没有"
+      ]
+    },
+    {
+      "id": "r089",
+      "category": "reality",
+      "text": "今天有几个电话打进来",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r090",
+      "category": "reality",
+      "text": "最近一次把水洒出来是几小时前",
+      "inputType": "number",
+      "placeholder": "没有写0"
+    },
+    {
+      "id": "r091",
+      "category": "reality",
+      "text": "今天在电梯或楼梯里遇到人了吗",
+      "inputType": "chips",
+      "options": [
+        "电梯里遇到",
+        "楼梯里遇到",
+        "都遇到了",
+        "都没遇到",
+        "没坐电梯楼梯"
+      ]
+    },
+    {
+      "id": "r092",
+      "category": "reality",
+      "text": "今天有看到救护车或警车或消防车吗",
+      "inputType": "chips",
+      "options": [
+        "看到了",
+        "只听到警笛",
+        "没有"
+      ]
+    },
+    {
+      "id": "r093",
+      "category": "reality",
+      "text": "今天有看到特别高或特别矮的人吗",
+      "inputType": "chips",
+      "options": [
+        "有，特别高",
+        "有，特别矮",
+        "都有",
+        "没有"
+      ]
+    },
+    {
+      "id": "r094",
+      "category": "reality",
+      "text": "今天有听到别人手机铃声响吗",
+      "inputType": "chips",
+      "options": [
+        "听到了",
+        "没听到"
+      ]
+    },
+    {
+      "id": "r095",
+      "category": "reality",
+      "text": "最近一次叫错或记混别人名字是什么时候",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r096",
+      "category": "reality",
+      "text": "今天有几件事是按计划做的",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "r097",
+      "category": "reality",
+      "text": "今天踩到过什么东西（口香糖/水坑/石子）",
+      "inputType": "chips",
+      "options": [
+        "踩到了",
+        "差点踩到",
+        "没有"
+      ]
+    },
+    {
+      "id": "r098",
+      "category": "reality",
+      "text": "今天有被人问路或问时间吗",
+      "inputType": "chips",
+      "options": [
+        "有",
+        "没有"
+      ]
+    },
+    {
+      "id": "r099",
+      "category": "reality",
+      "text": "今天喝的饮料是什么温度",
+      "inputType": "chips",
+      "options": [
+        "冰的",
+        "常温",
+        "热的",
+        "没喝饮料"
+      ]
+    },
+    {
+      "id": "r100",
+      "category": "reality",
+      "text": "今天换了几次衣服或加了件外套",
+      "inputType": "number",
+      "placeholder": "回想"
+    },
+    {
+      "id": "a061",
+      "category": "absurd",
+      "text": "如果你是一杯水，现在是半满还是半空",
+      "inputType": "chips",
+      "options": [
+        "半满",
+        "半空"
+      ]
+    },
+    {
+      "id": "a062",
+      "category": "absurd",
+      "text": "附近哪个方向看起来更像「未来」",
+      "inputType": "chips",
+      "options": [
+        "左边",
+        "右边",
+        "前方",
+        "后面"
+      ]
+    },
+    {
+      "id": "a063",
+      "category": "absurd",
+      "text": "如果给现在的你起个文件名，会是什么",
+      "inputType": "text",
+      "placeholder": "随便想"
+    },
+    {
+      "id": "a064",
+      "category": "absurd",
+      "text": "现在哪个手指最想动一下",
+      "inputType": "chips",
+      "options": [
+        "拇指",
+        "食指",
+        "中指",
+        "无名指",
+        "小指",
+        "都不想动"
+      ]
+    },
+    {
+      "id": "a065",
+      "category": "absurd",
+      "text": "如果此时你跳一下，头顶会碰到什么",
+      "inputType": "chips",
+      "options": [
+        "天花板",
+        "灯",
+        "空气",
+        "不确定"
+      ]
+    },
+    {
+      "id": "a066",
+      "category": "absurd",
+      "text": "此刻往哪个方向走最像在冒险",
+      "inputType": "chips",
+      "options": [
+        "左边",
+        "右边",
+        "前面",
+        "后面"
+      ]
+    },
+    {
+      "id": "a067",
+      "category": "absurd",
+      "text": "你觉得自己更像一个点还是更像一条线",
+      "inputType": "chips",
+      "options": [
+        "一个点",
+        "一条线"
+      ]
+    },
+    {
+      "id": "a068",
+      "category": "absurd",
+      "text": "右耳听到的声音比左耳多还是少",
+      "inputType": "chips",
+      "options": [
+        "右耳多",
+        "左耳多",
+        "差不多"
+      ]
+    },
+    {
+      "id": "a069",
+      "category": "absurd",
+      "text": "最近一个长得像人脸的东西是什么",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "a070",
+      "category": "absurd",
+      "text": "现在有几个物体的正面正对着你",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "a071",
+      "category": "absurd",
+      "text": "把此刻拍成黑白照片，画面里最白的东西是什么",
+      "inputType": "text",
+      "placeholder": "扫一眼"
+    },
+    {
+      "id": "a072",
+      "category": "absurd",
+      "text": "感觉脚下的地面下面是什么",
+      "inputType": "chips",
+      "options": [
+        "泥土",
+        "水泥/钢筋",
+        "另一个房间",
+        "不知道"
+      ]
+    },
+    {
+      "id": "a073",
+      "category": "absurd",
+      "text": "你是1.0版本还是2.0版本",
+      "inputType": "chips",
+      "options": [
+        "1.0",
+        "2.0",
+        "Beta测试版"
+      ]
+    },
+    {
+      "id": "a074",
+      "category": "absurd",
+      "text": "如果能一键消除周围的某样东西，会是什么",
+      "inputType": "text",
+      "placeholder": "扫一眼"
+    },
+    {
+      "id": "a075",
+      "category": "absurd",
+      "text": "现在哪个方向最像有人在叫你",
+      "inputType": "chips",
+      "options": [
+        "左边",
+        "右边",
+        "前面",
+        "后面",
+        "上面",
+        "没有"
+      ]
+    },
+    {
+      "id": "a076",
+      "category": "absurd",
+      "text": "如果你是一本书，现在翻到了第几页",
+      "inputType": "number",
+      "placeholder": "随口说个数"
+    },
+    {
+      "id": "a077",
+      "category": "absurd",
+      "text": "此刻手边的空气密度1-10是多少",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "a078",
+      "category": "absurd",
+      "text": "如果给周围的声音加一个音效滤镜",
+      "inputType": "chips",
+      "options": [
+        "水下",
+        "隧道",
+        "空旷大厅",
+        "不加滤镜"
+      ]
+    },
+    {
+      "id": "a079",
+      "category": "absurd",
+      "text": "你是这个空间的中心还是边缘",
+      "inputType": "chips",
+      "options": [
+        "中心",
+        "边缘",
+        "旁观者"
+      ]
+    },
+    {
+      "id": "a080",
+      "category": "absurd",
+      "text": "你能感知到几层距离感（近/中/远/极远）",
+      "inputType": "number",
+      "placeholder": "感受空间层次"
+    },
+    {
+      "id": "a081",
+      "category": "absurd",
+      "text": "如果世界马上暂停，谁会在你旁边",
+      "inputType": "text",
+      "placeholder": "看一眼或想一想"
+    },
+    {
+      "id": "a082",
+      "category": "absurd",
+      "text": "最近一次觉得自己像个NPC是什么时候",
+      "inputType": "chips",
+      "options": [
+        "就现在",
+        "今天早些时候",
+        "昨天",
+        "从来没觉得"
+      ]
+    },
+    {
+      "id": "a083",
+      "category": "absurd",
+      "text": "周围哪个东西最不该出现在那里",
+      "inputType": "text",
+      "placeholder": "找茬"
+    },
+    {
+      "id": "a084",
+      "category": "absurd",
+      "text": "如果东西开始一样样消失，哪个会最先没",
+      "inputType": "text",
+      "placeholder": "扫视"
+    },
+    {
+      "id": "a085",
+      "category": "absurd",
+      "text": "直觉告诉你往哪边走会遇到好事",
+      "inputType": "chips",
+      "options": [
+        "左边",
+        "右边",
+        "前面",
+        "后面",
+        "原地"
+      ]
+    },
+    {
+      "id": "a086",
+      "category": "absurd",
+      "text": "闭上眼睛第一个看到的颜色是什么",
+      "inputType": "chips",
+      "options": [
+        "黑色",
+        "红色",
+        "蓝色",
+        "黄色",
+        "光斑"
+      ]
+    },
+    {
+      "id": "a087",
+      "category": "absurd",
+      "text": "今天重复最多的一个动作是什么",
+      "inputType": "text",
+      "placeholder": "回想"
+    },
+    {
+      "id": "a088",
+      "category": "absurd",
+      "text": "如果你变成身边的一件物品，会是什么",
+      "inputType": "text",
+      "placeholder": "看一眼"
+    },
+    {
+      "id": "a089",
+      "category": "absurd",
+      "text": "今天你是信息发送者还是接收者",
+      "inputType": "chips",
+      "options": [
+        "发的多",
+        "收的多",
+        "差不多",
+        "都没怎么收发"
+      ]
+    },
+    {
+      "id": "a090",
+      "category": "absurd",
+      "text": "如果现在说谎，哪个谎言会最先被戳穿",
+      "inputType": "text",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "a091",
+      "category": "absurd",
+      "text": "周围有东西的颜色让你觉得不对劲吗",
+      "inputType": "text",
+      "placeholder": "找一圈"
+    },
+    {
+      "id": "a092",
+      "category": "absurd",
+      "text": "现在你的影子有多长（大概几米）",
+      "inputType": "number",
+      "placeholder": "没有影子写0"
+    },
+    {
+      "id": "a093",
+      "category": "absurd",
+      "text": "眼前的世界如果降低饱和度你会先注意到什么变化",
+      "inputType": "text",
+      "placeholder": "想象一下"
+    },
+    {
+      "id": "a094",
+      "category": "absurd",
+      "text": "你附近有几个正在「等待」的物体",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "a095",
+      "category": "absurd",
+      "text": "你今天的「主角能量」1-10是几分",
+      "inputType": "number",
+      "placeholder": "感觉"
+    },
+    {
+      "id": "a096",
+      "category": "absurd",
+      "text": "如果现实是一层层剥开的，你现在在第几层",
+      "inputType": "number",
+      "placeholder": "随便说"
+    },
+    {
+      "id": "a097",
+      "category": "absurd",
+      "text": "你更想听到好消息还是不想听到坏消息",
+      "inputType": "chips",
+      "options": [
+        "想听好消息",
+        "不想听坏消息"
+      ]
+    },
+    {
+      "id": "a098",
+      "category": "absurd",
+      "text": "现在用手指在空中写一个字，会是什么",
+      "inputType": "text",
+      "placeholder": "第一个念头"
+    },
+    {
+      "id": "a099",
+      "category": "absurd",
+      "text": "你觉得自己更像阴天还是晴天",
+      "inputType": "chips",
+      "options": [
+        "阴天",
+        "晴天",
+        "多云",
+        "雷雨天"
+      ]
+    },
+    {
+      "id": "a100",
+      "category": "absurd",
+      "text": "如果时间往回倒3秒你会做什么不同的选择",
+      "inputType": "text",
+      "placeholder": "什么也不改"
     }
   ]
 }
