@@ -843,9 +843,9 @@
     {
       "id": "b060",
       "category": "body",
-      "text": "最先感觉到温度的身体部位是哪里",
-      "inputType": "text",
-      "placeholder": "感受全身"
+      "text": "现在身体哪块肌肉最放松",
+      "inputType": "chips",
+      "options": ["脸", "肩颈", "手臂", "腿", "都差不多"]
     },
     {
       "id": "e001",
@@ -1186,9 +1186,9 @@
     {
       "id": "e049",
       "category": "environment",
-      "text": "附近有在碰触你的冷的物体吗",
+      "text": "身体有没有碰到特别凉的东西",
       "inputType": "chips",
-      "options": ["在碰我", "没碰我"]
+      "options": ["有，碰到了", "没有"]
     },
     {
       "id": "e050",
@@ -1221,9 +1221,9 @@
     {
       "id": "e054",
       "category": "environment",
-      "text": "这个空间感觉更像开始还是结束",
+      "text": "这个空间的光线更像上午还是傍晚",
       "inputType": "chips",
-      "options": ["开始", "结束", "中间"]
+      "options": ["上午", "傍晚", "深夜", "正午"]
     },
     {
       "id": "e055",
@@ -1242,9 +1242,9 @@
     {
       "id": "e057",
       "category": "environment",
-      "text": "窗外最先看到的是什么",
+      "text": "往最远处看，第一眼看到的是什么",
       "inputType": "text",
-      "placeholder": "望出去"
+      "placeholder": "最远的方向"
     },
     {
       "id": "e058",
@@ -1613,9 +1613,9 @@
     {
       "id": "r050",
       "category": "reality",
-      "text": "最近一次感觉到重力是什么时候",
+      "text": "最近一次站起来时头晕了吗",
       "inputType": "chips",
-      "options": ["站起来时", "坐下时", "蹲下时", "躺下时"]
+      "options": ["晕了", "没晕", "最近没站起来"]
     },
     {
       "id": "r051",
@@ -1683,9 +1683,9 @@
     {
       "id": "r060",
       "category": "reality",
-      "text": "今天碰到别人的是哪里",
-      "inputType": "text",
-      "placeholder": "回想"
+      "text": "今天不小心碰到陌生人的是哪个部位",
+      "inputType": "chips",
+      "options": ["肩膀", "手臂", "手", "没碰到"]
     },
     {
       "id": "a001",
@@ -1718,9 +1718,9 @@
     {
       "id": "a005",
       "category": "absurd",
-      "text": "最近让你停了一下(2秒以上)的东西让你停了大概几秒",
+      "text": "最近一件让你突然停下来的事，你停了大概几秒",
       "inputType": "number",
-      "placeholder": "回忆"
+      "placeholder": "大概"
     },
     {
       "id": "a006",
@@ -1816,9 +1816,9 @@
     {
       "id": "a019",
       "category": "absurd",
-      "text": "你附近所有东西的平均年龄大概多少年",
+      "text": "你附近目之所及，最旧的东西大概用了多少年",
       "inputType": "number",
-      "placeholder": "扫视一圈估"
+      "placeholder": "估一下"
     },
     {
       "id": "a020",
@@ -1851,9 +1851,9 @@
     {
       "id": "a024",
       "category": "absurd",
-      "text": "感觉空气中有几层\"看不见的层\"",
-      "inputType": "number",
-      "placeholder": "抽象感知"
+      "text": "如果你变成空气，会先飘向哪个方向",
+      "inputType": "chips",
+      "options": ["左边", "右边", "上面", "前面", "后面"]
     },
     {
       "id": "a025",
@@ -1879,16 +1879,16 @@
     {
       "id": "a028",
       "category": "absurd",
-      "text": "身体里感觉最重的部位重量级是几分(1-10)",
-      "inputType": "number",
-      "placeholder": "感受身体"
+      "text": "如果你突然变轻了，第一个飘起来的是哪个部位",
+      "inputType": "chips",
+      "options": ["头", "手臂", "腿", "整个人", "不会飘"]
     },
     {
       "id": "a029",
       "category": "absurd",
-      "text": "最近一个无意识的动作持续了大概几秒",
+      "text": "最近一次发呆持续了大概几秒",
       "inputType": "number",
-      "placeholder": "回想"
+      "placeholder": "估算"
     },
     {
       "id": "a030",
@@ -2026,9 +2026,9 @@
     {
       "id": "a049",
       "category": "absurd",
-      "text": "你现在更像在发送还是接收",
+      "text": "你今天主要是说话多还是听别人说话多",
       "inputType": "chips",
-      "options": ["发送", "接收", "都是"]
+      "options": ["说话多", "听别人多", "差不多", "都没怎么说话"]
     },
     {
       "id": "a050",
@@ -2040,9 +2040,9 @@
     {
       "id": "a051",
       "category": "absurd",
-      "text": "你身边的空间是厚的还是薄的",
+      "text": "如果伸手摸你周围的空气，是稠的还是稀的",
       "inputType": "chips",
-      "options": ["厚的", "薄的"]
+      "options": ["稠的", "稀的", "像水", "像雾"]
     },
     {
       "id": "a052",
