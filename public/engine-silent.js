@@ -55,7 +55,7 @@ window.Engine_Silent = {
     }
 
     if (r.signals) {
-      const signals = el('div', { className: 'result-signals-zen zen-emerge', style: 'animation-delay:5.5s' });
+      const signals = el('div', { className: 'result-signals-zen zen-emerge', style: { animationDelay: '5.5s' } });
       for (const s of r.signals) {
         signals.appendChild(el('div', { className: 'result-signal-entry-zen' },
           el('div', { className: 'result-signal-label' }, s.label),
