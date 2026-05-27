@@ -454,15 +454,31 @@ function renderLoading() {
     for (const fn of cleanupFns) fn();
   };
 
-  API.decide(S.theme, S.optionA, S.optionB, S.answers)
-    .then((data) => {
+  // 超时保护：90秒
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 90000);
+  cleanupFns.push(() => clearTimeout(timeoutId));
+
+  fetch('/api/decide', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ theme: S.theme, optionA: S.optionA, optionB: S.optionB, answers: S.answers }),
+    signal: controller.signal,
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
       clearLoadingCleanup();
+      if (!ok) throw new Error(data.error || '请求失败');
       S.result = data;
       location.hash = 'result';
     })
     .catch((e) => {
       clearLoadingCleanup();
-      alert(e.message);
+      if (e.name === 'AbortError') {
+        alert('分析超时，请重试');
+      } else {
+        alert(e.message || '信号解读失败');
+      }
       location.hash = 'decide';
     });
 }
