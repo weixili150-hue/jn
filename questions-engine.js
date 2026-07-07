@@ -1,4 +1,4 @@
-// 问题采样引擎 — 权重抖动 + 近期去重 + 可选 AI 微调
+// 问题采样引擎 — 按 slot 1→2→3→4 各取1题，近期去重
 const fs = require('fs');
 const path = require('path');
 
@@ -8,152 +8,81 @@ function loadBank() {
   return JSON.parse(fs.readFileSync(BANK_PATH, 'utf-8'));
 }
 
-// 最近 N 次采样的问题 ID 记录（FIFO）
+// 最近 N 次采样的题目 ID 记录（FIFO），避免连续出现相同题
 const recentIds = [];
-const MAX_RECENT_ROUNDS = 20;
-const FALLBACK_ROUNDS = 5;
+const MAX_RECENT = 15;
 
-// 类别权重 ±30% 随机抖动
-function jitterWeights(categories) {
-  const result = {};
-  for (const [key, cat] of Object.entries(categories)) {
-    const jitter = 0.7 + Math.random() * 0.6; // 0.7 ~ 1.3
-    result[key] = cat.weight * jitter;
-  }
-  return result;
-}
+const SLOT_NAMES = {
+  1: '手机确定信号',
+  2: '身体几何/穿戴信号',
+  3: '空间坐标信号',
+  4: '今日痕迹/社交/消费信号',
+};
 
-// 从指定类别中随机选取未在去重窗口内的题目
-function pickFromCategory(pool, excludeSet, count) {
-  const available = pool.filter(q => !excludeSet.has(q.id));
-  if (available.length === 0) return [];
-  const shuffled = available.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
-}
-
+// 参数 n 保留但不使用，始终返回4题（每个slot各1题）
 function sampleQuestions(n = 4) {
   const bank = loadBank();
-  const { categories, questions } = bank;
+  const questions = bank.questions;
 
-  // 按类别分组
-  const byCategory = {};
-  for (const cat of Object.keys(categories)) {
-    byCategory[cat] = questions.filter(q => q.category === cat);
+  // 按 slot 分组
+  const bySlot = { 1: [], 2: [], 3: [], 4: [] };
+  for (const q of questions) {
+    if (bySlot[q.slot]) bySlot[q.slot].push(q);
   }
 
-  // 尝试用全窗口去重，不够则缩窗
-  let excludeSet = new Set(recentIds.flat());
-  if (excludeSet.size > questions.length * 0.85) {
-    // 去重太激进，缩窗
-    const fallback = recentIds.slice(-FALLBACK_ROUNDS);
-    excludeSet = new Set(fallback.flat());
+  // 近期用过的 ID 集合
+  const excludeSet = new Set();
+  const recentWindow = recentIds.slice(-10).flat();
+  for (const id of recentWindow) excludeSet.add(id);
+
+  // 如果排除集太大（超过某个slot的80%），缩小窗口
+  let effectiveExclude = excludeSet;
+  for (let s = 1; s <= 4; s++) {
+    const available = bySlot[s].filter(q => !excludeSet.has(q.id));
+    if (available.length < bySlot[s].length * 0.2) {
+      // 去重太激进，只用最近3轮
+      effectiveExclude = new Set(recentIds.slice(-3).flat());
+      break;
+    }
   }
 
-  // 抖动后的权重
-  const weights = jitterWeights(categories);
-
-  // 归一化权重 → 每个类别的配额（保底 1 题/类别）
-  const catKeys = Object.keys(categories);
-
-  // 先给每个类别分配 1 题（如果可用）
+  // 每个 slot 随机选1题
   const selected = [];
-  for (const cat of catKeys) {
-    const pool = byCategory[cat];
-    const picked = pickFromCategory(pool, excludeSet, 1);
-    for (const q of picked) {
-      selected.push(q);
-      excludeSet.add(q.id);
-    }
-  }
+  for (let s = 1; s <= 4; s++) {
+    const pool = bySlot[s];
+    const available = pool.filter(q => !effectiveExclude.has(q.id));
+    const pickFrom = available.length > 0 ? available : pool;
+    const picked = pickFrom[Math.floor(Math.random() * pickFrom.length)];
 
-  // 剩余名额按权重分配
-  const remaining = n - selected.length;
-  if (remaining > 0) {
-    const alloc = catKeys.map(cat => ({
-      cat,
-      w: weights[cat],
-    }));
-    // 加权随机选取剩余题目
-    for (let i = 0; i < remaining; i++) {
-      const totalW = alloc.reduce((s, a) => s + a.w, 0);
-      let r = Math.random() * totalW;
-      for (const a of alloc) {
-        r -= a.w;
-        if (r <= 0) {
-          const pool = byCategory[a.cat];
-          const picked = pickFromCategory(pool, excludeSet, 1);
-          if (picked.length > 0) {
-            selected.push(picked[0]);
-            excludeSet.add(picked[0].id);
-          }
-          break;
-        }
-      }
-    }
-  }
+    // 转换为前端兼容格式
+    selected.push({
+      id: picked.id,
+      slot: picked.slot,
+      text: picked.question,
+      inputType: 'text',
+      placeholder: getPlaceholder(picked.slot, picked.question),
+    });
 
-  // 洗牌
-  const shuffled = selected.sort(() => Math.random() - 0.5).slice(0, n);
+    effectiveExclude.add(picked.id);
+  }
 
   // 记录去重窗口
-  recentIds.push(shuffled.map(q => q.id));
-  if (recentIds.length > MAX_RECENT_ROUNDS) {
+  recentIds.push(selected.map(q => q.id));
+  if (recentIds.length > MAX_RECENT) {
     recentIds.shift();
   }
 
-  return shuffled;
+  return selected;
 }
 
-// AI 微调（可选）
-async function tweakQuestions(questions) {
-  if (process.env.ENABLE_AI_TWEAK !== 'true') return questions;
-
-  const apiKey = process.env.DEEPSEEK_API_KEY;
-  if (!apiKey) return questions;
-
-  const { buildQuestionsTweakPrompt } = require('./prompts/entropy');
-
-  // 只微调 2 题
-  const toTweak = questions.slice(0, 2);
-  const toKeep = questions.slice(2);
-
-  try {
-    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          { role: 'user', content: buildQuestionsTweakPrompt(toTweak) },
-        ],
-        max_tokens: 1000,
-        temperature: 0.8,
-        thinking: { type: 'enabled' },
-        output_config: { effort: 'max' },
-      }),
-      signal: AbortSignal.timeout(15000),
-    });
-
-    if (!response.ok) return questions;
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) return questions;
-
-    const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const tweaked = JSON.parse(jsonStr);
-
-    if (Array.isArray(tweaked) && tweaked.length > 0) {
-      return [...tweaked, ...toKeep].slice(0, questions.length);
-    }
-  } catch (e) {
-    // 静默 fallback
-  }
-
-  return questions;
+function getPlaceholder(slot, question) {
+  const defaults = {
+    1: '比如 37',
+    2: '比如 15',
+    3: '比如 2',
+    4: '比如 微信',
+  };
+  return defaults[slot] || '';
 }
 
-module.exports = { sampleQuestions, tweakQuestions };
+module.exports = { sampleQuestions };

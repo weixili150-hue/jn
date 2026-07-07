@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const { buildResultPrompt } = require('./prompts/entropy');
-const { sampleQuestions, tweakQuestions } = require('./questions-engine');
+const { sampleQuestions } = require('./questions-engine');
 
 const app = express();
 const PORT = process.env.PORT || 3459;
@@ -27,13 +27,7 @@ app.post('/api/questions', async (req, res) => {
   }
 
   try {
-    let questions = sampleQuestions(4);
-
-    // 可选：AI 微调
-    if (process.env.ENABLE_AI_TWEAK === 'true') {
-      questions = await tweakQuestions(questions);
-    }
-
+    const questions = sampleQuestions(4);
     return res.json({ questions });
   } catch (e) {
     console.error('Question sampling failed:', e.message);
