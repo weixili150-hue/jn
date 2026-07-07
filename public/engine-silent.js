@@ -121,10 +121,13 @@ function _showNextZenQuestion(view, idx) {
     placeholder: q.placeholder || '轻轻写下...',
   });
 
-  const doneHint = el('div', { className: 'zen-done-hint' }, '按回车');
+  const submitBtn = el('button', {
+    className: 'btn-zen-next',
+    onclick: () => submit(input.value),
+  }, '↓');
 
   inputWrap.appendChild(input);
-  inputWrap.appendChild(doneHint);
+  inputWrap.appendChild(submitBtn);
   moment.appendChild(inputWrap);
 
   view.appendChild(moment);
@@ -147,8 +150,8 @@ function _showNextZenQuestion(view, idx) {
     }
 
     input.disabled = true;
-    doneHint.style.transition = 'opacity 0.6s ease';
-    doneHint.style.opacity = '0';
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0';
 
     setTimeout(() => { _showNextZenQuestion(view, idx + 1); }, 2000);
   }

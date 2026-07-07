@@ -284,6 +284,19 @@ body {
   font-size:0.625rem; color:var(--fg-muted); opacity:0.25;
   letter-spacing:0.12em; transition:opacity 0.6s ease;
 }
+.btn-zen-next {
+  width:44px; height:44px; border-radius:50%;
+  border:1px solid var(--fg-muted); background:transparent;
+  color:var(--fg-muted); font-size:1.25rem; cursor:pointer;
+  opacity:0.25; transition:opacity var(--transition-base), border-color var(--transition-base);
+  display:flex; align-items:center; justify-content:center;
+  padding:0; line-height:1;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-zen-next:hover,
+.btn-zen-next:focus-visible { opacity:0.6; border-color:var(--accent); color:var(--accent); }
+.btn-zen-next:active { opacity:1; background:rgba(0,0,0,0.03); }
+.btn-zen-next:disabled { opacity:0; pointer-events:none; }
 
 /* ─── Silent Signal: Splash ─── */
 .splash-zen h1 { font-family:var(--font-cn); font-size:1.5rem; font-weight:400; margin-bottom:24px; animation:zenReveal 2s ease; }
