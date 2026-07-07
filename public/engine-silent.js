@@ -124,7 +124,7 @@ function _showNextZenQuestion(view, idx) {
   const submitBtn = el('button', {
     className: 'btn-zen-next',
     onclick: () => submit(input.value),
-  }, '↓');
+  }, '确认');
 
   inputWrap.appendChild(input);
   inputWrap.appendChild(submitBtn);
