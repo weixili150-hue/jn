@@ -77,6 +77,8 @@ app.post('/api/decide', async (req, res) => {
         ],
         max_tokens: 4000,
         temperature: 0.7,
+        thinking: { type: 'enabled' },
+        output_config: { effort: 'max' },
       }),
       signal: AbortSignal.timeout(60000),
     });

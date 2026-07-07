@@ -131,6 +131,8 @@ async function tweakQuestions(questions) {
         ],
         max_tokens: 1000,
         temperature: 0.8,
+        thinking: { type: 'enabled' },
+        output_config: { effort: 'max' },
       }),
       signal: AbortSignal.timeout(15000),
     });

@@ -178,9 +178,9 @@
     {
       "id": "p022",
       "category": "phone",
-      "text": "手机桌面文件夹有几个",
+      "text": "手机相册里大概有多少张照片",
       "inputType": "number",
-      "placeholder": "数一下"
+      "placeholder": "比如 2000"
     },
     {
       "id": "p023",
@@ -359,12 +359,9 @@
     {
       "id": "p042",
       "category": "phone",
-      "text": "桌面壁纸偏深色还是偏浅色",
-      "inputType": "chips",
-      "options": [
-        "深色",
-        "浅色"
-      ]
+      "text": "最近一条消息是几分钟前收到的",
+      "inputType": "number",
+      "placeholder": "比如 3"
     },
     {
       "id": "p043",
@@ -453,13 +450,9 @@
     {
       "id": "p051",
       "category": "phone",
-      "text": "屏幕亮度感觉偏亮还是偏暗",
-      "inputType": "chips",
-      "options": [
-        "偏亮",
-        "偏暗",
-        "刚好"
-      ]
+      "text": "手机屏幕朝上还是朝下 现在(1朝上 2朝下)",
+      "inputType": "number",
+      "placeholder": "1或2"
     },
     {
       "id": "p052",
@@ -563,9 +556,9 @@
     {
       "id": "b004",
       "category": "body",
-      "text": "脚离最近的墙大概多少厘米",
+      "text": "两只脚现在有没有交叉(1有 2没有)",
       "inputType": "number",
-      "placeholder": "余光看一下"
+      "placeholder": "1或2"
     },
     {
       "id": "b005",
@@ -584,51 +577,51 @@
     {
       "id": "b007",
       "category": "body",
-      "text": "握拳的力度感1-10是几分",
+      "text": "右手手腕上戴着什么(1手表 2手链 3皮筋 4什么都没有)",
       "inputType": "number",
-      "placeholder": "握一下试试"
+      "placeholder": "1-4"
     },
     {
       "id": "b008",
       "category": "body",
-      "text": "脖子僵硬程度1-10是几分",
+      "text": "现在嘴里有东西吗(1有 2没有)",
       "inputType": "number",
-      "placeholder": "晃晃脖子"
+      "placeholder": "1或2"
     },
     {
       "id": "b009",
       "category": "body",
-      "text": "手指温度1-10是几分(1冰-10烫)",
+      "text": "两只手现在哪只更冷(1左手 2右手 3差不多)",
       "inputType": "number",
-      "placeholder": "摸一下手指"
+      "placeholder": "1-3"
     },
     {
       "id": "b010",
       "category": "body",
-      "text": "肚子饿的程度1-10是几分",
+      "text": "上次吃东西是大概几分钟前",
       "inputType": "number",
-      "placeholder": "感受胃"
+      "placeholder": "比如 45"
     },
     {
       "id": "b011",
       "category": "body",
-      "text": "嘴唇干湿程度1-10是几分",
+      "text": "上次喝水是大概几分钟前",
       "inputType": "number",
-      "placeholder": "舔一下"
+      "placeholder": "比如 15"
     },
     {
       "id": "b012",
       "category": "body",
-      "text": "手掌出汗程度1-10是几分",
+      "text": "现在穿的袜子是什么颜色(1白色 2黑色 3灰色 4其他 5没穿)",
       "inputType": "number",
-      "placeholder": "手心感觉"
+      "placeholder": "1-5"
     },
     {
       "id": "b013",
       "category": "body",
-      "text": "脊背挺直程度1-10是几分(1驼-10直)",
+      "text": "眼镜戴了吗(1戴了 2没戴 3不戴眼镜)",
       "inputType": "number",
-      "placeholder": "感受后背"
+      "placeholder": "1-3"
     },
     {
       "id": "b014",
@@ -647,16 +640,16 @@
     {
       "id": "b016",
       "category": "body",
-      "text": "喉咙干渴度1-10是几分",
+      "text": "上衣最上面的扣子扣了没(1扣了 2没扣 3没扣子)",
       "inputType": "number",
-      "placeholder": "咽一下口水"
+      "placeholder": "1-3"
     },
     {
       "id": "b017",
       "category": "body",
-      "text": "胃部充实度1-10是几分(1空-10撑)",
+      "text": "袖子现在在手腕上面还是下面(1上面 2下面 3短袖)",
       "inputType": "number",
-      "placeholder": "感觉一下"
+      "placeholder": "1-3"
     },
     {
       "id": "b018",
@@ -1077,42 +1070,30 @@
     {
       "id": "e004",
       "category": "environment",
-      "text": "能看到几个发光或反光的东西",
+      "text": "身上一共穿了几件衣服(含外套)",
       "inputType": "number",
-      "placeholder": "扫视一圈"
+      "placeholder": "比如 3"
     },
     {
       "id": "e005",
       "category": "environment",
-      "text": "能看到几个屏幕",
+      "text": "你现在坐着还是站着还是躺着(1坐着 2站着 3躺着 4蹲着)",
       "inputType": "number",
-      "placeholder": "数一下"
+      "placeholder": "1-4"
     },
     {
       "id": "e006",
       "category": "environment",
-      "text": "离你最近的门大概多远",
-      "inputType": "chips",
-      "options": [
-        "1米以内",
-        "1-3米",
-        "3-10米",
-        "10米以上",
-        "看不到/没有"
-      ]
+      "text": "身边伸手就能够到的东西大概有几样",
+      "inputType": "number",
+      "placeholder": "比如 5"
     },
     {
       "id": "e007",
       "category": "environment",
-      "text": "离你最近的窗户大概多远",
-      "inputType": "chips",
-      "options": [
-        "1米以内",
-        "1-3米",
-        "3-10米",
-        "10米以上",
-        "看不到/没有"
-      ]
+      "text": "你现在用左手还是右手拿手机(1左手 2右手 3双手 4不是手机)",
+      "inputType": "number",
+      "placeholder": "1-4"
     },
     {
       "id": "e008",
@@ -1124,9 +1105,9 @@
     {
       "id": "e009",
       "category": "environment",
-      "text": "噪音等级1-10是几分",
+      "text": "耳机现在戴着吗(1戴着 2没戴)",
       "inputType": "number",
-      "placeholder": "安静0-嘈杂10"
+      "placeholder": "1或2"
     },
     {
       "id": "e010",
@@ -1180,15 +1161,9 @@
     {
       "id": "e017",
       "category": "environment",
-      "text": "天花板上有几个灯",
-      "inputType": "chips",
-      "options": [
-        "0个",
-        "1-2个",
-        "3-5个",
-        "6个以上",
-        "没天花板/户外"
-      ]
+      "text": "你现在所在的楼层是几楼(1一楼 2二楼 3三楼以上 4平房)",
+      "inputType": "number",
+      "placeholder": "1-4"
     },
     {
       "id": "e018",
@@ -1261,30 +1236,30 @@
     {
       "id": "e026",
       "category": "environment",
-      "text": "周围你能看到几个人",
+      "text": "旁边有没有人在跟你说话(1有 2没有)",
       "inputType": "number",
-      "placeholder": "扫视"
+      "placeholder": "1或2"
     },
     {
       "id": "e027",
       "category": "environment",
-      "text": "温度感觉1-10是几分(1冷-10热)",
+      "text": "身上盖着东西吗(1盖着被子 2盖着毯子 3盖着衣服 4没盖)",
       "inputType": "number",
-      "placeholder": "体感"
+      "placeholder": "1-4"
     },
     {
       "id": "e028",
       "category": "environment",
-      "text": "湿度感觉1-10是几分(1干-10湿)",
+      "text": "现在穿拖鞋还是穿鞋还是光脚(1拖鞋 2鞋 3光脚 4袜子)",
       "inputType": "number",
-      "placeholder": "皮肤感觉"
+      "placeholder": "1-4"
     },
     {
       "id": "e029",
       "category": "environment",
-      "text": "空气流动感1-10是几分(1无风-10大风)",
+      "text": "现在房间里还有别人吗(1有 2没有)",
       "inputType": "number",
-      "placeholder": "感觉空气"
+      "placeholder": "1或2"
     },
     {
       "id": "e030",
@@ -1648,9 +1623,9 @@
     {
       "id": "r005",
       "category": "reality",
-      "text": "今天出门又进门总共几次",
+      "text": "今天一共摸了几次手机(大概)",
       "inputType": "number",
-      "placeholder": "回想"
+      "placeholder": "比如 50"
     },
     {
       "id": "r006",
@@ -1823,9 +1798,9 @@
     {
       "id": "r030",
       "category": "reality",
-      "text": "今天等红灯等了几次",
+      "text": "今天刷了几个短视频(大概)",
       "inputType": "number",
-      "placeholder": "回忆"
+      "placeholder": "比如 30"
     },
     {
       "id": "r031",
@@ -1897,14 +1872,9 @@
     {
       "id": "r037",
       "category": "reality",
-      "text": "最近一次等红灯时在做什么",
-      "inputType": "chips",
-      "options": [
-        "走路",
-        "骑车",
-        "开车",
-        "没等"
-      ]
+      "text": "最近一次看微信是几分钟前",
+      "inputType": "number",
+      "placeholder": "比如 5"
     },
     {
       "id": "r038",
@@ -1943,13 +1913,9 @@
     {
       "id": "r041",
       "category": "reality",
-      "text": "最近一次关灯是主动还是被动",
-      "inputType": "chips",
-      "options": [
-        "主动关",
-        "被动关",
-        "没关过"
-      ]
+      "text": "今天喝了第几杯水/咖啡/茶",
+      "inputType": "number",
+      "placeholder": "比如 2"
     },
     {
       "id": "r042",
@@ -2137,9 +2103,9 @@
     {
       "id": "a001",
       "category": "absurd",
-      "text": "给你现在的状态选一个颜色亮度(1-10)",
+      "text": "如果你是一只猫，你现在最可能在干嘛(1睡觉 2盯着窗外 3挠沙发 4要吃的 5躲起来)",
       "inputType": "number",
-      "placeholder": "凭感觉"
+      "placeholder": "1-5"
     },
     {
       "id": "a002",
@@ -2151,23 +2117,23 @@
     {
       "id": "a003",
       "category": "absurd",
-      "text": "这个世界的音量等级感觉是几分(1-10)",
+      "text": "你的手机如果会说话，它现在第一句会说什么(1我好累 2该充电了 3别看我了 4你手好重 5我没电了)",
       "inputType": "number",
-      "placeholder": "听一下"
+      "placeholder": "1-5"
     },
     {
       "id": "a004",
       "category": "absurd",
-      "text": "能看到几个发光的东西",
+      "text": "假如时间是一条路，你现在在哪个路段(1上坡 2下坡 3平路 4隧道 5岔路口)",
       "inputType": "number",
-      "placeholder": "扫视"
+      "placeholder": "1-5"
     },
     {
       "id": "a005",
       "category": "absurd",
-      "text": "最近一件让你突然停下来的事，你停了大概几秒",
+      "text": "如果你现在可以瞬移到一个地方，你会去哪(1床上 2海边 3山里 4老家 5餐厅)",
       "inputType": "number",
-      "placeholder": "大概"
+      "placeholder": "1-5"
     },
     {
       "id": "a006",
@@ -2186,9 +2152,9 @@
     {
       "id": "a008",
       "category": "absurd",
-      "text": "空气的重量感1-10是几分",
+      "text": "现在的心情像哪种天气(1晴天 2多云 3小雨 4暴风雨 5雾)",
       "inputType": "number",
-      "placeholder": "感受气压"
+      "placeholder": "1-5"
     },
     {
       "id": "a009",
@@ -2551,15 +2517,9 @@
     {
       "id": "a048",
       "category": "absurd",
-      "text": "如果此刻房间有一个看不见的物体，它最可能在哪",
-      "inputType": "chips",
-      "options": [
-        "左边",
-        "右边",
-        "后面",
-        "上面",
-        "墙角"
-      ]
+      "text": "你今天的运气像哪种水果(1柠檬 2西瓜 3榴莲 4草莓 5苹果)",
+      "inputType": "number",
+      "placeholder": "1-5"
     },
     {
       "id": "a049",
@@ -3073,9 +3033,9 @@
     {
       "id": "b069",
       "category": "body",
-      "text": "手腕转一圈，灵活度1-10",
+      "text": "现在靠着东西吗(1靠着椅背 2靠着墙 3靠着枕头 4没靠)",
       "inputType": "number",
-      "placeholder": "转一下"
+      "placeholder": "1-4"
     },
     {
       "id": "b070",
@@ -3255,9 +3215,9 @@
     {
       "id": "b089",
       "category": "body",
-      "text": "脚踝转一圈大概能转几度",
+      "text": "最近一次打哈欠是大概几分钟前",
       "inputType": "number",
-      "placeholder": "转一下估"
+      "placeholder": "比如 20"
     },
     {
       "id": "b090",
@@ -3291,9 +3251,9 @@
     {
       "id": "b093",
       "category": "body",
-      "text": "耸一下肩膀，紧张度1-10",
+      "text": "现在腿是伸直还是弯着(1伸直 2弯着 3盘着)",
       "inputType": "number",
-      "placeholder": "耸一下"
+      "placeholder": "1-3"
     },
     {
       "id": "b094",
@@ -3552,9 +3512,9 @@
     {
       "id": "e081",
       "category": "environment",
-      "text": "空间回音感1-10（拍一下手）",
+      "text": "身边最近的一个电子设备是什么(1手机 2电脑 3平板 4电视 5其他)",
       "inputType": "number",
-      "placeholder": "拍手试试"
+      "placeholder": "1-5"
     },
     {
       "id": "e082",
@@ -3590,9 +3550,9 @@
     {
       "id": "e085",
       "category": "environment",
-      "text": "能看到几个发光或反光的点",
+      "text": "你的包现在离你多远(1手边 2同一个房间 3不在身边 4没带包)",
       "inputType": "number",
-      "placeholder": "扫视"
+      "placeholder": "1-4"
     },
     {
       "id": "e086",
@@ -3634,9 +3594,9 @@
     {
       "id": "e089",
       "category": "environment",
-      "text": "现在体感温度大概几度",
+      "text": "现在有风吹到脸上吗(1有 2没有)",
       "inputType": "number",
-      "placeholder": "感觉就好"
+      "placeholder": "1或2"
     },
     {
       "id": "e090",
@@ -3798,14 +3758,9 @@
     {
       "id": "r068",
       "category": "reality",
-      "text": "最近一次按开关是开灯还是关灯",
-      "inputType": "chips",
-      "options": [
-        "开灯",
-        "关灯",
-        "其他开关",
-        "没按过"
-      ]
+      "text": "最近一次拍照是拍什么(1自拍 2风景 3食物 4屏幕截图 5没拍)",
+      "inputType": "number",
+      "placeholder": "1-5"
     },
     {
       "id": "r069",
@@ -3909,13 +3864,9 @@
     {
       "id": "r081",
       "category": "reality",
-      "text": "今天有忘记带什么东西出门吗",
-      "inputType": "chips",
-      "options": [
-        "有",
-        "没有",
-        "没出门"
-      ]
+      "text": "今天打开最多的APP是第几个(1微信 2抖音 3小红书 4B站 5微博 6其他)",
+      "inputType": "number",
+      "placeholder": "1-6"
     },
     {
       "id": "r082",
@@ -4257,9 +4208,9 @@
     {
       "id": "a077",
       "category": "absurd",
-      "text": "此刻手边的空气密度1-10是多少",
+      "text": "你的耐心现在像一个(1满杯水 2半杯水 3杯底一点水 4空杯子 5杯子裂了)",
       "inputType": "number",
-      "placeholder": "感觉"
+      "placeholder": "1-5"
     },
     {
       "id": "a078",
@@ -4414,9 +4365,9 @@
     {
       "id": "a095",
       "category": "absurd",
-      "text": "你今天的「主角能量」1-10是几分",
+      "text": "你现在的思绪像(1一条直线 2一团毛线 3一片空白 4满天星星 5一锅沸水)",
       "inputType": "number",
-      "placeholder": "感觉"
+      "placeholder": "1-5"
     },
     {
       "id": "a096",
