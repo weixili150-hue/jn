@@ -34,34 +34,65 @@ window.Engine_Mystic = {
       }, 600);
     }
 
-    if (q.inputType === 'chips' && q.options) {
-      const group = el('div', { className: 'void-choice-group' });
-      for (const opt of q.options) {
-        group.appendChild(el('button', {
-          className: 'void-floating-choice',
-          onclick: () => answer(opt),
-        }, opt));
+    const isBridge = q.kind === 'bridge';
+    const isReality = q.kind === 'reality';
+    const at = q.answerType || 'short-text';
+
+    // Bridge: show previous 3 answers
+    if (isBridge) {
+      const prevAnswers = [];
+      for (let i = 0; i < S.currentQuestion; i++) {
+        const pq = S.questions[i];
+        if (pq && S.answers[pq.id]) prevAnswers.push(S.answers[pq.id]);
       }
-      card.appendChild(group);
-    } else {
-      const input = el('input', {
-        className: 'void-input-line',
-        type: q.inputType === 'number' ? 'number' : 'text',
-        inputMode: q.inputType === 'number' ? 'numeric' : undefined,
-        placeholder: q.placeholder || '输入...',
-      });
-      const inputWrap = el('div', { className: 'sample-input-wrap' }, input);
-      card.appendChild(inputWrap);
+      if (prevAnswers.length > 0) {
+        const prevBox = el('div', { className: 'bridge-prev-answers' });
+        prevBox.style.cssText = 'font-size:0.8125rem;color:var(--fg-muted);opacity:0.5;margin-bottom:16px;text-align:center;line-height:1.8;';
+        prevBox.innerHTML = '前三个答案：<br>' + prevAnswers.map((a, i) => '<span style="margin:0 4px;color:var(--accent);">' + (i + 1) + '. ' + a + '</span>').join('  ');
+        card.appendChild(prevBox);
+      }
+    }
 
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && input.value.trim()) answer(input.value.trim());
-      });
+    // Input based on answerType
+    const input = el('input', {
+      className: 'void-input-line',
+      type: (at === 'integer' || at === 'short-number') ? 'number' : 'text',
+      inputMode: (at === 'integer' || at === 'short-number') ? 'numeric' : 'text',
+      placeholder: q.placeholder || '输入...',
+      maxLength: q.maxLength || (at === 'single-character' ? 1 : 50),
+    });
+    const inputWrap = el('div', { className: 'sample-input-wrap' }, input);
+    card.appendChild(inputWrap);
 
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && input.value.trim()) answer(input.value.trim());
+    });
+
+    card.appendChild(el('button', {
+      className: 'btn btn-primary',
+      style: { marginTop: '20px' },
+      onclick: () => { if (input.value.trim()) answer(input.value.trim()); },
+    }, '记录'));
+
+    // "换一题" only for reality
+    if (isReality) {
       card.appendChild(el('button', {
-        className: 'btn btn-primary',
-        style: { marginTop: '20px' },
-        onclick: () => { if (input.value.trim()) answer(input.value.trim()); },
-      }, '确认'));
+        className: 'btn btn-link',
+        style: { marginTop: '12px', fontSize: '0.75rem', opacity: 0.4 },
+        onclick: async () => {
+          // Request new question from server
+          try {
+            const data = await API.getQuestions(S.theme, S.optionA, S.optionB);
+            const newQ = data.questions[S.currentQuestion];
+            if (newQ && newQ.id !== q.id) {
+              S.questions[S.currentQuestion] = newQ;
+            }
+          } catch(e) {}
+          // Re-render
+          S.answers[q.id] = undefined;
+          window.Engine_Mystic.sample();
+        },
+      }, '无法查看，换一题'));
     }
 
     /* Progress — 4 faint stars */

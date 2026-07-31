@@ -152,11 +152,19 @@ window.addEventListener('hashchange', () => {
 });
 
 window.addEventListener('load', () => {
+  // 题库版本升级：清除旧缓存
+  const BANK_VERSION = 'v2-new-500';
+  const cachedVersion = localStorage.getItem('question_bank_version');
+  if (cachedVersion !== BANK_VERSION) {
+    // 清除所有旧题库相关缓存
+    ['entropy_recent_text_ids','qe_hist','qe_skip','ritual_history','ritual_skip'].forEach(k => localStorage.removeItem(k));
+    localStorage.setItem('question_bank_version', BANK_VERSION);
+  }
+
   const saved = localStorage.getItem('entropy-theme');
   if (saved) {
     setTheme(saved);
   } else {
-    // 首次访问，不预设主题，让用户选择
     setTheme('mystic-void');
   }
   route();
