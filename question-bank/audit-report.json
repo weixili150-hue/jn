@@ -1,0 +1,27 @@
+{
+  "reality_total": 211,
+  "reality_active": 210,
+  "reality_backup": 0,
+  "reality_rejected": 1,
+  "abstract_total": 100,
+  "abstract_active": 99,
+  "abstract_backup": 0,
+  "abstract_rejected": 1,
+  "category_distribution": {
+    "phone_state": 54,
+    "wechat": 27,
+    "browser": 28,
+    "weather": 25,
+    "system_app": 25,
+    "wearables": 22,
+    "logs": 15,
+    "visible_ui": 15
+  },
+  "abstract_types": {
+    "single_character": 25,
+    "short_number": 19,
+    "short_text": 55
+  },
+  "duplicate_prompts": 2,
+  "banned_keyword_hits": 2
+}
