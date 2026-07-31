@@ -1,88 +1,93 @@
-// 问题采样引擎 — 按 slot 1→2→3→4 各取1题，近期去重
+// 问题采样引擎 — 3现实(不同来源) + 1抽象
 const fs = require('fs');
 const path = require('path');
 
 const BANK_PATH = path.join(__dirname, 'questions-bank.json');
+const ABSTRACT_PATH = path.join(__dirname, 'question-bank', 'abstract-active.json');
+
+let _abstractCache = null;
+function loadAbstract() {
+  if (!_abstractCache) {
+    _abstractCache = JSON.parse(fs.readFileSync(ABSTRACT_PATH, 'utf-8'));
+  }
+  return _abstractCache;
+}
 
 function loadBank() {
   return JSON.parse(fs.readFileSync(BANK_PATH, 'utf-8'));
 }
 
-// 最近 N 次采样的题目 ID 记录（FIFO），避免连续出现相同题
-const recentIds = [];
+const recentRealityIds = [];
+const recentAbstractIds = [];
 const MAX_RECENT = 15;
 
-const SLOT_NAMES = {
-  1: '手机确定信号',
-  2: '身体几何/穿戴信号',
-  3: '空间坐标信号',
-  4: '今日痕迹/社交/消费信号',
-};
-
-// 参数 n 保留但不使用，始终返回4题（每个slot各1题）
 function sampleQuestions(n = 4) {
   const bank = loadBank();
-  const questions = bank.questions;
+  const realityQuestions = bank.questions;
+  const abstractQuestions = loadAbstract();
 
-  // 按 slot 分组
-  const bySlot = { 1: [], 2: [], 3: [], 4: [] };
-  for (const q of questions) {
-    if (bySlot[q.slot]) bySlot[q.slot].push(q);
+  // 按来源分组现实题
+  const bySource = {};
+  for (const q of realityQuestions) {
+    if (!bySource[q.category]) bySource[q.category] = [];
+    bySource[q.category].push(q);
   }
 
-  // 近期用过的 ID 集合
-  const excludeSet = new Set();
-  const recentWindow = recentIds.slice(-10).flat();
-  for (const id of recentWindow) excludeSet.add(id);
+  // 近期去重
+  const excludeR = new Set(recentRealityIds.slice(-10).flat());
+  const excludeA = new Set(recentAbstractIds.slice(-5).flat());
 
-  // 如果排除集太大（超过某个slot的80%），缩小窗口
-  let effectiveExclude = excludeSet;
-  for (let s = 1; s <= 4; s++) {
-    const available = bySlot[s].filter(q => !excludeSet.has(q.id));
-    if (available.length < bySlot[s].length * 0.2) {
-      // 去重太激进，只用最近3轮
-      effectiveExclude = new Set(recentIds.slice(-3).flat());
-      break;
-    }
-  }
-
-  // 每个 slot 随机选1题
+  // 选3道现实题，来源不同
   const selected = [];
-  for (let s = 1; s <= 4; s++) {
-    const pool = bySlot[s];
-    const available = pool.filter(q => !effectiveExclude.has(q.id));
-    const pickFrom = available.length > 0 ? available : pool;
-    const picked = pickFrom[Math.floor(Math.random() * pickFrom.length)];
+  const usedSources = [];
 
-    // 转换为前端兼容格式
-    selected.push({
-      id: picked.id,
-      slot: picked.slot,
-      text: picked.question,
-      inputType: 'text',
-      placeholder: getPlaceholder(picked.slot, picked.question),
+  for (let i = 0; i < 3; i++) {
+    const available = realityQuestions.filter(q => {
+      if (usedSources.includes(q.category)) return false;
+      if (excludeR.has(q.id)) return false;
+      return true;
     });
 
-    effectiveExclude.add(picked.id);
+    let pickFrom = available.length > 0 ? available
+      : realityQuestions.filter(q => !usedSources.includes(q.category));
+
+    if (pickFrom.length === 0) pickFrom = realityQuestions;
+    const picked = pickFrom[Math.floor(Math.random() * pickFrom.length)];
+
+    selected.push({
+      id: picked.id,
+      category: picked.category,
+      text: picked.text,
+      inputType: picked.inputType || 'text',
+      placeholder: picked.placeholder || '输入答案',
+      maxLength: picked.maxLength || 4,
+    });
+
+    usedSources.push(picked.category);
+    excludeR.add(picked.id);
   }
 
-  // 记录去重窗口
-  recentIds.push(selected.map(q => q.id));
-  if (recentIds.length > MAX_RECENT) {
-    recentIds.shift();
-  }
+  // 选1道抽象题
+  const availA = abstractQuestions.filter(q => !excludeA.has(q.id));
+  const pickA = availA.length > 0 ? availA : abstractQuestions;
+  const apicked = pickA[Math.floor(Math.random() * pickA.length)];
+
+  selected.push({
+    id: apicked.id,
+    category: 'abstract',
+    text: apicked.prompt,
+    inputType: apicked.answerType === 'single-character' ? 'text' : (apicked.answerType === 'short-number' ? 'number' : 'text'),
+    placeholder: apicked.placeholder || '输入答案',
+    maxLength: apicked.maxLength || 4,
+  });
+
+  // 记录去重
+  recentRealityIds.push(selected.slice(0, 3).map(q => q.id));
+  recentAbstractIds.push(apicked.id);
+  if (recentRealityIds.length > MAX_RECENT) recentRealityIds.shift();
+  if (recentAbstractIds.length > MAX_RECENT) recentAbstractIds.shift();
 
   return selected;
-}
-
-function getPlaceholder(slot, question) {
-  const defaults = {
-    1: '比如 37',
-    2: '比如 15',
-    3: '比如 2',
-    4: '比如 微信',
-  };
-  return defaults[slot] || '';
 }
 
 module.exports = { sampleQuestions };
