@@ -479,6 +479,15 @@ body {
   width:1px; height:1px; opacity:0;
   font-size:16px;
 }
+.terminal-real-input {
+  width:100%; padding:10px 0; margin-top:6px;
+  background:transparent; border:none; border-top:1px solid var(--border);
+  color:var(--accent-2); font-family:var(--font-mono); font-size:0.9375rem;
+  outline:none; caret-color:var(--accent-2);
+  -webkit-appearance:none; border-radius:0;
+}
+.terminal-real-input::placeholder { color:var(--fg-muted); opacity:0.3; }
+.terminal-real-input:focus { border-top-color:var(--accent-2); }
 @keyframes terminalBlink {
   0%,100%{opacity:1} 50%{opacity:0}
 }

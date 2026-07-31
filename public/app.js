@@ -153,7 +153,12 @@ window.addEventListener('hashchange', () => {
 
 window.addEventListener('load', () => {
   const saved = localStorage.getItem('entropy-theme');
-  if (saved) setTheme(saved);
+  if (saved) {
+    setTheme(saved);
+  } else {
+    // 首次访问，不预设主题，让用户选择
+    setTheme('mystic-void');
+  }
   route();
 });
 
@@ -236,12 +241,6 @@ function renderThemeSelect() {
   clearLoadingCleanup();
   $('#app').innerHTML = '';
 
-  /* Silent Signal skips this view */
-  if (S.theme === 'silent-signal') {
-    location.hash = 'decide';
-    return;
-  }
-
   const T = S.theme;
 
   const hour = new Date().getHours();
@@ -250,9 +249,9 @@ function renderThemeSelect() {
     : 'silent-signal';
 
   const themes = [
-    { id: 'mystic-void', name: 'Mystic Void', desc: '深夜、情感、宿命感', hint: defaultTheme === 'mystic-void' ? '当前时段推荐' : '' },
-    { id: 'neon-entropy', name: 'Neon Entropy', desc: '冲动、高能量、想听狠话', hint: defaultTheme === 'neon-entropy' ? '当前时段推荐' : '' },
-    { id: 'silent-signal', name: 'Silent Signal', desc: '冷静、日常、想慢慢想', hint: defaultTheme === 'silent-signal' ? '当前时段推荐' : '' },
+    { id: 'mystic-void', name: '神秘黑暗', desc: '宇宙会提前泄露一点答案。', hint: defaultTheme === 'mystic-void' ? '当前时段推荐' : '' },
+    { id: 'neon-entropy', name: '赛博朋克', desc: '系统正在截取现实的偏移。', hint: defaultTheme === 'neon-entropy' ? '当前时段推荐' : '' },
+    { id: 'silent-signal', name: '极简禅意', desc: '答案出现前，时间会先安静下来。', hint: defaultTheme === 'silent-signal' ? '当前时段推荐' : '' },
   ];
 
   const viewCls = T === 'silent-signal' ? 'theme-select theme-select-zen' : 'theme-select';

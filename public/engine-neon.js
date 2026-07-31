@@ -20,10 +20,6 @@ function destroyTerminal() {
     _termHiddenInput.remove();
     _termHiddenInput = null;
   }
-  if (_termKeydownHandler) {
-    document.removeEventListener('keydown', _termKeydownHandler);
-    _termKeydownHandler = null;
-  }
   $('#app').innerHTML = '';
 }
 
@@ -83,7 +79,7 @@ function showTerminalInput() {
   if (_termHiddenInput) {
     _termHiddenInput.style.display = 'block';
     _termHiddenInput.value = '';
-    setTimeout(function () { _termHiddenInput.focus(); }, 50);
+    _termHiddenInput.focus();
   }
   updateTerminalPrompt();
 }
@@ -384,37 +380,37 @@ function startTerminal() {
   terminalApp.appendChild(terminal);
   app.appendChild(terminalApp);
 
-  /* Hidden input for native IME support */
+  /* Visible input for reliable mobile + desktop support */
   _termHiddenInput = el('input', {
     type: 'text',
-    className: 'terminal-hidden-input',
+    className: 'terminal-real-input',
     autocomplete: 'off',
     autocorrect: 'off',
     autocapitalize: 'off',
     spellcheck: false,
+    placeholder: '输入后按回车...',
   });
   _termHiddenInput.style.display = 'none';
-  terminalApp.appendChild(_termHiddenInput);
+  terminal.appendChild(_termHiddenInput);
 
   _termHiddenInput.addEventListener('input', function () {
     if (!window._terminalActive || !_termAcceptingInput) return;
-    var val = _termHiddenInput.value;
-    _termInputBuffer = val;
+    _termInputBuffer = _termHiddenInput.value;
     updateTerminalPrompt();
   });
 
-  _termKeydownHandler = function (e) {
+  _termHiddenInput.addEventListener('keydown', function (e) {
     if (!window._terminalActive || !_termAcceptingInput) return;
     if (e.key === 'Enter') {
       e.preventDefault();
       var value = _termHiddenInput.value.trim();
+      if (!value) return;
       _termHiddenInput.value = '';
       _termInputBuffer = '';
       updateTerminalPrompt();
       handleTerminalInput('Enter', value);
     }
-  };
-  document.addEventListener('keydown', _termKeydownHandler);
+  });
 
   _termState = 'boot';
   _termInputBuffer = '';
