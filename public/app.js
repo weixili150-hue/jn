@@ -153,7 +153,7 @@ window.addEventListener('hashchange', () => {
 
 window.addEventListener('load', () => {
   // 题库版本升级：清除旧缓存
-  const BANK_VERSION = 'v2-new-500';
+  const BANK_VERSION = 'v3-all-reality';
   const cachedVersion = localStorage.getItem('question_bank_version');
   if (cachedVersion !== BANK_VERSION) {
     // 清除所有旧题库相关缓存
